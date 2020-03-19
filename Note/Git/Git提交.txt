@@ -1,0 +1,121 @@
+
+SJRJY@DESKTOP-L6H201M MINGW64 /e/project/php/ckp_server ((65f0970...))
+$ git config --global user.email "1187081521@qq.com"
+
+SJRJY@DESKTOP-L6H201M MINGW64 /e/project/php/ckp_server ((65f0970...))
+$ git config --global user.name "zyn"
+
+SJRJY@DESKTOP-L6H201M MINGW64 /e/project/php/ckp_server ((65f0970...))
+$ git commit -m "首充功能"
+HEAD detached at origin/master
+Changes not staged for commit:
+        modified:   Application/HttpController/Test.php
+        modified:   Application/Models/Log/Pay.php
+        modified:   Application/Models/User/Account.php
+        modified:   Application/Models/User/UserAttr.php
+        modified:   Application/Protobuf/Result/LoadRoleInfo.php
+        modified:   Application/Traits/CacheTrait.php
+        modified:   Application/Websocket/Controller/Web.php
+        modified:   Protobuf/Src/AutoMsg/LoadRoleInfo.php
+
+no changes added to commit
+
+SJRJY@DESKTOP-L6H201M MINGW64 /e/project/php/ckp_server ((65f0970...))
+$ git add .
+
+SJRJY@DESKTOP-L6H201M MINGW64 /e/project/php/ckp_server ((65f0970...))
+$ git commit -m "首充功能"
+[detached HEAD c4afe72] 首充功能
+ 8 files changed, 152 insertions(+), 4 deletions(-)
+
+SJRJY@DESKTOP-L6H201M MINGW64 /e/project/php/ckp_server ((c4afe72...))
+$ git push
+fatal: You are not currently on a branch.
+To push the history leading to the current (detached HEAD)
+state now, use
+
+    git push origin HEAD:<name-of-remote-branch>
+
+
+SJRJY@DESKTOP-L6H201M MINGW64 /e/project/php/ckp_server ((c4afe72...))
+$ git push .
+fatal: You are not currently on a branch.
+To push the history leading to the current (detached HEAD)
+state now, use
+
+    git push . HEAD:<name-of-remote-branch>
+
+
+SJRJY@DESKTOP-L6H201M MINGW64 /e/project/php/ckp_server ((c4afe72...))
+$ git push origin/master
+fatal: You are not currently on a branch.
+To push the history leading to the current (detached HEAD)
+state now, use
+
+    git push origin/master HEAD:<name-of-remote-branch>
+
+
+SJRJY@DESKTOP-L6H201M MINGW64 /e/project/php/ckp_server ((c4afe72...))
+$ git push origin
+fatal: You are not currently on a branch.
+To push the history leading to the current (detached HEAD)
+state now, use
+
+    git push origin HEAD:<name-of-remote-branch>
+
+
+SJRJY@DESKTOP-L6H201M MINGW64 /e/project/php/ckp_server ((c4afe72...))
+$ ^C
+
+SJRJY@DESKTOP-L6H201M MINGW64 /e/project/php/ckp_server ((c4afe72...))
+$ git status
+HEAD detached from origin/master
+nothing to commit, working tree clean
+
+SJRJY@DESKTOP-L6H201M MINGW64 /e/project/php/ckp_server ((c4afe72...))
+$ git push origin/master
+fatal: You are not currently on a branch.
+To push the history leading to the current (detached HEAD)
+state now, use
+
+    git push origin/master HEAD:<name-of-remote-branch>
+
+
+SJRJY@DESKTOP-L6H201M MINGW64 /e/project/php/ckp_server ((c4afe72...))
+$ git push origin HEAD:master --force
+Enumerating objects: 5636, done.
+Counting objects: 100% (5636/5636), done.
+Delta compression using up to 4 threads.
+Compressing objects: 100% (1560/1560), done.
+Writing objects: 100% (5636/5636), 1.58 MiB | 12.35 MiB/s, done.
+Total 5636 (delta 3957), reused 5511 (delta 3859)
+remote: Resolving deltas: 100% (3957/3957), done.
+To git.jygeili.com:ckp/ckp_server.git
+ + 8f904a0...c4afe72 HEAD -> master (forced update)
+
+SJRJY@DESKTOP-L6H201M MINGW64 /e/project/php/ckp_server ((c4afe72...))
+
+
+
+/*************************************************************************************************************/
+//全部提交
+
+SJRJY@DESKTOP-L6H201M MINGW64 /e/project/php/ckp_server ((6272e22...))
+$ git add .
+
+SJRJY@DESKTOP-L6H201M MINGW64 /e/project/php/ckp_server ((6272e22...))
+$ git commit -m "首充奖励功能补充提交"
+[detached HEAD ff10d3b] 首充奖励功能补充提交
+ 4 files changed, 139 insertions(+), 125 deletions(-)
+
+SJRJY@DESKTOP-L6H201M MINGW64 /e/project/php/ckp_server ((ff10d3b...))
+$ git push origin HEAD:master --force
+Enumerating objects: 5655, done.
+Counting objects: 100% (5655/5655), done.
+Delta compression using up to 4 threads.
+Compressing objects: 100% (1579/1579), done.
+Writing objects: 100% (5655/5655), 1.58 MiB | 16.89 MiB/s, done.
+Total 5655 (delta 3969), reused 5508 (delta 3859)
+remote: Resolving deltas: 100% (3969/3969), done.
+To git.jygeili.com:ckp/ckp_server.git
+ + 8180ac6...ff10d3b HEAD -> master (forced update)

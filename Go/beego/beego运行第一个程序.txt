@@ -1,0 +1,11 @@
+安装beego
+go get github.com/astaxie/beego
+安装bee工具
+go get github.com/beego/bee
+用bee新建一个项目
+bee new porject
+打开项目，conf/app.conf,8080端口被占用，改为别的端口（8081）
+运行项目：
+进入项目目录：bee run
+运行成功
+打开 localhost：8081 可以看见:Welcome to Beego ,以及bee小蜜蜂

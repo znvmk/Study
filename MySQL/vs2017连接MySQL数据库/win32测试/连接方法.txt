@@ -1,0 +1,8 @@
+1.安装MySQL 5.7.19
+属性：mysql root 123456 udb
+2.新建win32空项目，编译平台为64位。新建源程序，将测试代码复制进去。
+3.项目->属性->C/C++->常规->附加包含目录->新建：D:\ls\MySQL\mysql-5.7.19-winx64\mysql\include（MySQL目录下的包含目录）
+4.项目->属性->链接器->常规->附加库目录->新建：D:\ls\MySQL\mysql-5.7.19-winx64\mysql\lib（MySQL目录下的库目录）
+5.64位编译运行，报错丢失libmysql.dll，将D:\ls\MySQL\mysql-5.7.19-winx64\mysql\lib，即MySQLlib目录下的libmysql.dll动态运行库复制到64位编译的debug目录下。
+注意：修改连接数据库信息：mysql_real_connect(&mydata, "localhost", "root", "123456", "udb", 3306, NULL, 0))
+host是"localhost"，而不是mysql

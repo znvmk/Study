@@ -1,0 +1,5 @@
+1.在ClientApp文件夹夹里运行cmd（先把node_modules文件夹删掉）
+npm install express
+安装依赖包
+2.打开项目，右键依赖项->管理NuGget程序包->添加Microsoft.Net.Compilers  v2.8.2
+3.运行，访问服务端网址：http://localhost:50228/api/SampleData/WeatherForecasts

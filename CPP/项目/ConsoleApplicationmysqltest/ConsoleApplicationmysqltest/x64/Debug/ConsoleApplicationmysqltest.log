@@ -1,0 +1,4 @@
+﻿  ConsoleApplicationmysqltest.cpp
+d:\znpr\c++\consoleapplicationmysqltest\consoleapplicationmysqltest\consoleapplicationmysqltest.cpp(153): warning C4018: “<”: 有符号/无符号不匹配
+  ConsoleApplicationmysqltest.vcxproj -> D:\znpr\C++\ConsoleApplicationmysqltest\x64\Debug\ConsoleApplicationmysqltest.exe
+  ConsoleApplicationmysqltest.vcxproj -> D:\znpr\C++\ConsoleApplicationmysqltest\x64\Debug\ConsoleApplicationmysqltest.pdb (Full PDB)

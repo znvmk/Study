@@ -1,0 +1,15 @@
+Oracle官方下载地址：
+http://www.oracle.com/technetwork/developer-tools/sql-developer/downloads/index.html
+
+
+账号
+服务器类
+单实例数据库安装
+高级安装，企业版，使用虚拟账户，一般用户\事务处理，全局数据库名称：orcl,字符集：ZHS16GBK
+
+oracle 用户有：
+sys;system;pdbadmin三个
+
+安装Oracle SQL Developer 18.2.0.183
+帮助->起始页：选择orcl数据库->左边绿色加号（新建/选择数据库连接）->左边选择orcl：连接名自动添加为orcl，用户名system或（sys as sysdba）,输入密码->测试连接->成功后保存密码，连接
+Oracle SQL Developer不用安装，解压直接能用

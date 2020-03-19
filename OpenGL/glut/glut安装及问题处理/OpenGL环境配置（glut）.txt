@@ -1,0 +1,46 @@
+1.
+（1）将 glut32.dll, glut.dll,glaux.dll,glew32.dll,glu32.dll,opengl32.dll全部 拷贝到  c:\windows\system32 下面；同时必须将dll文件放在C:\Windows\SysWOW64(64位)目录下
+（2）将glut.h等对应头文件全部添加在C:\Program Files (x86)\Microsoft SDKs\Windows\v7.1A\Include\gl目录下
+（3）将glut.lib等对应库文件全部添加在C:\Program Files (x86)\Microsoft SDKs\Windows\v7.1A\Lib目录下
+2.
+（1）将glut.h等对应头文件全部添加在VS安装目录下的VC目录下的 \include\gl\ 目录下
+gl文件夹没有可以自己建立一个。
+（3）将glut.lib等对应库文件全部添加在VS安装目录下的VC目录下的 lib目录下（如：\Microsoft Visual Studio 9.0\VC\lib\下）
+
+3.
+（1）在VC++目录 包含目录 中添加C:\Program Files (x86)\Microsoft SDKs\Windows\v7.1A\Include\gl
+（2）在VC++目录 库目录 中添加C:\Program Files (x86)\Microsoft SDKs\Windows\v7.1A\Lib
+（3）在项目属性 链接器  输入 附加依赖项 中添加：opengl32.lib glu32.lib glut.lib glut32.lib  glaux.lib glew32s.lib glew32.lib
+ 或者用代码连接，在stdafx.h文件中添加:
+#pragma comment( lib, "winmm.lib")
+#pragma comment( lib, "opengl32.lib")	// OpenGL32连接库
+#pragma comment( lib, "glu32.lib")		// GLu32连接库
+#pragma comment( lib, "glaux.lib")		// GLaux连接库
+
+
+#pragma comment( lib, "E:\\OpenGL\\glutdlls37beta\\OpenGL-lib\\opengl32.lib")	// OpenGL32连接库
+#pragma comment( lib, "E:\\OpenGL\\glutdlls37beta\\OpenGL-lib\\glu32.lib")		// GLu32连接库
+#pragma comment( lib, "E:\\OpenGL\\glutdlls37beta\\OpenGL-lib\\glaux.lib")		// GLaux连接库
+#pragma comment( lib, "E:\\OpenGL\\glutdlls37beta\\OpenGL-lib\\glut32.lib")
+#pragma comment( lib, "E:\\OpenGL\\glutdlls37beta\\OpenGL-lib\\glut.lib")
+#pragma comment( lib, "E:\\OpenGL\\glutdlls37beta\\OpenGL-lib\\glew32.lib")
+#pragma comment( lib, "E:\\OpenGL\\glutdlls37beta\\OpenGL-lib\\glew32s.lib")
+
+在debug目录下添加相应的dll文件
+
+
+
+4.
+接着包含头文件：
+//#include <GL\gl.h>
+//#include <GL\glu.h>
+//#include <GL\glaux.h>
+
+//只需包含glew.h，glut.h两个头文件就可以了，因为glew.h，glut.h已经包含了以上头文件了。
+#include <gl/glew.h>      // 包含最新的gl.h,glu.h库
+#include <gl/glut.h>      // 包含OpenGL实用库
+
+//#include <GL\glew.h>
+//#include <GL\glxew.h>
+//#include <GL\eglew.h>
+//#include <GL\wglew.h>

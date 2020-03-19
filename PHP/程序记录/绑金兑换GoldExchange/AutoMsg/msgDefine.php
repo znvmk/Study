@@ -1,0 +1,12 @@
+[
+    'type'=>'send',
+    'message'=>'GoldExchangeReq',
+    'msgid'=>'5004',
+    'desc'=>'兑换绑金请求'
+],
+[
+    'type'=>'rec',
+    'message'=>'GoldExchangeResult',
+    'msgid'=>'5005',
+    'desc'=>'兑换绑金返回'
+],

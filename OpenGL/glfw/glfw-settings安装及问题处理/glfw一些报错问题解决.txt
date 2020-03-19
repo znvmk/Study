@@ -1,0 +1,10 @@
+在VS2017中使用OpenGL编写C++程序时会出现
+E0144 "const char*"类型的值不能用于初始化"char *"类型的实体
+的错误
+报错代码如下：
+char * texturePath="../data/picture/jpg/wall.jpg"
+查了查资料，可能的原因是在VS2017版本中使用这种char*的表达方式会造成程序崩溃，所以VS2017对其进行了控件管理。
+解决方案：
+先将字符使用字符数组进行存储，再使用指针
+char jpg1[] = "../data/picture/jpg/wall.jpg";
+char *texturePath = jpg1; 

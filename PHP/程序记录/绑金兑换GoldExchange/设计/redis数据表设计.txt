@@ -1,0 +1,2 @@
+添加：'RoleInfo:uid:1'  'goldExchangeTimes'
+**已经改为自动添加：次数10

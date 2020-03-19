@@ -1,0 +1,100 @@
+as:
+360root
+AoeReader
+baidu\baidubrowser,baidunetdisk
+baofeng\stormPlayer,stormPlayer9
+bigbaicai64
+cyberlink\waveeditor
+foxitreader
+funder\apabi reader 4.0
+iqiy video\geeplayer,lstyle
+kingsoft\wpsoffice
+kugou
+kuwo
+listary
+masterpdf
+microvirt\memu
+mozila firefox
+quckmediaeditor
+simulator\bluestackscn,changzhi\dnplayer2,microvirt,nox
+teamviewer
+tecent\qq,tim,wechat
+txtReader\mozhua
+ucbrowser
+winamp
+youdao
+zapya
+ziperello
+
+gm:
+360game:wwqi
+chess\火狐;leelazero\leela-zero,sabaki;panda,stonebase.4.7.7.2272,tomweiqi,zenith go7中文版,思佳围棋软件V3.3.8,围棋助手完整版8.9.0，弈城围棋2.0，银星围棋14，中国象棋
+everyonepiano
+jinwutuandanjiban_chs
+PoorSakra vol.4
+redalert
+warcraftIII完整
+打字练习\jptypeeasypro,police space,typeeas 2003,typeeasegame
+
+ls:
+adobe\adobe after effects cc 2018,adobe audition cc2019,adobe audition cs6,adobe extension manager cs6,adobe photoshop cc 2019,adobe premiere pro cc2019,photo cs6
+apms
+apmserv
+audio\image-line,vocaloid4
+audodesk\3ds max 2019,autocad 2019,autodesk recap,autodesk recap photo,maya2018
+cloudnotes\shimo,yinxiang biji,youdaonote,金山文档
+cmder
+draw\celsys\clip studio 1.5,comicstudio ex,core\painter 2018,medibang,painter,sai,unicorn\udmpaint
+edit\gvim81,microsoft vs code,notepad++,programmers notepad,pspad editor sublime text 3
+git
+java\java development platform\eclipse,jdk\jdk10.0.2,jdk-12.0.1
+jetbrains\intellij idea 2019.1,pycharm 2019.1
+layaairide
+mysql\mysql-5.7.19-winx64,mysql-8.0.13-winx64
+nasm
+netsarang\xshell plus 6 exaluation
+nodejs
+preimumsoft\navicat premium
+python\python37
+redis
+vc6.0
+video\corel\corel videostudio 2018,maxon\cinema 4d r19,mmd
+vmware
+winhex v19.3-sr4-x64-cn
+write\写作助手，码字精灵
+
+sc
+
+ss:
+360\360chrome,360desktoplite,360drvmagr,360safe360se6
+ahk
+baidu\dupandownload,ime
+bluesprig\jetclean
+ccleaner
+diskgenius pro v4.8.0x64
+dism++
+easersoft\extremecopy
+everything
+flypyinput
+freetimesoftware\formatfactory,picosmostools
+huorong
+hyjiang
+kaying tools
+keytewak
+lenvovo drivers mangement
+microsoft office
+pandownload
+rapidee(directx修复)
+sogouinput
+totaocmd
+winrar
+xiaomi
+翻墙工具
+傲梅分区助手6.3
+新盟游戏鼠标
+
+
+c:
+vs2017
+vs2019
+github

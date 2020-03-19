@@ -1,0 +1,47 @@
+奖励系统
+首充奖励
+ $data_pay = CKApiReq::decode($this->data);
+    $Id = $data_pay['PayParams']['Id'];
+    $Pwd = $data_pay['PayParams']['Pwd'];
+    //获取充值的id
+    $Topup = new Topup();
+    $data_Topup = $Topup->findById($Id);
+
+    /**奖励系统
+     * 奖励类型：金币，道具，其他
+     * 奖励数量：
+     */
+    //奖励标志
+    $award=0;
+
+    /**首充奖励
+     * 首充标识：$TopupFirst=false;默认为false
+     * 奖励金额：money
+     */
+    //首充标识
+    $TopupFirst=false;
+
+    //判断是否是首充
+
+
+    //奖励金额
+    $money=0;
+
+    if(true){
+        switch(award){
+            case 0:;break;
+            default:berak;
+        }
+
+    }
+
+
+    if($TopupFirst){
+        //奖励100金币
+        $money=100;
+        $data_Topup +=$money;
+
+    }else{
+        //无奖励
+        $money=0;
+}

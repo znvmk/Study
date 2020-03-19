@@ -1,0 +1,28 @@
+HASH表：RoleInfo添加popularity人气字段
+RoleInfo:uid:112 popularity 11
+**在天使玩家中人气字段如果不存在，添加，并设置为1
+
+ZSET表：angelPlayer：天使玩家排名，按身价排名：value:Id ,score:shenjiazhi(role表中获取)身价
+angelPlayer 100 112
+**自动添加
+
+SET表：like：给天使玩家的ID：like:112
+like:119 113
+**自动添加
+
+STRING表：updateTime:AnglePlayer :天使玩家上一次更新排行榜及点赞的时间记录
+："timing":"030000",定时刷新时间；"date": "201807170300"：上一次刷新时间记录
+JSON:
+{
+"timing": "030000",
+"date": "201807170300"
+}
+
+
+
+
+ 	字段game_level 
+		0=>'普通玩家',
+            1=>'天使级玩家',
+            2=>'先锋级玩家',
+            3=>'精英级玩家'

@@ -1,0 +1,2 @@
+项目->属性->链接器->高级->入口点：mainCRTStartup
+项目->属性->链接器->系统->子系统->选择：窗口 (/SUBSYSTEM:WINDOWS)

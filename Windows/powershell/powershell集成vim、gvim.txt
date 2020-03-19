@@ -1,0 +1,33 @@
+PowerShell使用Vim的方法
+
+1、去Vim官网下载适合操作系统的可执行文件
+
+因为我下的GitHub安装包里自带了vim，所以我就直接进行的配置。
+
+2、找到Vim文件夹中的vimrc文件进行修改，增加下面这4行。
+
+set encoding=utf-8
+set termencoding=utf-8
+set fileencoding=utf-8
+set fileencodings=ucs-bom,utf-8,chinese,cp936
+3、在C:\Windows\System32\WindowsPowerShell\v1.0目录下新建profile.ps1文件，复制下面的代码到profile.ps1文件中。
+# There's usually much more than this in my profile!
+$SCRIPTPATH = "C:\Program Files (x86)\Vim"
+$VIMPATH    = $SCRIPTPATH + "\vim80\vim.exe"
+ 
+Set-Alias vi   $VIMPATH
+Set-Alias vim  $VIMPATH
+ 
+# for editing your PowerShell profile
+Function Edit-Profile
+{
+    vim $profile
+}
+ 
+# for editing your Vim settings
+Function Edit-Vimrc
+{
+    vim $home\_vimrc
+}
+4、重启Shell，执行Set-ExecutionPolicy RemoteSigned命令修改模式就可以了。
+Set-ExecutionPolicy RemoteSigned

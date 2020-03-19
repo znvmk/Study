@@ -1,0 +1,11 @@
+https://www.cnblogs.com/stulzq/p/7717873.html?utm_source=debugrun&utm_medium=referral
+
+1.安装依赖
+NuGet:
+Microsoft.EntityFrameworkCore (v2.1.1)
+Microsoft.EntityFrameworkCore.SqlServer  (v2.1.1)
+Microsoft.EntityFrameworkCore.SqlServer.Design  (v1.1.6)
+Microsoft.EntityFrameworkCore.Tools  (v2.1.1)
+Microsoft.EntityFrameworkCore.Tools.DotNet  (v2.0.3)
+2.写实体
+3.应用

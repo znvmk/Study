@@ -1,0 +1,44 @@
+win7无法直接安装docker（Docker Desktop Installer.exe）,可以下载DockerToolbox-19.03.1.exe
+运行
+如果已经在电脑上安装了git，可以取消git选项
+安装
+桌面生产三个图标：Oracle VM VirtualBox，Kitematic (Alpha)，Docker Quickstart Terminal
+运行Docker Quickstart Terminal，发现出错无法生成default image
+打开docker的安装位置，将Docker Toolbox目录下的：boot2docker.iso复制到C:\Users\Administrator\.docker\machine\cache目录下
+运行Docker Toolbox目录下的start.sh
+发现在virtualbox中生成了default镜像
+运行default镜像，点击预览窗口打开虚拟机
+
+
+关于docker使用run命令加上参数-it时出现the input device is not a TTY. If you are using mintty, try prefixing the
+
+具体的错误信息rt所示（自己从docker hub上pull了一个repo，然后直接run，最后就出现了以上错误信息）
+
+我的环境是Win10用的是git shell（刚开始用的是cmd，但是发现git shell的体验要好点），从仓库pull完之后然后运行，就出现了上图所示的错误，然后自己也按照提示在command之前加入了winpty，但是没有什么用，然后就上网寻找解决办法~~~~，但是按照网上别人说的经过各种风骚的操作，结果却是回到原点！真是可怕。。。。
+解决办法
+还是老老实实以管理员权限打开cmd，然后在运行就可以了，简单吧^^
+
+
+最近在用docker时创建redis的镜像时，使用命令
+docker run -it --name redis-master redis /bin/bash
+出现问题
+the input device is not a TTY.  If you are using mintty, try prefixing the command with 'winpty'
+就算加上winpty在前缀，也出现问题
+/usr/local/bin/docker-entrypoint.sh: 16: exec: C:/Program Files (x86)/Git/usr/bin/bash.exe: not found
+最后采用了命令才解决问题
+
+***解决方法:winpty docker run -it --name redis-master redis bash
+*winpty docker run -it -p 9501:9501 easyswoole/easyswoole3 bash
+*winpty docker run -ti -p 9501:9501 easyswoole/easyswoole3 bash
+
+如果采用这种方法的话要退出容器但是不结束容器可以采用按住ctrl+p+q,如果想要退出同时结束容器可以采用输入命令exit
+
+同时，如果采用第一种方式的，要想再次进入容器可以使用命令winpty  docker attach 容器名/容器Id
+
+还有问题就是使用-v挂载文件+winpty控制输入流的的时候出现的问题
+
+Error response from daemon: invalid mode: \Program Files (x86)\Git\usr\src\app.
+invalid volume specification: '/c/Users/Administrator/project/Django/App1:~/usr/src/app': invalid mount config for type "bind": invalid mount path: '~/usr/src/app' mount path must be absolute.
+我才用一下方法解决，抛弃了winpty
+
+docker run -it -d --name App1 --link redis-master:db  -v /project/Django/App1:/usr/src/app django /bin/bash

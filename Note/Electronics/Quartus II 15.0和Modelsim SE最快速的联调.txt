@@ -1,0 +1,78 @@
+Quartus II 15.0和Modelsim SE最快速的联调
+最近在Quartus上做一点项目，要进行一些仿真，电脑上只安装有Modelsim SE，于是在网上寻找联调的方法，发现绝大部分教程要么太老，要么还是过于复杂(需要重复编译库，或者每做一个新的设计都要重新编译库)。
+
+本文引用地址：http://www.eepw.com.cn/article/201602/287229.htmd
+　　1、工欲善其事，必选编译库
+
+　　首选安装Quartus 15.0 然后破解，至于在哪里下载，怎么破解，大家自行百度吧，如果是学生的的话，貌似可以申请免费的license，要不然就用试用版好了，然后是安装Modelsim SE，我用的10.1c，这个资源也是可以百度到的，毕竟大家都是学习用，高版本的Quartus只能配高版本的Modelsim 哦。
+
+　　Modelsim的安装路径为：D:\Modelsim_64b\。
+
+　　Quartus 的安装路径为：D:\altera\15.0\ 。
+
+配置Modelsim 目录
+　　首选打开Quartus软件，然后点击 Tools->Options->EDA Tool Options 选择对应Modelsim可执行文件的安装路径，本例中为 D:\Modelsim_64b\win64\ (即安装目录下的win32 或者 win64目录 )
+**注意D:\Modelsim_64b\win64\最后免得“\”必须要加上
+
+接着进行编译库，Tools ->Launch Simulation Library Complier 对应的界面配置如下：
+　　1、 配置仿真工具和对应的仿真工具目录。
+　　2、 选择需要编译仿真库的对应器件，因为我只用了Stratix V 系列的芯片故只选择了该系列，如果你的开发是在其他系列的器件上，你需要选中你所使用的器件。
+　　3、 勾选使用的语言，建议把VHDL和Verilog都勾选上(反正也不费事哈)。
+　　4、 选择库的输出目录，这个目录是任意的，只要你自己知道就好，待会要用的。(用户自己编译库的位置 就是这个)。
+
+**注意还需设置自己项目刚刚指定的仿真目录：将项目文件浏览器切换到Hierarchy,在Cydone IV GX:AUTO上右键单击Settings->EDA Tool Settings->Simulation:Tool Name:ModelSim,Format(s):VHDL->Apply->Ok
+
+　　配置完后，就点击 Start Compilation。这个时候，库就开始编译了。编译的时长和电脑配置有关，等待一段时间就会好的。编译完成后，会弹出编译完成界面，可能会报warning ，不用管它。点击OK按钮，关闭提示，点击Close按钮，关闭 EDA Simulation Library Complier 。
+编译完成界面
+
+　　打开我们刚刚配置的输出目录： D:\altera\15.0\modelsim 可以看到如下文件。这个留着后面还要用的哦。
+编译好后输出目录
+
+2、幸福的日子，还差一点配置
+　　修改 Modelsim 的安装目录下的modelsim.ini文件的文件属性，去掉只读属性。
+
+　　随便打开一个工程，然后打开Assignments -> Settings -> EDA Tool Settings -> Simulation对应配置，并点击 More EDA Netlist Writer Settings
+Setting配置
+
+　　配置用户自己编译的库的位置(Location of user compiled simulation library)，此例中的位置为D:\altera\15.0\modelsim (自己操作时需改为 你自己设置的图5中的输出目录)，点击OK按钮 关闭该窗口。
+　　More Setting 配置
+
+　　然后配置对应的Testbench文件，这个操作步骤是和以前一样的。
+
+　　Processing -> Start -> Start Test Bench Template Writer 在仿真目录下就可以得到对应的生成好的testbench 模板。修改该testbench模板，改成自己想要的就好了。
+生成 Testbench 模板
+
+　　Test bench 配置按如下步骤，首选打开Assignments -> Settings->EDA Tool Settings -> Simulation 勾选中 Compile test bench ,并点击Test Benches 按钮。
+然后在弹出的界面按下面步骤操作即可
+
+　　1、 点击 New 按钮，弹出 New Test Bench Settings 界面。
+
+　　2、 输入Test bench name 即我们Test bench的文件名，自动的会输入test bench顶层模块的名称，默认文件名和顶层模块名一致(模板是一致的，建议自己编写模块也保持一致)。
+
+　　3、 输入设计例化名称，模板生成的例化名称均为 i1。
+
+　　4、 选择Test bench 文件，选中对应的vt文件即可。
+
+　　5、 点击Add按钮(容易遗忘)。
+
+　　6、 点击 New Test Bench Settings 界面上的OK按钮。
+
+　　7、 点击 Test Benchs 界面上的OK按钮。
+
+
+　　然后点击 More NativeLink Settings，对应修改如下，
+
+　　还是需要确定 用户自己编译库的位置
+
+　　将最后一个(Write out portable paths in third...) off 改为on
+
+　　好啦，点击 Tools -> Run Simulation Tool –> RTL Simulation 吧。
+
+
+　　是不是仿真快多了呢?每次仿真都不用去重新编译库，速度biubiu的上去啦!
+
+　　当我们打开 Modelsim.ini发现，库目录已经在里面了。
+
+　　仿真起来十分的方便快捷。
+
+　　还有就是在仿真过程只是做了很少的修改，不用关闭Modelsim，然后再重新调用Modelsim，只需将library->work中对应的文件右键重新编译下，然后Restart即可，这样可以显著提高仿真效率的。

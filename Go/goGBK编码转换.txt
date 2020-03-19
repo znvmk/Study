@@ -1,0 +1,107 @@
+go语言采集gbk网页转编码
+ 随手记	 Skiychan  3年前 (2015-11-10)  10173浏览  0评论
+1、使用 github.com/axgle/mahonia 这个包的时候
+
+
+resp, err := http.Get(url)
+if err != nil {
+log.Fatal(err)
+return
+}
+
+defer resp.Body.Close()
+
+//mahonia包 强荐
+resbody := mahonia.NewDecoder("gbk").NewReader(resp.Body)
+result, err := ioutil.ReadAll(resbody)
+
+resp, err := http.Get(url)
+if err != nil {
+log.Fatal(err)
+return
+}
+ 
+defer resp.Body.Close()
+ 
+//mahonia包 强荐
+resbody := mahonia.NewDecoder("gbk").NewReader(resp.Body)
+result, err := ioutil.ReadAll(resbody)
+另一种写法，这种明显颠覆了我之前的所有思路啊。（牛哄哄的，比上面一个更推荐）
+
+
+var doc *goquery.Document
+var err error
+enc := mahonia.NewDecoder("gbk")
+if doc, err = goquery.NewDocument(url); err != nil {
+panic(err.Error())
+}
+str, _ := doc.Html()
+fmt.Printf(enc.ConvertString(str))
+
+var doc *goquery.Document
+var err error
+enc := mahonia.NewDecoder("gbk")
+if doc, err = goquery.NewDocument(url); err != nil {
+panic(err.Error())
+}
+str, _ := doc.Html()
+fmt.Printf(enc.ConvertString(str))
+2、使用 github.com/djimenez/iconv-go 这个包的时候（注意，如果是win平台则需要安装gcc）
+
+
+resp, err := http.Get(url)
+if err != nil {
+log.Fatal(err)
+return
+}
+
+robots, err := ioutil.ReadAll(resp.Body)
+defer resp.Body.Close()
+result, err := iconv.ConvertString(string(robots), "gbk", "utf-8")
+
+resp, err := http.Get(url)
+if err != nil {
+log.Fatal(err)
+return
+}
+ 
+robots, err := ioutil.ReadAll(resp.Body)
+defer resp.Body.Close()
+result, err := iconv.ConvertString(string(robots), "gbk", "utf-8")
+3、使用官方包
+“golang.org/x/text/transform”
+“golang.org/x/text/encoding/simplifiedchinese”
+
+
+resp, err := http.Get(url)
+if err != nil {
+log.Fatal(err)
+return
+}
+
+robots, err := ioutil.ReadAll(resp.Body)
+defer resp.Body.Close()
+
+sr := strings.NewReader(string(robots))
+tr := transform.NewReader(sr, simplifiedchinese.GB18030.NewDecoder())
+var b bytes.Buffer
+write := bufio.NewWriter(&amp;b)
+io.Copy(write, tr)
+result := b.String()
+
+resp, err := http.Get(url)
+if err != nil {
+log.Fatal(err)
+return
+}
+ 
+robots, err := ioutil.ReadAll(resp.Body)
+defer resp.Body.Close()
+ 
+sr := strings.NewReader(string(robots))
+tr := transform.NewReader(sr, simplifiedchinese.GB18030.NewDecoder())
+var b bytes.Buffer
+write := bufio.NewWriter(&amp;b)
+io.Copy(write, tr)
+result := b.String()
+转载请注明：SKIY开发笔记 » go语言采集gbk网页转编码

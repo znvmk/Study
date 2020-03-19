@@ -1,0 +1,2 @@
+error during connect: Get http://%2F%2F.%2Fpipe%2Fdocker_engine/v1.28/version: open //./pipe/docker_
+https://blog.csdn.net/fanfan4569/article/details/71340556

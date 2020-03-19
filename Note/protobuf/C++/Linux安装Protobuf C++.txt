@@ -1,0 +1,34 @@
+【C++】google protobuf库
+https://blog.csdn.net/fangjin_kl/article/details/60778039
+
+1、安装
+git clone https://github.com/google/protobuf
+cd protobuf
+git submodule update --init --recursive
+
+安装依赖库
+$ sudo apt-get install autoconf automake libtool curl make g++ unzip
+
+生成脚本
+
+$ ./autogen.sh
+编译
+
+$ ./configure
+$ make
+$ make check
+$ sudo make install
+$ sudo ldconfig # refresh shared library cache.刷新lib库
+
+注意，默认安装在/usr/local下，但是在某些平台下/usr/local/lib不是默认的系统路径，所以需要添加到LD_LIBRARY_PATH下，但是直接把路径改成/usr/lib下更加方便。所以可以
+
+./configure --prefix=/usr
+如果你已经使用了一个prefix，那么先要运行make clean再编译。
+
+安装完后，运行
+
+$ protoc --version
+
+如果输出版本号，则安装成功。
+
+

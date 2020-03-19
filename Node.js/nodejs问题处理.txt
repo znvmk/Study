@@ -1,0 +1,31 @@
+nodejs npm 错误 Error: UNKNOWN: unknown error, mkdir 'D:\Develop\nodejs\node_global' at Error
+错误原因
+在设置npm的cache和predix时，因为使用参考其他教程照抄，而没有修改为本机对应路径，本机上并没有这个地址，因此造成了错误。
+
+教程代码：
+
+npm config set cache "D:\Develop\nodejs\node_global"
+npm config set prefix "D:\Develop\nodejs\node_cache"
+
+结果就是输入与npm任何有关的命令时，都会报错：
+
+nodejs报错
+
+错误代码文本形式：
+
+Error: UNKNOWN: unknown error, mkdir 'D:\Develop\nodejs\node_global' at Error <native>
+
+Error: UNKNOWN: unknown error, mkdir 'D:\Develop\nodejs\node_global' at Error <native>
+
+解决方法
+从错误根源出发，手动更改设置npm的cache和predix。 
+手动更改“C:\Users\Administrator.npmrc”文件，在记事本中打开，内容如下：
+
+prefix=D:\Develop\nodejs\node_global
+
+因为这个不存在的目录，所以一直报错，将文本内容修改为正确的配置路径：
+
+prefix=C:\Program Files\nodejs\node_global
+cache=C:\Program Files\nodejs\node_cache
+
+重新打开命令行，运行npm命令，不出现错误，问题解决。

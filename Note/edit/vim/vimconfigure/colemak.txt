@@ -1,0 +1,102 @@
+vim7.4官方源码在vs2013的编译方法及问题总结 (2013-11-04 12:06:52)转载▼
+标签： vim vs2013 编译 it	分类： 技术类
+
+
+vim7.4发布也有一段时候了，也该是把之前编译的7.3重新编译一下了，于是考虑着到最新的visual studio 2013编译一下，也顺便看看有没有其它问题。
+
+1、安装vs2013，这个应该不用说了。
+
+2、下载vim源码，ftp://ftp.vim.org/pub/vim/unix/vim-7.4.tar.bz2
+
+3、下载vim的最新补丁。
+ftp://ftp.vim.org/pub/vim/patches/ ，把这个地址里面的7.4目录全部用ftp工具下载下来，然后把目录名字改成patches。
+
+4、给源码打补丁。
+把vim-7.4.tar.bz2解压，会有farsi libs nsis src等目录，再把刚才下载的补丁的那个patches的文件夹全部放到这里面来。注意，给源码打补丁必须要用到patch这个工具，而这个工具只有在linux环境或者windows下面的cygwin里才有，自行想办法解决。
+在终端里面使用命令：for file in patches/7.4.*; do patch -Np0 -i $file; done 给源码打补丁。
+
+验证一下是否打补丁成功，打开vim源码src目录下面的version.c文件，定位到大概739行，在
+static int included_patches[]这个数组的定义里面，看下面的数字是不是已经变成了补丁序号，比如说打了61个补丁，就应该显示最大的是61。如果这里没有显示或者显示不对，那说明打的补丁有问题，重新打。
+
+5、如果你想开启vim对其它程序语言的支持的话，请去各软件的官网下载最新的依赖库并安装。我下载了这些所需的依赖包（注意，下载perl的时候不要下载strawberry perl，实测使用它无法编译下去，而使用active perl则没有问题）：
+ActivePerl-5.16.3.1603-MSWin32-x64-296746.msi
+ActivePerl-5.16.3.1603-MSWin32-x86-296746.msi
+ActiveTcl8.6.1.0.297577-win32-ix86-threaded.exe
+ActiveTcl8.6.1.0.297577-win32-x86_64-threaded.exe
+LuaForWindows_v5.1.4-46.exe
+python-2.7.5.amd64.msi
+python-2.7.5.msi
+python-3.3.2.amd64.msi
+python-3.3.2.msi
+ruby-1.9.1-p0-i386-mswin32.zip
+下载完之后，安装它们，注意最好安装到一个目录下面以方便后面的操作，比如D:\vim_compile_tool。
+
+6、修改源代码，实现vim启动界面 修改者 xxx abc@cde.com的功能。
+在源码的src目录下面，修改vim.h这个文件。
+在#include "vim.h" 的下一行加上这一行：
+#define MODIFIED_BY "zhufeng chen "
+
+7、修改适合vs2013编译器的makefile文件Make_mvc.mak。
+这个文件在源码的src目录下面，打开它。
+在# Derive version of VC being used from nmake if not specified 这个区域下面，加入最新的vs2013的vc编译器的定义，否则makefile会拒绝编译，因为版本不匹配。
+大约是424行，这个地方：
+!if "$(_NMAKE_VER)" == "11.00.60610.1"
+MSVCVER = 11.0
+!endif
+在上面这一段下面加上如下的这一段：
+!if "$(_NMAKE_VER)" == "12.00.21005.1"
+MSVCVER = 11.0
+!endif
+加上的这一段是为了加入vs2013的vc编译器版本定义的支持。
+
+611行，把SUBSYSTEM = windows改成 SUBSYSTEM = windows,5.01
+639行，把SUBSYSTEM = console改成 SUBSYSTEM = console,5.01
+改这两行是为了让vs2013的编译器编译出来的exe支持在win2000 sp1及以上的版本系统运行，不改的话，生成的exe只支持在vista及以上的系统运行，具体见我的上一篇日志。
+
+8、修改ruby部分的源码，否则无法编译ruby支持。
+把这个文件D:\vim_compile_tool\ruby\include\ruby-1.9.1\i386-mswin32\ruby\config.h
+前三行
+       #if _MSC_VER != 1200
+       #error MSC version unmatch: _MSC_VER: 1200 is expected.
+       #endif
+全部注释掉。
+
+9、 因为mzscheme现在已经变成racket，它已经不再支持动态加载，而静态加载的话，+mzscheme会造成生成的gvim.exe文件大很多而且必须要加入版本号完全一样的dll才能运行gvim.exe，所以放弃这个选项。
+
+10、修改vim源码生成的exe的图标，具体文件是源码src目录下面的vim.ico这个文件。
+因为源码自带的vim.ico分辨率太低，所以可以自己去生成一个分辨率更高的ico文件，或者改成别的ico也行，我就自己制作了一个vim原版的分辨率的ico文件和一个macvim的高分辨率的ico图标，分别用这两个ico编译出了两个gvim.exe。
+
+11、开始准备编译32位、64位原生gvim.exe以及32位命令行版vim.exe。
+
+12、修改src目录下面的bigvim.bat，以下是我使用的例子。
+
+:: command to build big Vim with OLE, Perl, Python, Ruby and Tcl
+SET TOOLDIR=D:\vim_compile_tool\
+nmake -f Make_mvc.mak SDK_INCLUDE_DIR="H:\Program Files (x86)\Microsoft SDKs\Windows\v7.1A\Include" FEATURES=HUGE GUI=yes OLE=yes CPUNR=pentium4 IME=yes GIME=yes CSCOPE=yes SNIFF=yes POSTSCRIPT=yes PERL=%TOOLDIR%perl32 DYNAMIC_PERL=yes PERL_VER=516 PYTHON=%TOOLDIR%Python27_32 DYNAMIC_PYTHON=yes PYTHON_VER=27 PYTHON3=%TOOLDIR%Python33_32 DYNAMIC_PYTHON3=yes PYTHON3_VER=33 RUBY=%TOOLDIR%ruby DYNAMIC_RUBY=yes RUBY_VER=19 RUBY_VER_LONG=1.9.1 TCL=%TOOLDIR%tcl32 TCL_VER=86 TCL_VER_LONG=8.6 DYNAMIC_TCL=yes LUA=%TOOLDIR%lua5.1 DYNAMIC_LUA=yes %1 USERNAME=zhufeng USERDOMAIN=zhufeng_m-PC
+
+对这个文件简单解释一下。
+TOOLDIR就是上面安装的那些依赖包的路径，注意，因为这个绝对路径的最后已经有了斜杠，所以在引用这个变量的时候，比如D:\vim_compile_tool\perl32这个路径，就应该是%TOOLDIR%perl32，不要再加一个斜杠。
+SDK_INCLUDE_DIR这个是win32.mak这个文件的路径，我给了一个参考，这个是随着vs2013一起安装上的。
+最后的USERNAME和USERDOMAIN可以自定义的。
+
+13、现在打开开始菜单或者开始屏幕里面的vs2013下面的Visual Studio Tool，里面会有VS2013 x64 本机工具命令提示，VS2013 x86 本机工具命令提示等几个快捷方式，这个就是设置vc编译器环境变量的快捷方式了，我们就要使用这其中的x86本机和x64本机来编译出原生的32以及64位的gvim.exe和vim.exe。
+
+14、先编译32位的gvim.exe。
+打开 VS2013 x86 本机工具命令提示， 会进入cmd窗口，在这个窗口里面cd到vim源码的src目录，然后输入bigvim.bat回车。如果是按照上面的所有步骤来做的话，这时候就应该开始编译源码了，会一直在滚动，大概过了三四分钟的样子，随着“正在生成代码”的提示过后，滚烫烫的gvim.exe就应该已经编译好了，位于源码src目录里面。现在执行vim.exe，输入:ve，看支持的特性是不是和上面的bigvim.bat是对应的，如果是正常对应的话，就可以把这个gvim.exe复制出来准备使用了。
+
+15、再编译32位的vim.exe。
+先清理一下src目录，把这个目录下面生成的一个以obj开头的文件夹删掉，再按文件的修改日期排序，把后面编译生成的一些其它文件全部删掉，再开始准备编译不带图形的cmd版vim.exe。
+只需要把bigvim.bat里面改一个地方，就是把GUI=yes改成GUI=no，再执行bigvim.bat，没有问题的话就会生成vim.exe。现在可以关闭这个cmd窗口了。
+
+16、最后编译64位的gvim.exe。
+按照15步的方法清理一下源码目录，再把bigvim.bat改回去，GUI=yes。
+这里的bigvim.bat还需要修改，因为现在是编译64位的版本，所以依赖库的目录也要相应改成64位版本，把bigvim.bat里面的依赖库的路径要修改一下。
+打开13步里面的 VS2013 x64 本机工具命令提示，继续执行bigvim.bat，生成gvim.exe之后运行它，使用:ve看，如果第二行是
+MS-Windows 64-bit GUI version with OLE  就说明成功了。
+
+
+
+
+最后附上我自编译的gvim 7.4，有32位及64位版本，有原版图标和macvim两个128*128高分辨率图标，自带了自用的vimrc。有问题请Email至 Iwantcomputer@gmail.com交流。
+
+http://pan.baidu.com/share/link?shareid=4257608227&uk=3943040330

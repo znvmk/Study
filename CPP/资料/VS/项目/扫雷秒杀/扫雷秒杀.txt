@@ -1,0 +1,36 @@
+void CMFCApplication1Dlg::OnBnClickedOk()
+{
+	// TODO: 在此添加控件通知处理程序代码
+
+	HWND gameh = ::FindWindow(L"扫雷", L"扫雷");
+	CString Getmapthis;
+	DWORD pid;
+	GetWindowThreadProcessId(gameh, &pid);
+	HANDLE hp = OpenProcess(PROCESS_ALL_ACCESS, FALSE, pid);
+	LPCVOID lpbase3 = (LPCVOID)0x1005361;
+	char buff3[32][32];
+	char buff4[512];
+	ReadProcessMemory(hp, lpbase3, &buff3, 800, 0);
+	for (int i = 0; i<32; i++)
+	{
+		for (int j = 0; j<32; j++)
+		{
+			sprintf_s(buff4, "%0x", buff3[i][j]);
+			Getmapthis = buff4;
+			if (Getmapthis == L"f")
+			{
+				int lparam;
+				////前面是Y轴，后面是X轴!
+				lparam = ((61 + i * 16) << 16) + (19 + j * 16);
+				SendMessageA(gameh, WM_LBUTTONDOWN, 0, lparam);
+				SendMessageA(gameh, WM_LBUTTONUP, 0, lparam);
+			}
+		}
+	}
+	UpdateData(FALSE);
+
+
+
+
+	//	CDialogEx::OnOK();
+}

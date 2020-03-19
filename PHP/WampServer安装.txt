@@ -1,0 +1,14 @@
+下载wampserver:https://wampserver-64bit.en.softonic.com/download
+选择一个项目位置，安装
+期间让选择默认浏览器位置
+选择自己的默认浏览器，定位到exe
+如果服务图标是黄色
+点击图标，移动到Apache，httpd.conf,打开编辑
+将listen  80
+改为 listen 8080
+重启服务，等图标变为绿色
+打开默认浏览器，输入：http://127.0.0.1:8080/
+可以看到wamp主页
+
+
+wapm,当有本地MySQL进程时wapm也无法正常启动，关掉本地MySQL进程和服务，重启wapm

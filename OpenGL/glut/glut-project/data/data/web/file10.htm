@@ -1,0 +1,40 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312">
+<meta name="GENERATOR" content="Microsoft FrontPage 4.0">
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<title>射击、爆炸</title>
+</head>
+
+<body background="images/background.JPG">
+<p align="center">
+<font size="5" color="#000080"><b>
+
+学OpenGL编3D游戏</b></font><p align="center"><font size="3" color="#800000">第十一章  
+射击、爆炸</font></p>
+
+<p align="left"><font size="2" color="#0000FF"><img border="0" src="images/0004.GIF" width="65" height="40">逼真的爆炸效果,是用程序仿真爆炸的物理过程。</font></p> 
+
+<p align="left" style="line-height: 150%"><font size="2"><img border="0" src="images/YELBTN.GIF" width="11" height="11">  
+ <font color="#800000"><b>爆炸、粒子</b></font></font></p> 
+<p align="left" style="line-height: 150%"><font size="2">&nbsp;&nbsp;&nbsp; 3D场景中爆炸效果不是单纯的图片回放，而是用程序仿真爆炸的物理过程，所以在3D中爆炸的效果很逼真的。在3D编程中“爆炸、燃烧、喷泉、水流”等等都是基于 “粒子” 算法的，基本原理是用大量的粒子对仿真对象的流体力学原理进行模拟。<br>    
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 爆炸粒子图像的形成是基于一个平面矩形，在矩形上贴有粒子图片。爆炸时，每一个无序的粒子都用一个带有粒子贴图的矩形块的运动代替，这个带有粒子贴图的矩形块在作了透明等处理后，图像就是一团火球。众多的火球在一起就是爆炸的图像效果。<br> 
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+由于粒子生成运动等原理的理解确实需要较多的数理知识。我们还是引用现成的爆炸粒子程序“explosion.cpp” 、“Particles.cpp”  
+来做我们这一章的效果。</font></p> 
+<p align="left" style="line-height: 150%">&nbsp;&nbsp;&nbsp;<font size="2"> 这是加入爆炸效果的场景。</font></p>  
+<p align="center" style="line-height: 150%"><img border="0" src="fileimg/图10-1-2%20爆炸效果.GIF" width="460" height="221"></p>
+<p align="left" style="line-height: 150%"><font size="2"><img border="0" src="images/YELBTN.GIF" width="11" height="11">  
+<font color="#800000"><b>鼠标操作漫游</b></font></font></p>
+<p align="left" style="line-height: 150%">&nbsp;&nbsp;&nbsp; <font size="2"> 在本章我们开始</font><font size="2">加入鼠标对场景操作，场景方位角左右移动、俯仰角上下移动就由鼠标的移动一次性的完成了。</font></p>
+<p align="left" style="line-height: 150%"><font size="2"><img border="0" src="images/YELBTN.GIF" width="11" height="11"> </font><font size="2" color="#800000"><b>全屏显示模式</b></font></p>
+<p align="left" style="line-height: 150%">&nbsp;&nbsp;&nbsp;<font size="2"> 在本章我们开始启用全屏显示模式。</font></p> 
+<p align="left" style="line-height: 150%"><font size="2"><img border="0" src="images/YELBTN.GIF" width="11" height="11">  
+<b><font color="#800000">瞄准目标射击</font></b> </font></p>
+<p align="left" style="line-height: 150%"><font size="2">&nbsp;&nbsp;&nbsp;&nbsp;  
+在游戏中我们要求的效果是，当操作鼠标搜录到对象（敌人）时发射子弹，子弹到达（命中）目标产生爆炸火光。怎么样？跟我来看看这些功能是怎样实现的。</font></p>
+
+</body>
+
+</html>

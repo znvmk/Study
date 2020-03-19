@@ -1,0 +1,91 @@
+﻿1.LeelaZero网址：http://zero.sjeng.org/
+点击最新版本LeelaZero下载
+2.LeelaZero 在GitHub的地址：https://github.com/gcp/leela-zero/releases/
+选择win64版本下载
+3.解压，运行解压目录下的autogtp.exe，贡献计算力.
+运行后在LeelaZero目录下会出现networks文件夹，里面是最新权重，可以在围棋外壳中加载里面的引擎
+4.下载可以加载围棋引擎的围棋程序外壳sabaki：https://sabaki.yichuanshen.de/
+5.sabaki在GitHub的地址：https://github.com/SabakiHQ/Sabaki/releases/
+选择win64版本下载，安装运行Sabaki
+6.在sabaki中配置LeelaZero
+Engines->Engines->Add
+name:leela-zero-0.15
+path:LeelaZero\leela-zero\leela-zero-0.15-win64\leelaz.exe
+arguments:-g --noponder -w networks\68d7c8fcabe792dfe2b8e8360629d08171ec8e02530b14f0451e59fa181733ce
+Initial commands (;-separated):time_settings 0 15 1     (解释：总用时，读秒，计算深度)
+设置完成，close
+7.对局：File->new->black:leela-zero-0.15(下拉菜单中选择已有引擎)，white:manual->ok
+
+readme.txt
+This is the commandline version of Leela.You likely will want to use this together with a GTP-capatible GUI,or some other tool that speaks the GTP protocol.
+Leela is compatible with GTP version 2,but note that you must add the "--gtp" option to enable GTP mode.
+Allowed options:
+    -h [--help]                 Show commandline options.
+    -g [--gtp]                  Enable  GTP mode.
+    -t [--threads] arg (=4)     Number of threads to use.
+    -p [--playouts] arg         Weaken engine by limiting the number of playouts.Requires --noponder.
+    -b [--lagbuffer]arg (=100)  Safety margin for time usage in centiesconds.
+    -l [--logfile] arg          File to log input/output to.
+    -q [--quiet]                Disable all disgnostic output.
+    -k [--konvadjust]           Adjust komi cone point in my disadvantage(for territory scoring).
+    --noponder                  Disable thinking on opponent's time.
+    --nonets                    Disable use of neural networks.
+    --nobook                    Disable use of the fuseki library.
+    --gpu arg                   ID of the OpenCL devied(s) to use (disables autodeletection).
+Note that although the engine can be handicapped by limiting the playeout count,playouts are not standardized so this no t a suitable setting for comparisons between engines. The OpenCL versing is stronger at a given playout count.
+参数
+第一步：下载安装Sabaki和Leeal-Zero两个软件的最新版。
+各种你要训练和对练的权重文件和Leeal-Zero放在一起的，便Sabaki调用。
+第二步：在Leeal-Zero中建个autogtp.txt内容是autogtp.exe -k SGF保存后改txt为bat成批处理了。
+运行这个批处理会自动保存下完的棋谱。
+第三步：打开Sabaki菜单Engines第一项Manage Engines设各种参数。
+下面以我的为例，你看懂我的便能设你的了。
+有四行内容：
+第一行： LeelaZ
+这个是你要练的权重文件名，可自己取名的。
+注意权重这种文件一般看不见扩展名的，听说可以是txt的，我一般删掉这个扩展名的。
+第二行：D：\leela-zero-0.12-cpuonly-win64\leelaz.exe
+这是Leela-Zero引擎路径。
+第三行：-g --noponder -p1600 -t4 -w 9ac646d7e0e237bc8ba77896fa97cc0b4fd8d71f6e9ee4daeb37008dd6ca0cff
+p后的数为电脑思考深度，
+t后的数为CPU线程数，
+注意线程用满影响你做别的事，少用点线程，你还能同时上网做别的事。
+w后的数为权重文件名。
+第四行：time_settings 0 120 1
+0的意思是一开始可用多少时间，数字你自己设，0是不限制。单位是秒。
+120的意思是每步棋电脑最多思考120秒，你想要几秒一步棋自己设。
+注意Sabaki默认每步棋50秒。
+1的意思是下一步棋，在我设的120秒内。
+我教完了，你懂了吧，你可以ADD几个围棋狗的，可看狗互咬，也可和狗下棋
+
+
+丽拉部分参数说明及使用须知
+
+-h 帮助，这个只用来看所有参数英文说明的,看不懂，去网上翻译。-h 在丽拉中能用，在sabaki中只能看不能下棋，会出错。看参数说明可设置。
+
+-g --gtp的缩写 图型界面-g是必需的，不然不下棋。
+
+--noponder 关闭后台思考，人机对弈的话可以不使用。
+
+-w 后面是丽拉的权重路径，这是必需的，不然下不了棋。
+
+-t2 电脑处理器用几个线程？不易过多最多3-4不然影响棋力。默认-t2
+
+-p1600 --playouts的缩写，模拟量，数值柯随意设置，用这个必须加--noponder 可以不设置即不限制模拟量 。
+
+-v3200 计算节点参数，可以不设置。与-p1600同时只能使用一个。
+
+-b100 这数字是厘秒，计算安全边际，默认100，比如下棋时一步设定10秒保留一秒，计算9秒留1秒用于网络延迟。是比赛用的参数平时不用。
+
+-r10  胜率小过10%认输。设置认输胜率。
+
+-m10  开局多样性设置，数值为单方手数，可随意设置，一般不要超过20。布局阶段会丰富一些。
+
+time_settings 0 61 1 每手棋思考时间，0表示没有保留时间。61表示思考60秒，1表示全局使用该时间设置。不设置该参数SABAKI默认是50秒。
+
+sabaki加载丽拉参数示范：
+
+第一行名字  leelaz
+第二行路径  E:\leela-zero-0.15 win64\leelaz.exe
+第三行参数  -g --noponder -t2 -w networks\权重名
+第四行参数  time_settings 0 21 1

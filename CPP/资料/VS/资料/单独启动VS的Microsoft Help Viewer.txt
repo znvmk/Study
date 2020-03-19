@@ -1,0 +1,67 @@
+找到这个程序的位置，发送到桌面快捷方式，打开此快捷方式的属性，在目标的最后添加下面那行字，然后你就能通过快捷方式打开它了
+
+/catalogName VisualStudio14 /locale zh-cn  /launchingApp Microsoft,VisualStudio,14.0
+
+比如"C:\Program Files (x86)\Microsoft Help Viewer\v2.2\HlpViewer.exe" /catalogName VisualStudio14 /locale zh-cn  /launchingApp Microsoft,VisualStudio,14.0
+
+
+
+其中，关于版本号：
+
+8代表Visual Studio 2005
+
+9代表Visual Studio 2008
+
+10 代表 Visual Studio 2010
+
+12 代表 Visual Studio 2013
+
+14 代表 Visual Studio 2015
+
+15 代表 Visual Studio 2017
+
+
+
+/locale后如果是en-us的话就会以英文模式启动
+
+/launchingApp用来读取VS设置，包括主题和历史记录等
+
+
+
+其他参数可以通过/？来获取帮助，以下是官方帮助：
+
+必需的参数:
+
+
+/catalogName <目录名>
+
+   指定要查看和管理的产品文档目录。
+
+
+选项:
+
+/locale <语言-国家/地区>
+
+   指定要查看和管理的产品文档的区域性名称(语言和国家/地区)；例如，对于葡萄牙语(巴西)，可以指定 /locale pt-br。
+
+
+
+/launchingApp <公司,产品,版本>
+
+   指定应用程序特定的数据以定义用于查找产品特定设置的注册表项。
+
+/sku <ID>
+
+   为指定的 SKU ID 筛选书籍列表。
+
+/manage
+
+   启动应用程序时显示"管理内容"选项卡。
+
+/helpQuery <ms-xhelp 查询>
+
+   执行查询以显示特定内容。
+
+/? 或 /help
+
+   显示用法信息。

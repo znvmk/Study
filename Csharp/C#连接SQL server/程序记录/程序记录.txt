@@ -1,0 +1,6 @@
+using System.Data;
+using System.Data.SqlClient;
+
+SqlConnection报错
+如果已经引用了System.Data和System.Data.SqlClient，但SqlConnection还是报错，原因是版本错误。Microsoft.NetCore.App中也包含了System.Data名字空间，但这个名字空间里却没有SQLConnection等函数。
+解决方法：NuGet安装Microsoft.EntityFrameworkCore.SqlServer,也可以再添加Microsoft.EntityFrameworkCore

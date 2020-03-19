@@ -1,0 +1,15 @@
+message RewardSystemReq{
+}
+message RewardSystemResult{
+    map<int32, RewardInfo> RewardInfoDic=1;
+}
+message RewardInfo{
+    int32 Flag=1;//领取标识：0、未达到成就；1、已达到成就，但未领取成就礼包；2、已领取成就礼包。
+    int32 GiftBag=2;//礼包ID
+}
+message ReceiveRewardReq{
+    int32 RewardId=1;
+}
+message ReceiveRewardResult{
+    int32 RewardId=1;//是否领取成功
+}

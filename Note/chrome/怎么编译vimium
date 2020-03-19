@@ -1,0 +1,12 @@
+下载vimium:https://github.com/philc/vimium/releases
+vimium-1.64.5
+npm intall -g caffeescript@1.12.7
+原因是：vimium不支持coffe v2，安装一个1xx的版本即可  sudo npm install --global coffeescript@1.12.7
+进入vimium-1.64.5文件夹，
+cake build
+运行完成，打开Google Chrome，更多工具，扩展程序，加载已解压的扩展程序，浏览选择文件夹刚刚编译过的文件夹：vimium-1.64.5
+在右上角鼠标左键点击刚刚安装好的vimium插件，点击Options
+在Custom key mappings中添加：
+map h previousTab
+map l nextTab
+在最下方点击：Save Changes

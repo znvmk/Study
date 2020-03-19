@@ -1,0 +1,34 @@
+https://blog.csdn.net/feinifi/article/details/79841256
+error: no default toolchain configured
+2018年04月07日 14:47:29
+阅读数：166
+当我们在windows上通过msi方式安装过rust之后，运行rustc或者cargo命令行命令时，出现如题所示的错误。stackoverflow上有一个issue,说过这个问题。最后的解决办法是通过rustup命令再次安装一次rust，并且指定stable为默认的rust工具链。
+
+我认为不用重新安装一次，如果系统中已经安装过rust，那么可以通过rustup相关命令link指定安装目录即可。
+
+D:\Program Files\Rust\bin>rustup toolchain link mygnutoolchain "D:\Program Files\Rust"
+D:\Program Files\Rust\bin>rustup default mygnutoolchain
+info: default toolchain set to 'mygnutoolchain'
+D:\Program Files\Rust\bin>rustc.exe --version
+rustc 1.24.0 (4d90ac38c 2018-02-12)
+D:\Program Files\Rust\bin>rustup show
+Default host: x86_64-pc-windows-msvc
+
+installed toolchains
+--------------------
+
+stable-x86_64-pc-windows-gnu (default)
+mygnutoolchain
+
+active toolchain
+----------------
+
+stable-x86_64-pc-windows-gnu (default)
+rustc 1.24.1 (d3ae9a9e0 2018-02-27)
+以上命令先toolchain link指定已经安装的rust目录，并指定一个名字mygnutoolchain。最后将mygnutoolchain设置为默认工具链。
+
+在windows上这么设置之后，会在~/.rustup/toolchains目录下生成一个链接，如下图。
+
+
+
+其中stable-x86_64-pc-windows-gnu是通过rustup install stable命令安装的，其实这一个安装是没有必要的，通过rustup toolchain link可以指定一个已经安装的rust。

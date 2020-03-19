@@ -1,0 +1,55 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312">
+<meta name="GENERATOR" content="Microsoft FrontPage 4.0">
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<link rel="stylesheet" href="style.css">
+<title>特殊平面_树木</title>
+</head>
+
+<body background="images/background.JPG">
+<p align="center">
+<font size="5" color="#000080"><b>
+
+学OpenGL编3D游戏</b></font><p align="center" style="line-height: 200%"><font size="3" color="#800000">第七章 特殊平面树</font></p>     
+
+<table border="0" width="96%">
+  <tr>
+    <td width="83%" valign="top">
+      <p style="line-height: 200%"><font size="2" color="#0000FF"><img border="0" src="images/0004.GIF" width="65" height="40"></font><font color="#0000FF">在这个OpenGL场景中搞点绿化，栽些树种些草，让这个小世界充满生机。<br>
+      </font><br>
+      &nbsp;&nbsp;&nbsp; 在三维场景中的树当然应该是3D对象要好一些（3D模型）。但是有人发明了一种平面图形做的树，在3D场景中的效果不错，关键是显示速度极快。在一个场景中栽上几千棵树对显示速度的影响都不大。下面我们来学习这种平面树的构成、使用方法。<br>     
+&nbsp;&nbsp;&nbsp; 在这一章的示范程序中，我们在OpenGL场景中显示了天、地、物，还载上了许多树。注意，天的贴图变了，效果也变了吧。</td>   
+    <td width="31%" valign="top"><img border="0" src="fileimg/图7-2-1特殊平面树.GIF" width="207" height="159"></td>
+  </tr>
+</table>
+<p align="left"><span style="mso-tab-count: 1; font-size: 10.5pt; mso-bidi-font-size: 12.0pt; font-family: 宋体; mso-bidi-font-family: Times New Roman; mso-font-kerning: 1.0pt; mso-ansi-language: EN-US; mso-fareast-language: ZH-CN; mso-bidi-language: AR-SA" lang="EN-US"><img border="0" src="images/YELBTN.GIF" width="11" height="11">&nbsp; 
+</span><font size="2" color="#800000"><b>平面树的原理<span style="mso-tab-count: 1; font-size: 10.5pt; mso-bidi-font-size: 12.0pt; font-family: 宋体; mso-bidi-font-family: Times New Roman; mso-font-kerning: 1.0pt; mso-ansi-language: EN-US; mso-fareast-language: ZH-CN; mso-bidi-language: AR-SA" lang="EN-US">&nbsp;</span></b></font></p>
+<div align="center">
+  <center>
+  <table border="0" width="46%">
+    <tr>
+      <td width="65%" valign="top">
+        <p style="line-height: 200%"><span lang="EN-US" style="mso-bidi-font-size: 12.0pt; font-family: 宋体; mso-bidi-font-family: Times New Roman; mso-font-kerning: 1.0pt; mso-ansi-language: EN-US; mso-fareast-language: ZH-CN; mso-bidi-language: AR-SA"><font size="2">&nbsp;&nbsp;   
+        在一个矩形平面上贴一个树木的图片，并让树的背景呈透明状态。将它放在OpenGL场景中，这就是我们所要的树。</font></span></p>
+      </td>
+      <td width="35%" valign="top"><font size="2"><img border="0" src="fileimg/图7-1-1由平面构成的树.GIF" width="109" height="102"></font></td>
+    </tr>
+  </table>
+  </center>
+</div>
+<p align="left"><span style="mso-tab-count: 1; mso-bidi-font-size: 12.0pt; font-family: 宋体; mso-bidi-font-family: Times New Roman; mso-font-kerning: 1.0pt; mso-ansi-language: EN-US; mso-fareast-language: ZH-CN; mso-bidi-language: AR-SA" lang="EN-US"><font size="2"><img border="0" src="images/YELBTN.GIF" width="11" height="11"> 
+ <font color="#800000"><b>普通平面构成的树</b></font></font></span></p>
+<p align="left"><font size="2">&nbsp;&nbsp;&nbsp;<span style="mso-tab-count: 1; font-size: 10.5pt; mso-bidi-font-size: 12.0pt; font-family: 宋体; mso-bidi-font-family: Times New Roman; mso-font-kerning: 1.0pt; mso-ansi-language: EN-US; mso-fareast-language: ZH-CN; mso-bidi-language: AR-SA" lang="EN-US"> 
+普通平面在3D场景中是有方向性，当我们视点不是对着树的正面，就会看到这种平面树的明显失真。</span></font></p>   
+<p align="center"><font size="2"><img border="0" src="fileimg/图7-1-2普通平面树.GIF" width="400" height="299"></font></p>
+<p align="left"><span style="mso-tab-count: 1; mso-bidi-font-size: 12.0pt; font-family: 宋体; mso-bidi-font-family: Times New Roman; mso-font-kerning: 1.0pt; mso-ansi-language: EN-US; mso-fareast-language: ZH-CN; mso-bidi-language: AR-SA" lang="EN-US"><font size="2"><img border="0" src="images/YELBTN.GIF" width="11" height="11"> 
+ <b><font color="#800000">特殊平面构成的树</font></b></font></span></p>
+<p align="left" style="line-height: 200%"><span style="mso-bidi-font-size: 12.0pt; font-family: 宋体; mso-bidi-font-family: Times New Roman; mso-font-kerning: 1.0pt; mso-ansi-language: EN-US; mso-fareast-language: ZH-CN; mso-bidi-language: AR-SA"><font size="2">&nbsp;&nbsp;&nbsp;    
+如果实现这样一个特殊的平面，在我们旋转场景时，场景中的一些平面（树）也跟着旋转。就是说不管我们怎么旋转场景，我们看到的都是看到的平面（树）的正面，它始终对着我们。这样由平面构成的树就看不出是平面的了。</font></span></p>
+<p align="center"><font size="2"><img border="0" src="fileimg/图7-2-1特殊平面树.GIF" width="400" height="299"></font></p>
+
+</body>
+
+</html>

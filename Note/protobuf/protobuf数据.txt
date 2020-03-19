@@ -1,0 +1,129 @@
+Server=er=a9lhi8dwsh.database.chinacloudapi.cn,143,1433;Database=SmallBeeShop;User=chenhongyi;Password=Chyraxlin1983122
+
+192.168.31.170  16001
+注册协议: string server_name ; //你的服务器名字
+注册协议: 
+string server_name  = 1 ; //你的服务器名字
+string ip = 2; //你的服务器ip
+string type = 3; //你的服务器类型 // 写 robot_server
+注册协议返回 : bool status =1 ;// true 注册成功
+int time = 2; //返回时间戳
+
+
+
+
+
+protoback.proto
+    //你发给我的包 通用格式 所有数据从这里走
+	public class ClientPack 
+    {
+        /// <summary>
+        /// 消息id
+        /// </summary>
+        public int MsgId =1;	
+        /// <summary>
+        /// 数据包
+        /// </summary>
+       public byte[] Data =2;
+    }
+
+	//服务器给你返回的包
+	 public class ServerPack 
+    {
+        /// <summary>
+        /// 消息id
+        /// </summary>
+      public int MsgId =1;
+        /// <summary>
+        /// 数据
+        /// </summary>
+       public byte[] Data =2;
+        /// <summary>
+        /// 错误码
+        /// </summary>
+         public int ErrCode =3;
+    }
+
+
+	//心跳包
+    public class ServerHeartBeatProto 
+    {
+        /// <summary>
+        /// 由管理中心服务器下发的时候 传输的是服务器的时间
+        /// 返回的时候 传0
+        /// </summary>
+        public int Time=1;
+    }
+
+	//注册请求包
+	    public class ServerRegisterReq 
+    {
+
+
+        /// <summary>
+        /// 服务器名字
+        /// </summary>
+         public string ServerName=1;
+
+        /// <summary>
+        /// 服务器ip
+        /// </summary>
+         public string Ip =2;
+
+        /// <summary>
+        /// 类型
+        /// </summary>
+      public string Type=3;
+
+    }    
+	/// <summary>
+    /// 服务器注册返回
+    /// </summary>
+    public class ServerRegisterResult 
+    {
+        /// <summary>
+        /// 注册状态
+        /// </summary>
+        public bool Status =1;
+
+        /// <summary>
+        /// 服务器时间
+        /// </summary>
+        public int Time =2;
+
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+            /// <summary>
+        /// 消息id
+        /// </summary>
+        [ProtoMember(1)] public int MsgId { get; set; }
+        /// <summary>
+        /// 错误码
+        /// </summary>
+        [ProtoMember(2)] public int ErrCode { get; set; }
+        /// <summary>
+        /// 数据
+        /// </summary>
+        [ProtoMember(3)] public byte[] Data { get; set; }
+
+
+        [ProtoMember(4)] public string ErrorMsg { get; set; }

@@ -1,0 +1,2 @@
+在Dlg.h的endif前包含头文件afxdao.h
+运行在目录下生成student.mdb文件

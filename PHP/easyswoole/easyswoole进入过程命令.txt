@@ -1,0 +1,188 @@
+Windows PowerShell
+版权所有 (C) 2016 Microsoft Corporation。保留所有权利。
+
+1、镜像未启动：出错及解决办法
+2、镜像缺少文件出错
+PS C:\Users\SJRJY> docker ps -a
+CONTAINER ID        IMAGE                                                   COMMAND             CREATED             STATUS                        PORTS                                        NAMES
+479b77d9a918        registry.cn-hangzhou.aliyuncs.com/ckp_game/easyswoole   "/bin/sh"           5 days ago          Exited (255) 13 minutes ago   9000/tcp, 0.0.0.0:9501-9502->9501-9502/tcp   easyswoole
+PS C:\Users\SJRJY> docker exec -it easyswoole /bin/sh
+Error response from daemon: Container 479b77d9a91857a5dece0c6d98e5eda7094a9024491b4dd72b72d03e88452842 is not running
+
+PS C:\Users\SJRJY> docker start 479b77d9a918
+479b77d9a918
+PS C:\Users\SJRJY> docker ps -a
+CONTAINER ID        IMAGE                                                   COMMAND             CREATED             STATUS              PORTS                                        NAMES
+479b77d9a918        registry.cn-hangzhou.aliyuncs.com/ckp_game/easyswoole   "/bin/sh"           5 days ago          Up 4 seconds        9000/tcp, 0.0.0.0:9501-9502->9501-9502/tcp   easyswoole
+
+PS C:\Users\SJRJY> docker exec -it easyswoole /bin/sh
+/var/www/html # cd /code
+/code # ls
+chat_server       ckp_server        新建文本文档.txt
+/code # cd ckp_server
+/code/ckp_server # ls
+Application          EasySwooleEvent.php  Protobuf             Views                composer.lock        easyswoole           log.txt              tt.php
+Config.php           Execl                RpcTest.php          composer.json        createDefine.php     easyswoole.install   msgdefine            vendor
+/code/ckp_server # php easyswoole start
+  ______                          _____                              _
+ |  ____|                        / ____|                            | |
+ | |__      __ _   ___   _   _  | (___   __      __   ___     ___   | |   ___
+ |  __|    / _` | / __| | | | |  \___ \  \ \ /\ / /  / _ \   / _ \  | |  / _ \
+ | |____  | (_| | \__ \ | |_| |  ____) |  \ V  V /  | (_) | | (_) | | | |  __/
+ |______|  \__,_| |___/  \__, | |_____/    \_/\_/    \___/   \___/  |_|  \___|
+                          __/ |
+                         |___/
+
+EasySwoole framework Version 2.1.1
+
+listen address      0.0.0.0
+listen port         9501
+worker num          20
+task worker num     8
+run at user         root
+daemonize           false
+debug enable        true
+swoole version      2.1.3
+swoole pid          54699
+[2018-06-28 01:40:31 @54699.0]  WARNING swSocket_bind (ERROR 502): bind(0.0.0.0:9501) failed. Error: Address in use [98]
+
+Fatal error: Uncaught Swoole\Exception: failed to listen server port[0.0.0.0:9501]. Error: Address in use[98]. in /code/ckp_server/vendor/easyswoole/easyswoole/src/Core/Swoole/ServerManager.php:119
+Stack trace:
+#0 /code/ckp_server/vendor/easyswoole/easyswoole/src/Core/Swoole/ServerManager.php(119): Swoole\Server->__construct('0.0.0.0', 9501, 3, 1)
+#1 /code/ckp_server/vendor/easyswoole/easyswoole/src/Core/Swoole/ServerManager.php(61): EasySwoole\Core\Swoole\ServerManager->createMainServer()
+#2 /code/ckp_server/vendor/easyswoole/easyswoole/src/Core/Core.php(45): EasySwoole\Core\Swoole\ServerManager->start()
+#3 /code/ckp_server/vendor/easyswoole/easyswoole/bin/easyswoole(322): EasySwoole\Core\Core->run()
+#4 /code/ckp_server/vendor/easyswoole/easyswoole/bin/easyswoole(24): serverStart(Array)
+#5 /code/ckp_server/vendor/easyswoole/easyswoole/bin/easyswoole(458): commandHandler()
+#6 /code/ckp_server/easyswoole(2): require('/code/ckp_serve...')
+#7 {main}
+  thrown in /code/ckp_server/vendor/easyswoole/easyswoole/src/Core/Swoole/ServerManager.php on line 119
+Error at file[/code/ckp_server/vendor/easyswoole/easyswoole/src/Core/Swoole/ServerManager.php] line[119] message:[Uncaught Swoole\Exception: failed to listen server port[0.0.0.0:9501]. Error: Address in use[98]. in /code/ckp_server/vendor/easyswoole/easyswoole/src/Core/Swoole/ServerManager.php:119
+Stack trace:
+#0 /code/ckp_server/vendor/easyswoole/easyswoole/src/Core/Swoole/ServerManager.php(119): Swoole\Server->__construct('0.0.0.0', 9501, 3, 1)
+#1 /code/ckp_server/vendor/easyswoole/easyswoole/src/Core/Swoole/ServerManager.php(61): EasySwoole\Core\Swoole\ServerManager->createMainServer()
+#2 /code/ckp_server/vendor/easyswoole/easyswoole/src/Core/Core.php(45): EasySwoole\Core\Swoole\ServerManager->start()
+#3 /code/ckp_server/vendor/easyswoole/easyswoole/bin/easyswoole(322): EasySwoole\Core\Core->run()
+#4 /code/ckp_server/vendor/easyswoole/easyswoole/bin/easyswoole(24): serverStart(Array)
+#5 /code/ckp_server/vendor/easyswoole/easyswoole/bin/easyswoole(458): commandHandler()
+#6 /code/ckp_server/easyswoole(2): require('/code/ckp_serve...')
+#7 {main}
+  thrown]
+/code/ckp_server # ^C
+/code/ckp_server # exit
+
+PS C:\Users\SJRJY> docker ps -a
+CONTAINER ID        IMAGE                                                   COMMAND             CREATED             STATUS                       PORTS               NAMES
+479b77d9a918        registry.cn-hangzhou.aliyuncs.com/ckp_game/easyswoole   "/bin/sh"           43 hours ago        Exited (137) 9 seconds ago                       easyswoole
+PS C:\Users\SJRJY> docker start 479b
+479b
+PS C:\Users\SJRJY> docker ps -a
+CONTAINER ID        IMAGE                                                   COMMAND             CREATED             STATUS              PORTS                                        NAMES
+479b77d9a918        registry.cn-hangzhou.aliyuncs.com/ckp_game/easyswoole   "/bin/sh"           43 hours ago        Up 1 second         9000/tcp, 0.0.0.0:9501-9502->9501-9502/tcp   easyswoole
+PS C:\Users\SJRJY> docker exec -it easyswoole /bin/sh
+/var/www/html # cd /code
+/code # cd ckp_server
+/code/ckp_server # ls
+Application          EasySwooleEvent.php  Protobuf             Views                composer.lock        easyswoole           log.txt              tt.php
+Config.php           Execl                RpcTest.php          composer.json        createDefine.php     easyswoole.install   msgdefine            vendor
+/code/ckp_server # php easyswoole start
+  ______                          _____                              _
+ |  ____|                        / ____|                            | |
+ | |__      __ _   ___   _   _  | (___   __      __   ___     ___   | |   ___
+ |  __|    / _` | / __| | | | |  \___ \  \ \ /\ / /  / _ \   / _ \  | |  / _ \
+ | |____  | (_| | \__ \ | |_| |  ____) |  \ V  V /  | (_) | | (_) | | | |  __/
+ |______|  \__,_| |___/  \__, | |_____/    \_/\_/    \___/   \___/  |_|  \___|
+                          __/ |
+                         |___/
+
+EasySwoole framework Version 2.1.1
+
+listen address      0.0.0.0
+listen port         9501
+worker num          20
+task worker num     8
+run at user         root
+daemonize           false
+debug enable        true
+swoole version      2.1.3
+swoole pid          11
+open(/code/ckp_server/Log/swoole.log) failed. Error: No such file or directory[2]
+[2018-06-28 01:43:32 @11.0]     ERROR   swoole_file_put_contents(:633): open(/code/ckp_server/Temp/pid.pid) failed. Error: No such file or directory[2].
+string(12) "intintintint"
+[2018-06-28 01:43:34 $12.0]     NOTICE  Server is reloading now.
+[2018-06-28 01:43:36 $12.0]     NOTICE  Server is reloading now.
+[2018-06-28 01:43:38 $12.0]     NOTICE  Server is reloading now.
+[2018-06-28 01:43:40 $12.0]     NOTICE  Server is reloading now.
+[2018-06-28 01:43:42 $12.0]     NOTICE  Server is reloading now.
+[2018-06-28 01:43:44 $12.0]     NOTICE  Server is reloading now.
+[2018-06-28 01:43:47 $12.0]     NOTICE  Server is reloading now.
+[2018-06-28 01:43:49 $12.0]     NOTICE  Server is reloading now.
+[2018-06-28 01:43:51 $12.0]     NOTICE  Server is reloading now.
+^C
+/code/ckp_server # ls
+Application          EasySwooleEvent.php  Protobuf             Views                composer.lock        easyswoole           log.txt              tt.php
+Config.php           Execl                RpcTest.php          composer.json        createDefine.php     easyswoole.install   msgdefine            vendor
+/code/ckp_server # cd log
+/bin/sh: cd: can't cd to log
+/code/ckp_server # mkdir Log
+/code/ckp_server # mkdir Temp
+/code/ckp_server # ls
+10.txt               EasySwooleEvent.php  RpcTest.php          composer.lock        log.txt
+88asd                Execl                RpcTest1.php         createDefine.php     msgdefine
+Application          Log                  Temp                 easyswoole           tt.php
+Config.php           Message.php          Views                easyswoole.install   vendor
+Config.php.example   Protobuf             composer.json        hook.sh              wbclient_test.php
+/code/ckp_server # php easyswoole start
+  ______                          _____                              _
+ |  ____|                        / ____|                            | |
+ | |__      __ _   ___   _   _  | (___   __      __   ___     ___   | |   ___
+ |  __|    / _` | / __| | | | |  \___ \  \ \ /\ / /  / _ \   / _ \  | |  / _ \
+ | |____  | (_| | \__ \ | |_| |  ____) |  \ V  V /  | (_) | | (_) | | | |  __/
+ |______|  \__,_| |___/  \__, | |_____/    \_/\_/    \___/   \___/  |_|  \___|
+                          __/ |
+                         |___/
+
+EasySwoole framework Version 2.1.1
+
+listen address      0.0.0.0
+listen port         9501
+worker num          20
+task worker num     8
+run at user         root
+daemonize           false
+debug enable        true
+swoole version      2.1.3
+swoole pid          806
+string(12) "intintintint"
+
+3、进入code目录下无文件:删除容器，重装容器
+/var/www/html # cd code/
+/var/www/html # exit
+PS C:\Users\SJRJY> docker rm -f easyswoole
+easyswoole
+PS C:\Users\SJRJY> docker run -it   -v E:/project/php:/code -p 9501:9501 -p 9999:9999  --name easyswoole easyswoole  /bin/sh
+/var/www/html # cd /code
+/code # ls
+chat_server       ckp_server        新建文本文档.txt
+/code # cd ckp_server
+/code/ckp_server # php easyswoole start
+  ______                          _____                              _
+ |  ____|                        / ____|                            | |
+ | |__      __ _   ___   _   _  | (___   __      __   ___     ___   | |   ___
+ |  __|    / _` | / __| | | | |  \___ \  \ \ /\ / /  / _ \   / _ \  | |  / _ \
+ | |____  | (_| | \__ \ | |_| |  ____) |  \ V  V /  | (_) | | (_) | | | |  __/
+ |______|  \__,_| |___/  \__, | |_____/    \_/\_/    \___/   \___/  |_|  \___|
+                          __/ |
+                         |___/
+
+EasySwoole framework Version 2.1.1
+
+listen address      0.0.0.0
+listen port         9501
+worker num          20
+task worker num     8
+run at user         root
+daemonize           false
+debug enable        true
+swoole version      2.1.3
+swoole pid          11

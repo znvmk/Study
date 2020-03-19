@@ -1,0 +1,34 @@
+断点续传式git clone（伪）
+clone git的项目的时候，经常都会遇到项目很大，提交历史很长，导致clone的时候花大半天都clone不下来的问题。
+而且如果直接git clone，必须一次把所有的历史clone下来，否则失败就直接丢弃所有。
+如果只是需要最新内容，或者网络不好，总是网络中断的情况，非常不友好。
+
+git clone 的 depth 参数
+实际上，如果只需要看最新的提交，使用depth参数，就可以实现只clone最新的代码：
+
+git clone --depth 1 $clone_url
+当然，还能使用 --single-branch 参数，指定对应分支。
+
+这个clone出来的结果，就是一个shadow，只有部分提交的git repo
+
+git fetch 与 depth参数
+在使用depth 1参数把最后一个提交clone出来之后，如何一步步获取历史提交呢？既然有只含有部分commit的shadow，就肯定有办法把这个shadow扩展为完整repo的指令，这个指令就是fetch。例如，之前已经clone了depth为1的commit，剩下的就是逐步fetch剩下的commit了。
+
+git fetch --depth $depth
+depth为1，表示从最新的提交开始，往下获取1个commit（也就是那个最新的commit）
+
+depth为2，表示从最新的提交开始，往下获取2个commit（最新的commit加一个第二新的commit）
+
+以此类推
+
+
+
+断点续传（伪）式 git clone
+好了，clone和fetch都有了depth了，那就可以用depth来对任务进行分割了，记一下上次的depth，每次只要比上次depth多至少1，就可以不断把内容fetch下来了。这个执行出错了，就在上一次成功的depth上面，加1，重新执行命令就行了。
+
+
+
+写一个简单脚本来做这些事情
+不用怀疑，我已经写好了脚本了，在这里可以看到。这个东西当时就是为了clone redis的源代码弄出来的。网络好的朋友不用看这个，网络不好的朋友，真的，这个脚本真的好用。
+
+当然如果你的网络差到一个commit都不能checkout出来，那当我没说。

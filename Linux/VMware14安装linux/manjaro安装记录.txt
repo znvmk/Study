@@ -1,0 +1,197 @@
+manjaro的简单安装
+    之前没有写博客的习惯，每一次安装系统的时候都是凭着记忆找到大佬们的博客，后来次数多了（主要是因为自己作死系统就经常会挂掉）就觉得很麻烦，所以就记录下来大概需要什么东西。比较基础的应该就不会记录啦～只是需要代码的关键步骤啥的。羡慕可以闭眼装机的玩家。
+
+     先写一些奇怪的东西：
+
+     manjaro虽然算是定制了一下archlinux，让它的安装更新手向，但是要清楚manjaro和archlinux是两个操作系统。虽然网上的archlinux资料很多，但是有些时候也不全是可以拿过来用的。直接在arch wiki里搜索虽然方便，但是容易出问题。新手有时候还是要注意一下。
+
+1、安装
+     EFI很好安装， UEFI需要分奇怪的区 (我记得是boot/efi)，按照说明直接分好给标注点应该也可以。
+
+    由于重新装系统的时候只有manjaro了，挂载点也没多想，就直接给了一块固态。选择了自动。
+
+     等以后重新安装的时候或许会更新这个方面。
+
+2、关于源的问题
+    首先是archlinuxcn的源，这个源很好用，里面包含了搜狗输入法， wps-office和网易云音乐这一类用起来比较顺手的软件。所以我们要添加archlinuxcn的源
+
+在文件   /etc/pacman.conf   末尾添加
+
+[archlinuxcn]
+SigLevel = Optional TrustedOnly
+Server = https://mirrors.ustc.edu.cn/archlinuxcn/$arch
+
+导入GPG key
+sudo pacman -Syy && sudo pacman -S archlinuxcn-keyring
+现在可以安装软件了
+
+  然后是更换中国的源。这个时候最好不要使用archlinux的那一套方法，manjaro在这方面做得很新手向的。参照  其他大神的博客  可以看到更换中国源（貌似主要在四个大学里) 只需要两个命令。
+sudo pacman-mirrors -gb testing -c China  //选择中国源并更新
+sudo pacman -Syyu  //更新系统
+教育网文件校验问题：
+文章中还提到了教育网同学或许不能更新或校验不成功，将/etc/pacman.d/mirrors/China中的三个源网址的http://……修改为https://……，重新更新一下系统就可以了。
+
+3、PPPoe 拨号
+这个是需要用其他软件来辅助的。因为我比较懒也很不想找其他方法了。但是拨号之前怎么上网呢？也是比较滑稽有趣。
+
+(1) 安装 rp-pppoe
+
+sudo pacman -S rp-pppoe
+(2)设置pppoe
+sudo pppoe-setup
+   设置的时候如果不知道自己活动的网卡，就用ifconfig看一下，填上即可。
+(3)启动pppoe拨号
+
+sudo pppoe-start
+(4)拨号后不可上网
+很奇怪的一个问题。每次拨号之后都不能上网。后来发现如果我运行以下命令
+
+sudo route del default
+sudo route add default ppp0
+删除路由重新添加就可以上网了。。虽然很麻烦但是没找到别的解决方法。
+4、安装一系列软件
+其实manjaro的包管理很强大也让人用着很舒服，虽然我不太懂AUR什么的。 
+
+做下面的事情  记得一定要有archlinuxcn 。（不知道有没有？pacman -Syy 更新一下，最后会出现archlinuxcn就稳了)
+
+ 搜狗输入法：
+
+首先应该是老规矩， 给出  前人博客 他写的很详细。每次都会看这里。
+
+sudo pacman -S fcitx-sogoupinyin
+sudo pacman -S fcitx-im
+sudo pacman -S fcitx-configtool
+设置中文输入法环境变量，否则中文输入法无法启动
+新建~/.profile  内容为：
+
+export GTK_IM_MODULE=fcitx
+export QT_IM_MODULE=fcitx
+export XMODIFIERS="@im=fcitx
+保存成功后，在终端输入fcitx启动服务（其实一般我会选择重启，因为之前有时候就是启动不了fcitx）安装wps-office：
+sudo pacman -S wps-office
+sudo pacman -S ttf-wps-fonts
+    其中ttf-wps-fonts是wps 的字体，可以解决部分字体问题（关键是在不取消提示的情况下干掉不想看到的字体缺失提示）
+   注意：这个时候的部分显示仍然是有问题的，这个我认为是不同软件的兼容问题。很大程度上无法解决。如果是只读的文件，可以借用windows导出pdf，可以保证格式。
+
+其他软件的安装：
+
+sudo pacman -S electronic-wechat
+sudo pacman -S netease-cloud-music
+sudo pacman -S pycharm
+sudo pacman -S python-pip
+    1、微信
+
+linux上有微信主要是因为有前人用 electron 把微信的网页版封装成了APP，如果自己想尝试的话也可以，貌似是不难的。
+
+   2、pip
+
+貌似目前大神们都不建议使用pip来管理众多python包，说实话也有很多包在向anaconda转移。
+
+  3、ss代理上网
+
+感兴趣的同学可以自行去arch wiki上看关于ss的文件。 
+不是很了解的同学或者真的是像我一样的新手可以使用shadowsocks的qt版本，qt版本做的还是比较人性化的～
+
+自己总是写不好pac文件，也设置不好代理， 所以一般用genpac来自动生成代理。可以自行百度。
+
+xfce桌面系统貌似没有内置一个全局代理功能，所以我忘了我怎么弄的了……
+
+gnome可以直接在网络的设置中设置代理，使用生成的pac文件就行了，很简单。
+
+
+
+到这里，manjaro可以基本投入使用。
+
+CSDN的编辑器好难用，可能因为我没用习惯吧。
+
+
+
+
+
+
+
+
+2016年11月13日  ·  22.2k 次阅读
+Manjaro 安装配置
+linux
+Manjaro简介
+Manjaro Linux 是面向桌面的、用户友好的、基于 Arch Linux 的发行版。它的一些显著特性包括：一份直观的安装程序、自动硬件检测、用于管理图形卡的特别 Bash 脚本、一组额外的桌面配置选项。 Manjaro Linux 带有三份样式，分别采用 Xfce、GNOME 3（使用Cinnamon Shell）、KDE 桌面。
+Manjaro
+
+写在前面
+在尝试安装 Arch 之后才接触到的 Manjaro ，相比之下 Manjaro 安装简单，只需要少量配置，即可使用，降低了初学者的入门门槛，让过渡更加平缓。分享一下自己的安装过程，给刚从 Windows 过渡来的小伙伴一些参考。
+
+启动盘
+下载ISO,官网传送门，页面底部有torrents链接。
+
+启动盘制作工具：Image Writer，其他工具传送门。
+
+安装
+进入boot直接选择之前制作好的安装介质启动。
+
+建议启动安装后选择第二项闭源驱动，Manjaro 会帮你安装好基本驱动，十分省事。
+
+剩下的就是点点点...
+
+额外配置
+添加archlinuxCN源
+sudo nano /etc/pacman.conf
+在文件底部加入如下几行
+[archlinuxcn]
+SigLevel = Optional TrustedOnly
+Server = https://mirrors.ustc.edu.cn/archlinuxcn/$arch
+
+导入GPG key
+sudo pacman -Syy && sudo pacman -S archlinuxcn-keyring
+现在可以安装软件了
+
+
+安装中文输入法
+以安装搜狗为例
+
+sudo pacman -S fcitx-sogoupinyin
+sudo pacman -S fcitx-im
+sudo pacman -S fcitx-configtool
+设置中文输入法环境变量，否则中文输入法无法启动
+
+sudo nano ~/.xprofile
+export GTK_IM_MODULE=fcitx
+export QT_IM_MODULE=fcitx
+export XMODIFIERS="@im=fcitx"
+保存成功后，在终端输入：fcitx启动服务
+
+2013年的贴。。虽然我忘了以前是怎么解决的，但还是给Fcitx出现问题的朋友一些建议：
+1. 检查~/.xinitrc里是否添加了环境变量：
+export GTK_IM_MODULE=fcitx
+export QT_IM_MODULE=fcitx
+export XMODIFIERS="@im=fcitx"
+2. 检查~/.xinitrc的末尾启动桌面环境的命令（以xfce4为例）：
+fcitx & exec startxfce4
+3. 运行fcitx-diagnose，按照其输出该装的装，该设的设。用于GTK 2、GTK 3和KDE的配置界面选一个合适的安装。
+4. 运行fcitx-configtool，进行配置。
+5. 适时重启桌面环境。
+
+
+
+
+开发环境
+经过以上基本设置，Manjaro 即可达到可用的状态，接着可以根据自己的需要构建开发环境，通过pacman安装应用非常方便，一条命令即可完成。
+
+推荐一些自己用到的前端开发工具
+
+chrome
+
+atom
+
+git
+
+nodejs
+
+npm
+
+最后推荐一款主题 arc-theme，一款漂亮的扁平化主题。
+
+总结
+Manjaro 的安装过程非常简单，同时也是基于 Arch Linux 的一个相对完整的发行版，有较好的稳定性、易用、人性化，就像其官网宣传的能达到开机即用的自由操作系统，这也为想要体验自由系统的用户提供了另一种途径，让更多用户可以更平缓的进入自由系统的世界，Enjoy Manjaro!
+
+原文链接：http://www.shery.me/blog/manjaro.html

@@ -1,0 +1,57 @@
+Git clone
+在D:/znp/Git目录下初始化git，生成.git文件
+在Git目录下新建ckp_server目录。查看Git秘钥：cd ~/.ssh，复制公钥，打开云仓库：http://git.jygeili.com/ckp/ckp_server。
+打开用户设置->打开SSH秘钥，添加秘钥：命名，将刚才复制的公钥粘贴进去。
+接下来，在项目ckp_server中选择SSH而不是HTTP，复制SSH：git@git.jygeili.com:ckp/ckp_server.git。
+在本地Git Brush中输入：git clone git@git.jygeili.com:ckp/ckp_server.git，将项目复制到本地ckp_server目录(注意本地的目录一定要和云仓库目录一样，否则会失败)，显示项目正在克隆。
+克隆完毕后进入到项目目录：cd ckp_server，查看当前分支：
+git checkout:显示当前分支是主分支master。
+输入：git pull，显示已经全部更新。
+至此，克隆已经成功。
+
+
+Administrator@MOEY4IZJMK87QPY MINGW64 /d/znp/Git
+$ cd ~/.ssh
+
+Administrator@MOEY4IZJMK87QPY MINGW64 ~/.ssh
+$ ls
+id_rsa  id_rsa.pub  known_hosts
+
+Administrator@MOEY4IZJMK87QPY MINGW64 ~/.ssh
+$ cd d:
+
+Administrator@MOEY4IZJMK87QPY MINGW64 /d
+$ cd d:/znp/Git
+
+Administrator@MOEY4IZJMK87QPY MINGW64 /d/znp/Git
+$ git clone git@git.jygeili.com:ckp/ckp_server.git
+Cloning into 'ckp_server'...
+The authenticity of host 'git.jygeili.com (39.104.71.112)' can't be established.
+ECDSA key fingerprint is SHA256:AHl0dhKDOiYPAi+ANg/QkaCptuV3wyYcs7XP/CuCTd8.
+Are you sure you want to continue connecting (yes/no)? yes
+Warning: Permanently added 'git.jygeili.com,39.104.71.112' (ECDSA) to the list of known hosts.
+remote: Counting objects: 7624, done.
+remote: Compressing objects: 100% (2675/2675), done.
+remote: Total 7624 (delta 5489), reused 6477 (delta 4653)
+Receiving objects: 100% (7624/7624), 2.91 MiB | 127.00 KiB/s, done.
+Resolving deltas: 100% (5489/5489), done.
+Checking out files: 100% (980/980), done.
+
+Administrator@MOEY4IZJMK87QPY MINGW64 /d/znp/Git
+$ git checkout
+fatal: not a git repository (or any of the parent directories): .git
+
+Administrator@MOEY4IZJMK87QPY MINGW64 /d/znp/Git
+$ ls
+ckp_server/  OpenGLPractise/  write/
+
+Administrator@MOEY4IZJMK87QPY MINGW64 /d/znp/Git
+$ cd ckp_server
+
+Administrator@MOEY4IZJMK87QPY MINGW64 /d/znp/Git/ckp_server (master)
+$ git checkout
+Your branch is up to date with 'origin/master'.
+
+Administrator@MOEY4IZJMK87QPY MINGW64 /d/znp/Git/ckp_server (master)
+$ git pull
+Already up to date.

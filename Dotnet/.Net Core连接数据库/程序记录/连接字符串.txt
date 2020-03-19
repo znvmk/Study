@@ -1,0 +1,6 @@
+Server=(localdb)\\mssqllocaldb;Database=aspnet-WebApplication2-0AC27548-CED7-4363-B6A6-F9C46D5F4CA3;Trusted_Connection=True;MultipleActiveResultSets=true
+
+public string connString = "Data Source=DESKTOP-L6H201M\\SQLEXPRESS;Database=wer;Trusted_Connection=True;MultipleActiveResultSets=true";
+
+"wasqContext": "Server=DESKTOP-L6H201M\\SQLEXPRESS;Database=wer;Trusted_Connection=True;MultipleActiveResultSets=true"
+"实体名称":"Server=数据服务器名称;Database=数据库名称;账号密码或Windows安全认证连接"

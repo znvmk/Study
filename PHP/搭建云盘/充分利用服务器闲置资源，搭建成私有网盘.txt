@@ -1,0 +1,68 @@
+转载https://cloud.tencent.com/developer/article/1369776
+
+
+
+充分利用服务器闲置资源，搭建成私有网盘
+
+
+通常来说，我们在购买服务器搭建网站后，服务器上还会有很大的资源处于闲置状态，那么我们怎么来利用好这些闲置资源呢？一招制敌，闲置资源+kodexplorer瞬间变成私有网盘。
+
+1、拥有服务器的公司或者个人站长，linux系统和window系统都可以，今天介绍linux系统搭建方法，下一篇会介绍windows系统发件方法。
+
+2、下载xampp。
+https://www.apachefriends.org
+xampp-linux-x64-7.3.6-2-installer.run
+下载完成后，在当前目录可以看到一个.run可执行文件，先给文件添加相应的权限，
+命令为：
+
+sodu chmod +x xampp-linux-x64-7.3.6-2-installer.run
+
+3、安装xampp
+命令为：
+
+sudo ./xampp-linux-x64-7.3.6-2-installer.run
+
+按照要求输入Y或者按回车键就可以安装成功，它的默认安装位置为：/opt/lampp。
+
+4、启动与停止xampp
+（1）启动xampp，命令为：
+
+sudo /opt/lampp/xampp start
+
+在启动之后，可以在自己的电脑或手机浏览器上输入你的云服务器IP地址，就可以看到xampp的默认页面，代表你的xampp正常使用，默认端口为80。运行出现错误，可能是端口冲突，通过查看80端口和443端口（命令为netstat -ap | grep 80）使用情况，可以修改默认的80和443端口。
+（2）停止xampp，命令为：
+
+sudo /opt/lampp/xampp stop
+
+5、下载最新版可道云
+官方下载页面：https://kodcloud.com/download/。其中有Linux获取最新版可道云的相关命令。
+kodexplorer4.40
+
+创建目录：
+
+sudo mkdir kodexplorer
+
+解压命令：
+
+unzip kodexplorer4.25.zip -d ./kodexplorer
+
+进入对应文件夹，并设置权限：
+
+sudo chmod -R 777 ~/Desktop/kodexplorer/
+
+6、拷贝至相应的目录
+命令：
+
+sudo cp -r ~/Desktop/kodexplorer/ /opt/lampp/htdocs/
+
+进入对应文件夹，设置权限：
+sudo chmod -R 777 /opt/lampp/htdocs/kodexplorer/
+sudo chmod -R 777 /opt/lampp/htdocs/kodexplorer/data/
+
+7、测试是否成功
+重新启动xampp服务，浏览器打开“IP地址/kodexplorer/index.php”，设置管理员(admin)密码，开始使用。
+
+登录界面
+可道云网盘
+
+面板是是不是非常的漂亮。

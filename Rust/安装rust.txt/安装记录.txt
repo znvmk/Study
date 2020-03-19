@@ -1,0 +1,8 @@
+在Rust中文官网下载最新版Rust：rustup‑init.exe
+https://www.rust-lang.org/zh-CN/install.html
+运行，在cmd窗口选择选项1，或默认1，安装。
+安装完成后用：rustc --version来查看rust版本，并确定是否安装成功。
+如果出现：error: no default toolchain configured，未安装成功。
+PS C:\Users\SJRJY\.cargo\bin> rustc --version
+rustc 1.27.2 (58cc626de 2018-07-18)
+则成功。

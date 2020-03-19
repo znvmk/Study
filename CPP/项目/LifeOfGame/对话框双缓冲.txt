@@ -1,0 +1,51 @@
+BOOL CLifeDlg::OnEraseBkgnd(CDC* pDC)
+{
+	// TODO: 在此添加消息处理程序代码和/或调用默认值
+
+	//双缓冲技术
+	CRect ClientRect;
+	GetClientRect(&ClientRect); //获取客户区大小
+	//int nWidth = (nImgWidth * m_fExpand> ClientRect.Width()) ? int(nImgWidth*m_fExpand) : ClientRect.Width();
+	//此处：宽高取屏幕与滚动条长度的最大值，不然放大缩小时，不能完全刷去上一次的图，
+	//会有残余，nImgWidth nImgHeight 图像的宽与高  m_fExpand对图像放大缩小比例，不缩放则为1
+
+	//int nHeight = (nImgHeight * m_fExpand> ClientRect.Height()) ? int(nImgHeight*m_fExpand) : ClientRect.Height();
+
+
+	//创建兼容DC
+	CDC MemDC;
+	//建立与屏幕显示兼容的内存显示设备
+	MemDC.CreateCompatibleDC(pDC);
+	CDC* pMDC;
+	pMDC = &MemDC;
+	CBitmap bmp;//定义一个位图对象 
+	//建立一个与屏幕显示兼容的位图
+	bmp.CreateCompatibleBitmap(pDC, ClientRect.Width(), ClientRect.Height());
+	MemDC.SelectObject(&bmp); //将位图选入到内存显示设备中
+							  //先用背景色将位图清除干净，这里我用的是白色作为背景 
+	MemDC.FillSolidRect(0, 0, ClientRect.Width(), ClientRect.Height(), RGB(255, 255, 255));
+
+
+
+
+
+
+	//网格线
+	DrawBoard(pMDC);
+
+	//信息
+	DrawInformation(pMDC);
+
+	//画方格
+	DrawDiamonds(pMDC, m_plbt);
+
+
+	pDC->BitBlt(0, 0, 850, 600, &MemDC, 0, 0, SRCCOPY);
+
+	//结束了 画图不要忘记释放资源，DC是有限的
+	bmp.DeleteObject();
+	MemDC.DeleteDC();
+	return TRUE;
+
+	//return CDialogEx::OnEraseBkgnd(pDC);
+}

@@ -1,0 +1,5 @@
+Rust 程序设计语言（第一版） 简体中文版
+https://kaisery.gitbooks.io/rust-book-chinese/content/
+
+Rust的绅士介绍
+http://llever.com/gentle-intro/1-basics.zh.html

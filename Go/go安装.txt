@@ -1,0 +1,20 @@
+go下载地址
+https://www.golangtc.com/download
+下载go1.9.2.windows-amd64.zip
+
+go安装记录
+1.将go1.9.2.windows-amd64.zip解压到go的安装目录，d:\Go
+2.配置环境变量
+path:d:\GO\go\bin
+GOROOT:d:\GO\go\
+GOPATH:C:\Users\SJRJY\gopath
+GOPATH可以有多个，是go项目的储存位置，go get 的包也存放在这个目录。如果有多个，默认存放在第一个位置
+GOBIN:D:\code\go\bin
+go get github.com/beego/bee
+安装完之后，bee 可执行文件默认存放在 $GOPATH/bin 里面，所以您需要把 $GOPATH/bin 添加到您的环境变量中，才可以进行下一步。
+将bee添加到path中
+IDEA使用go
+
+在idea中查找安装go插件，重启，新建go项目，选择过SDK目录：d:\GO\go,自动识别为版本1.9.2
+***将自己新建的项目下的包改为main，否则无法运行main函数
+

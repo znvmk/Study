@@ -1,0 +1,164 @@
+https://tool.lu/
+
+https://www.easyswoole.com/Manual/2.x/Cn/_book/
+
+git命令
+https://blog.csdn.net/halaoda/article/details/78661334
+
+//Git教程
+https://git-scm.com/book/zh/v2/Git-%E5%9F%BA%E7%A1%80-%E8%AE%B0%E5%BD%95%E6%AF%8F%E6%AC%A1%E6%9B%B4%E6%96%B0%E5%88%B0%E4%BB%93%E5%BA%93
+
+git教程
+https://www.liaoxuefeng.com/wiki/0013739516305929606dd18361248578c67b8067c8c017b000
+
+Git教程
+https://git-scm.com/book/zh/v2
+
+Redis应用3-基于Redis消息队列实现的异步操作
+https://blog.csdn.net/noaman_wgs/article/details/73194700
+
+Redis做异步队列
+https://blog.csdn.net/jdx888/article/details/79495890
+
+mongodb教程
+http://www.runoob.com/mongodb/mongodb-intro.html
+https://www.yiibai.com/mongodb/mongodb_drop_collection.html
+
+//gvim下载
+https://gvim.en.softonic.com/
+
+Linux下C++开发工具介绍
+https://www.cnblogs.com/carekee/articles/3228192.html
+
+Linux 下C++开发入门指南
+https://blog.csdn.net/luoduoduojiayou/article/details/54585114
+
+Linux下C++的编程——开偏介绍
+https://blog.csdn.net/luoweifu/article/details/50153461
+
+Linux下C++的编程——开发环境搭建与第一个程序https://blog.csdn.net/luoweifu/article/details/50197913
+
+带你玩转Visual Studio
+https://blog.csdn.net/column/details/visualstudio.html?&page=1
+
+Linux下QT安装教程
+https://blog.csdn.net/xqhrs232/article/details/63251450
+
+manjaro Linux系统下载
+https://manjaro.org/get-manjaro/
+
+manjaro使用国内软件源
+https://blog.csdn.net/kxp9545/article/details/76138980
+
+装完manjaro炒作系统后你需要做的几点优化
+https://blog.csdn.net/albertjone/article/details/80026808
+
+manjaro的简单安装
+https://blog.csdn.net/tju_tahara/article/details/79029695
+
+VMware虚拟机Linux增加磁盘空间的扩容操作
+https://blog.csdn.net/lyd135364/article/details/78623119
+
+安装Manjaro后该做的事
+https://www.jianshu.com/p/4fce765a306b
+
+Rust 程序设计语言（第一版） 简体中文版
+https://kaisery.gitbooks.io/rust-book-chinese/content/
+http://llever.com/gentle-intro/1-basics.zh.html
+http://special.csdncms.csdn.net/rust/basis.shtml
+
+（中文）在实践中学 Rust：关于各种主题的 Rust 示例的合集，可在线预览。
+https://rustwiki.org/zh-CN//rust-by-example/
+（英文）Rust by Example
+https://doc.rust-lang.org/rust-by-example/index.html
+
+在cmd窗口下运行gVim
+https://blog.csdn.net/zxzxzx0119/article/details/80178383
+
+OpenGL--粒子系统
+https://blog.csdn.net/u010223072/article/details/45888397
+
+VS中添加vim编辑模式
+https://marketplace.visualstudio.com/items?itemName=JaredParMSFT.VsVim
+
+C++外挂
+https://blog.csdn.net/liujiayu2/article/details/45722503
+
+粒子系统
+http://www.cocos.com/docs/native/v3/particle-system/zh.html
+
+粒子系统的关键概念
+http://api.unrealengine.com/CHN/Engine/Rendering/ParticleSystems/Overview/index.html
+
+Googel Chrome 中使用vimium,像vim那样操作谷歌
+https://blog.csdn.net/qq_36084640/article/details/79320883
+
+VS2017下编译和配置boost库
+https://blog.csdn.net/tianse12/article/details/72654443
+
+boost库下载
+https://www.boost.org/users/download/
+
+ASP.Net教程
+http://www.runoob.com/aspnet/aspnet-tutorial.html
+
+ASP.Net下载
+https://www.microsoft.com/net/download/dotnet-core/2.1#sdk-2.1.300-preview1
+
+Nodejs教程
+https://www.runoob.com/nodejs/nodejs-event-loop.html
+
+Docker教程
+http://www.runoob.com/docker/docker-tutorial.html
+
+GitBook教程
+https://blog.csdn.net/xxf377376701/article/details/79171819
+
+SQL菜鸟教程
+http://www.runoob.com/sql/sql-syntax.html
+
+DbContext 查询
+https://www.cnblogs.com/telon/p/4092869.html
+
+.NET Framework 中的新增功能
+https://docs.microsoft.com/zh-cn/dotnet/framework/whats-new/
+
+基于方法的查询语法示例：投影
+https://docs.microsoft.com/zh-cn/dotnet/framework/data/adonet/ef/language-reference/method-based-query-syntax-examples-projection
+
+Asp.Net MVC+EF+三层架构的完整搭建过程
+https://www.cnblogs.com/zzqvq/p/5816091.html
+
+.NET 三层架构中DAL+IDAL+Model+BLL+Web
+https://wenku.baidu.com/view/f3e0ebe0c9d376eeaeaad1f34693daef5ef713a3.html
+
+EasySwoole 服务启动过程以及主体设计流程源码解析
+https://segmentfault.com/a/1190000015240584
+
+RESTful API 设计指南
+http://www.ruanyifeng.com/blog/2014/05/restful_api.html
+
+【EntityFramework 6.1.3】个人理解与问题记录（3）
+https://www.cnblogs.com/DjlNet/p/7360545.html
+
+Visual Studio2017中如何让Entity Framework工具ADO.NET实体数据模型支持MYSQL数据源
+https://www.aliyun.com/jiaocheng/1113362.html
+
+vimium学习
+https://www.jianshu.com/p/5b627a24f7aa
+
+https://www.yiibai.com/sql/
+
+http://www.w3school.com.cn/sql/index.asp
+
+https://docs.docker.com/docker-for-windows/
+
+1. ORM框架之EntityFramework介绍
+https://www.jianshu.com/p/ce8026992275
+
+Oracle官方下载地址：
+http://www.oracle.com/technetwork/developer-tools/sql-developer/downloads/index.html
+
+值得推荐的C/C++框架和库 【强烈推荐】
+https://blog.csdn.net/zhq651/article/details/52895230
+https://blog.csdn.net/sunwenjun/article/details/2052385

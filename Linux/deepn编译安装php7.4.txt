@@ -1,0 +1,62 @@
+卸载php
+sudo apt-get remove php-common
+php 7.4.3
+编译安装
+wget https://downloads.php.net/~derick/php-7.4.0alpha1.tar.gz
+解压 tar xvf php-7.4.0alpha1.tar.gz
+进入目录
+然后 ./buildconf
+因为我要安装 PHP 到目录 /www/server/php/74，你可以改成其他目录（如 /usr/local/php/74），也可以用这个目录。
+./configure --prefix=/www/server/php/74 --with-config-file-path=/www/server/php/74/etc --enable-fpm --with-fpm-user=www --with-fpm-group=www --enable-mysqlnd --with-mysqli=mysqlnd --with-pdo-mysql=mysqlnd --with-iconv-dir --with-zlib --enable-xml --disable-rpath --enable-bcmath --enable-shmop --enable-sysvsem --enable-inline-optimization --with-curl=/usr/local/curl --enable-mbregex --enable-mbstring --enable-intl --enable-ftp --with-openssl=/usr/local/openssl --with-mhash --enable-pcntl --enable-sockets --with-xmlrpc --with-gettext --enable-fileinfo --enable-opcache --with-sodium
+安装配置选项1：
+
+./configure --prefix=/usr/local/php --with-mysql=/usr/local/mysql  --with-curl --with-freetype-dir --with-gd --with-gettext --with-iconv-dir --with-kerberos --with-libdir=lib64 --with-libxml-dir --with-mysqli --with-openssl --with-pcre-regex --with-pdo-mysql --with-pdo-sqlite --with-pear --with-png-dir --with-jpeg-dir --with-xmlrpc --with-xsl --with-zlib --with-bz2 --with-mhash --enable-fpm --enable-bcmath --enable-libxml --enable-inline-optimization --enable-gd-native-ttf --enable-mbregex --enable-mbstring --enable-openssl --enable-pdo_mysql --enable-opcache --enable-pcntl --enable-shmop --enable-soap --enable-sockets --enable-sysvsem --enable-sysvshm --enable-xml --enable-zip
+安装配置选项2：
+
+./configure --prefix=/opt/php/74 --with-config-file-path=/www/server/php/74/etc --enable-fpm --with-fpm-user=www --with-fpm-group=www --enable-mysqlnd --with-mysqli=mysqlnd --with-pdo-mysql=mysqlnd --with-iconv-dir --with-zlib --enable-xml --disable-rpath --enable-bcmath --enable-shmop --enable-sysvsem --enable-inline-optimization --with-curl=/usr/local/curl --enable-mbregex --enable-mbstring --enable-intl --enable-ftp --with-openssl=/usr/local/openssl --with-mhash --enable-pcntl --enable-sockets --with-xmlrpc --with-gettext --enable-fileinfo --enable-opcache --with-sodium
+报错：No package 'openssl'
+sudo apt-get install libssl-dev
+
+报错：No package 'sqlite3' found
+得到的版本是3.16.2，高于 PHP 7.4 要求的 3.7.4，后来知道问题在于缺少sqlite-devel依赖包。
+执行下方语句安装sqlite-devel
+sudo apt-get install sqlite3 libsqlite3-dev
+
+报错：No package 'libcurl' found
+sudo apt-get install libcurl4-openssl-dev
+此时提示 No package 'oniguruma' found
+No package 'oniguruma' found
+类似问题一，缺少oniguruma，执行下方语句编译，来源：https://amon.org/oniguruma
+
+git clone https://github.com/kkos/oniguruma.git oniguruma
+cd oniguruma
+./autogen.sh
+./configure
+make
+make install
+
+执行./autogen.sh报错
+Generating autotolls files.
+./autogen.sh:6: ./autogen.sh:autoreconf:not found
+
+运行
+sudo apt-get install autoreconf
+sudo apt-get install automake
+sudo apt-get install libtool
+
+报错：no package 'libsodium' found
+sudo apt-get install libsodium-dev
+
+此时回到 PHP 源码目录，make clean
+再次执行上方提到的 configure 的命令
+此时执行成功，随后执行 make -j4
+make install
+如果没有出现 error，表明安装成功！
+如果你要把这新安装的 PHP 作为默认的 PHP 环境，可以建立软连接，链接到 /usr/bin 下
+ 
+
+ln -s /www/server/php/74/bin/php /usr/bin/php;
+ln -s /www/server/php/74/bin/phpize /usr/bin/phpize;
+ln -s /www/server/php/74/bin/php-config /usr/bin/php-config;
+ln -s /www/server/php/74/bin/phpdbg /usr/bin/phpdbg;
+ln -s /www/server/php/74/bin/php-cgi /usr/bin/php-cgi;

@@ -1,0 +1,230 @@
+**my.ini文件在mysql安装目录和bin目录下各复制一份**
+
+
+weixin_35706605的博客
+ 目录视图 摘要视图 订阅
+ MySQL5.7.19Win10免安装配置+登录+问题解决
+标签： mysql安装出错
+2017-07-26 12:08 2138人阅读 评论(3) 收藏 举报
+ 分类： MySQL
+版权声明：本文为博主原创文章，未经博主允许不得转载。
+最近需要用到MySQL，由于以前没有接触过，安装的时候也遇到了不少问题，花了不少时间幸好最后解决了，把自己的过程记录下来。
+主要的安装环境：
+1.Win10+64位
+2.MySQL5.7.19
+
+主要步骤：
+1.MySQL的安装有两种方法，一种是下载安装程序安装,这种比较推荐对安装路径没什么要求的，一般默认就安装在C盘里了，方法就是按照提示已知点NEXT，应该就可以安装了。我不想把软件安装在C盘，所以选择安装在D盘，开始也是用安装软件安装的，但是自定义安装路径就出了很多错误，一些路径啊什么的自己也不会改，最后也没安好。如果你是从来没有接触过MySQL的，想先下下来自己再学，又不想安在C盘里的话，就我自己的亲身经历，不推荐用这种方法。当然，你也可以自己去网上找教程去安（反正我没安好而且查了很久不知道怎么改）这种方法的SQL下载地址：
+2.本文推荐的是免安装配置，自己感觉相对简单。
+3.首先下载压缩包，下载地址：https://dev.mysql.com/downloads/mysql/5.1.html#downloads
+
+选择适合自己的压缩包（我的电脑是64位，所以选红圈里的）
+接着，点Download，下载，此时你可以选择下载到自定义的文件夹里（我下到了D盘）
+
+不用注册，直接点红圈里的就行。
+4.下载好如图
+
+5.解压到你自定义的安装路径中，我同样选择安装在D盘里（如图）
+
+6.此时开始配置MySQL环境变量
+（1）点击“电脑”，右键
+
+（2）单击环境变量
+
+（3）点击系统变量，新建
+新增系统环境变量：
+变量名：MYSQL_HOME
+变量值：D：\mysql-5.7.19-winx64
+接着再Path中添加：%MYSQL_HOME%\bin 
+（不要删除任何东西，只需再原来的后面加上分号，然后加上自己要配置的环境变量就可以了）
+
+改好后点确定-》确定
+
+7. 5.7.18版本以后的MySQL需要手动创建my.ini文件，然后放置到指定的目录下。
+（1）新建文本文档（即打开记事本）,然后改名字为my。将下面的内容粘贴进去记事本。
+
+ [client]
+port=3306
+default-character-set=utf8
+[mysqld]
+port=3306
+character_set_server=utf8
+basedir=%MYSQL_HOME%
+datadir=%MYSQL_HOME%\data
+[WinMySQLAdmin]
+%MYSQL_HOME%\bin\mysqld.exe
+
+%MYSQL_HOME%都改为绝对路径D：\mysql-5.7.19-winx64
+
+（2）粘贴后保存，修改文件后缀名为.ini   保存。
+（3）建立好my.ini文件后，将其复制粘贴到D：\mysql-5.7.19-winx64\bin，即放到mysql所在的bin目录下。
+
+8. 使用管理员身份打开命令提示符，点击开始，然后输入cmd，鼠标右击cmd，选择以管理员身份运行。
+
+9. 切换目录至mysql包所在的bin目录（例如本文中在D：\mysql-5.7.19-winx64\bin，就先输入D:，回车，再输入mysql-5.7.19-winx64\bin）。然后输入 mysqld.exe -install
+
+10. 执行命令后，提示：Service successfully installed. 表示安装成功.
+
+11.初始化mysql数据，并创建一个具有空密码的root用户，打开cmd执行如下命令：
+
+   mysqld --initialize-insecure --user=mysql
+
+   执行命令后，等一会后，系统会自动生成相应的 data 目录，并自动创建好空密码的 root 用户。此时表示初始化    成功。
+
+12. 在cmd,也叫命令提示符中，输入下面的命令，启动mysql服务
+
+     net start mysql
+
+执行后，提示：
+MySQL服务正在启动
+MySQL服务已经启动成功
+注：要想登录使用 mysql，服务是必需要先启动的。以后也一样
+
+在服务启动后，因为刚创建的 root 用户是空密码的，因此需要先进行密码设定：
+
+mysqladmin -u root -p password 此处输入新密码
+Enter password: 此处输入旧密码
+
+执行完以上两条命令后，只要 Enter password: 后输入的旧密码正确，则 root 用户的新密码就算设定成功了。此后，要想登录 root 用户，则都需要使用新密码。
+注：刚创建的 root 用户是空密码的，因此，在第一次修改 root 用户的密码时，在 Enter password: 后面不需要输入任何密码，直接回车即可。
+
+13. 此时安装登录完成，你可以对数据库进行操作，具体的本文不再讲解。
+
+14. 关闭数据库
+
+         mysql> quit;
+         net stop mysql
+
+
+
+
+
+
+但是！BUT，我在安装的时候1到11步都可以，按理来说，12步应该也可以，（当然是按照网上各种教程来说）
+
+但是我一输入  net start mysql  就出错，说net不是什么什么的（记不清了），去网上搜解决办法是路径，可是路径我都改过了啊，所以找了半天也没改好，所以就不管了，直接输入 mysql -u root -p  也出错
+ 【ERROR 1045 (28000): Access denied for user root@localhost (using password: YES）】
+【ERROR 1045 (28000): Access denied for user 'ODBC'@'localhost' (using password: NO)】
+，，，然后我就很郁闷，，，查了很多方法也不行，总出错。
+
+但是，经过多方查找。解决方法如下：
+
+1. 编辑mysql配置文件my.ini，在[mysqld]这个条目下加入 skip-grant-tables
+     保存退出后重启mysql
+
+2. 将目录调到MySQL的目录后（和上面步骤9一样），输入 mysql -u root -p  
+ 
+  此时可以不用密码登录了，出现password：的时候直接回车可以进入，不会出现ERROR 1045 (28000)，但很多操作都会受限制，按下面的流程走，红色部分为输入部分。
+
+（1）进入mysql数据库：
+          mysql> use mysql;
+          显示：
+          Database changed
+（2）给root用户设置新密码，红色字是自己输入：
+        update mysql.user set authentication_string=password('newpassword') where user='root';
+        显示
+        Query OK, 1 rows affected (0.01 sec)
+        Rows matched: 1 Changed: 1 Warnings: 0
+（3）刷新数据库
+         mysql> flush privileges;
+         Query OK, 0 rows affected (0.00 sec)
+（4）退出mysql：
+          mysql> quit
+          Bye
+
+改好之后，再修改一下my.ini这个文件，把刚才加入的"skip-grant-tables"这行删除，保存退出再重启mysql。
+
+3. 此时再启动cmd,调整目录，输入  mysql -uroot -p， 再输入密码，就可以正确登录了（如图）
+
+
+注：我没有输入net start mysql 也可以打开MySQL，不知道什么原因，反正打开了，也不管了，有高手知道也可以告诉我哈，安装是安好了，接下来就是数据库的操作了，我要好好去学习MySQL啦。
+
+
+
+
+
+
+
+忘记root密码
+
+
+
+
+windows下修改Mysql5.7.11初始密码的图文教程
+
+作者：liuguangsh 
+这篇文章主要介绍了windows下修改Mysql5.7.11初始密码的图文教程,本文给大家介绍的非常详细，具有参考借鉴价值，需要的朋友可以参考下
+
+. .
+
+
+上周安装了Mysl 但是却无法登陆，找了好久才找到这个解决办法，讲的详细谢谢了。
+
+[摘要：1.my-default.ini 更名my.ini 正在解压的目次上面复造my-default.ini一份更名字为 my.ini。 2.翻开 Windows 情况变量设置, 新建变量名 MYSQL_HOME , 变量值为 MyS]
+
+1.my-default.ini 改名my.ini
+
+在解压的目录下面复制my-default.ini一份改名字为 my.ini。
+2.打开 Windows 环境变量设置, 新建变量名 MYSQL_HOME , 变量值为 MySQL 安装目录路径, 在 环境变量 的 Path 变量中添加 ;%MYSQL_HOME%\bin;
+3.几个命令
+
+安装 MySQL 服务: mysqld --install
+
+
+启动: net start MySQL
+
+
+停止: net stop MySQL
+
+
+卸载: sc delete MySQL，mysqld -remove
+
+命令行窗口一定要用管理员模式打开，来到%MYSQL_HOME%\bin;这个目录下，
+
+a.安装服务：mysqld --install。
+
+
+b.启动服务 net start MySQL
+
+（可能遇到问题，MySQL 服务正在启动。MSQL服务无法启动。服务没有报告任何错误。请键入NET HELPMSG 3534 以获得更多的帮助。
+
+把data文件夹删掉，用mysqld --initialize 初始化data目录即可。删不掉data的时候，把任务管理器打开kill掉mysqld进程,其他启动或者关闭服务失败的时候一样做法。）
+当成功进入开启服务以后，用
+
+mysql -u root -p 回车
+
+输入密码
+
+出现 ERROR 1045 (28000): Access denied for user 'root'@'localhost' (using password: NO)
+
+关闭服务net stop MySQL
+
+用安全模式打开，mysqld --skip-grant-tables
+
+这个时候，光标会一直闪。注意，不要动，打开另一个命令行窗口。
+4.和前面一样的操作来到bin目录下，
+
+登录 mysql -u root -p
+
+密码为空,直接回车；
+
+就可以进去了
+
+然后
+
+use mysql;
+
+（可能先前的版本密码的抬头是password，5.7.11是 authentication_string,可以select * from user,查看一下）
+
+(老版本)update user set password=password("123456") where user="root";
+
+（5.7.11）update user set authentication_string=password("123456") where user="root";
+最后，flush privileges;就OK了。
+关闭两个cmd窗口。
+
+5.最后登录一下试试。
+刚开始mysql启动失败，是英文mysqld进程还开着呢，启动任务管理器kill掉就行了。
+然后重新启动mysql，用命令 mysql -u root -p进入mysql控制台，输入密码登录
+
+最后，成功修改了root密码。
+

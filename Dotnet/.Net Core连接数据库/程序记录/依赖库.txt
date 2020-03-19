@@ -1,0 +1,6 @@
+Microsoft.EntityFrameworkCore (v2.1.1)
+Microsoft.EntityFrameworkCore.SqlServer  (v2.1.1)
+Microsoft.EntityFrameworkCore.SqlServer.Design  (v1.1.6)
+Microsoft.EntityFrameworkCore.Tools  (v2.1.1)
+Microsoft.EntityFrameworkCore.Tools.DotNet  (v2.0.3)
+EntityFramework.CodeFirst

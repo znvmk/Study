@@ -1,0 +1,29 @@
+环境变量配置：
+JAVA_HOME    D:\…\jdk
+PATH   %JAVA_HOME%\bin;%JAVA_HOME%\jre\bin;
+CLASS_PATH    .;%JAVA_HOME%\lib\dt.jar; %JAVA_HOME%\lib\tools.jar;
+
+安装目录结构：Java->jdk->jdk-10.0.2->(jdk-10.0.2,jre-10.0.2)
+
+jdk10之后
+环境变量配置：
+JAVA_HOME    D:\…\jdk
+PATH   %JAVA_HOME%\bin
+安装目录结构：Java->jdk->jdk-11.0.2
+
+eclipse 2019-03之后，eclipse用快捷方式打开会报错：
+"A Java Runtime Environment(JRE) or Java Development Kit(JDK)..."
+出现这种这种可能的情况有两种：一、jdk环境变量没有配置好；二、javaw.exe路径出现问题。
+解决办法：
+找到eclipse的安装目录，找出eclipse.ini文件里的vm这行：将vm下面一行改成你的javaw.exe的路径；有的eclipse配置文件里面没有-vm配置，需要手动增加。如图。修改之后，一定要记得保存！！！
+
+eclipse.ini
+
+openFile
+--launcher.appendVmargs
+之后添加：
+
+-vm
+D:\ls\Java\jdk\jdk-12.0.1\bin
+
+即可

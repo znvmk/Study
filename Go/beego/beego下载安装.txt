@@ -1,0 +1,8 @@
+https://beego.me/docs/intro/
+beego下载：https://github.com/astaxie/beego/tree/v1.10.1
+go get github.com/astaxie/beego
+git config --global http.sslVerify false
+go get -u github.com/astaxie/beego
+go install  github.com/astaxie/beego
+go get github.com/beego/bee
+

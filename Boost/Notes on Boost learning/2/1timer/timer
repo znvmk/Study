@@ -1,0 +1,16 @@
+#include <iostream>
+#include <boost/timer.hpp>
+
+using namespace std;
+using namespace boost;
+int main()
+{
+	timer t;//计时器对象
+	
+	cout << "max timespan:" << t.elapsed_max() / 3600 << "h" << endl;//可度量最大单位，以小时为单位
+	cout << "min timespan:" << t.elapsed_min() << "s" << endl;//可度量最小单位，以秒为单位
+	cout << "now time elapsed:" << t.elapsed() << "s" << endl;//输出已经流逝的时间
+
+	system("pause");
+	return 0;
+}

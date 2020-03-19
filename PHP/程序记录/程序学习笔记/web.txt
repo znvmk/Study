@@ -1,0 +1,51 @@
+1.web构造函数
+function __construct(WebSocket $client, CommandBean $request, SplStream $response)
+{
+    $this->data = $request->getArg('data');//取得数据
+    $this->fd = $client->getFd();//取得客户端客户端文件标识
+    $msgid = $request->getAction();//取得消息请求编号：在websock.php文件中
+    /**
+    *websock.php
+    */
+    /*
+    public static function decode($raw, $client)
+    {
+
+        // TODO: Implement decode() method.
+        $command = new CommandBean();
+        $baseMessage = new MsgBaseRev();
+        $baseMessage->mergeFromString($raw);
+        /**
+        * Parses a protocol buffer contained in a string.:解析包含在字符串中的协议缓冲区。
+        *
+        * This function takes a string in the (non-human-readable) binary wire
+        * format, matching the encoding output by serializeToString().
+        * See mergeFrom() for merging behavior, if the field is already set in the
+        * specified message.
+        *
+        * @param string $data Binary protobuf data.
+        * @return null.
+        * @throws Exception Invalid data.
+        */
+
+        $data = $baseMessage->getData();
+        $msgId = $baseMessage->getMsgId();
+        $command->setControllerClass(Web::class);
+        var_dump('msgid_' . $msgId);
+        $command->setAction('msgid_' . $msgId);//设置消息号
+//        $command->setAction('msgid_1004');
+
+        $command->setArg('data',$data);//设置消息内容
+
+        return $command;
+    }
+    */
+
+
+    if ($msgid != 'msgid_1004') {
+        $dataCenter = new \App\Models\DataCenter\DataCenter();
+        $this->uid = $dataCenter->getUidByFd($this->fd);
+    }
+    parent::__construct($client, $request, $response);
+
+}

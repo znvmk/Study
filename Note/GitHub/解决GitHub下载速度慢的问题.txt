@@ -1,0 +1,77 @@
+GitHub 自从私有库免费后，涌入大批量的开发爱好者，小 C 也将自己的部分代码转为了私库，但是在中国访问 GitHub 的速度不忍直视，那就叫一个慢！下面小 C 就用下面的问题告诉大家中国地区访问 GitHub 为什么很慢以及如何加速访问 GitHub。
+中国地区访问 GitHub 为什么很慢
+Q：为什么访问速度会很慢
+
+A：GitHub 的CDN域名遭到DNS污染。GitHub 在中国大陆访问速度慢的问题原因有很多，但最直接和最主要的原因是 GitHub 的分发加速网络的域名遭到 DNS 污染。由于 GitHub 的加速分发 CDN 域名 assets-cdn.github.com 遭到 DNS 污染，导致无法连接使用 GitHub 的加速分发服务器，才使得中国大陆访问速度很慢。
+
+Q：如何解决 DNS 污染
+
+A：通过修改 Hosts 解决污染问题。一般的 DNS 问题都可以通过修改 Hosts 文件来解决，GitHub 的 CDN 域名被污染问题也不例外，同样可以通过修改 Hosts 文件解决。将域名解析直接指向 IP 地址来绕过 DNS 的解析，以此解决污染问题。
+
+如何加速访问GitHub
+1、打开IPAddress.com网站，查询下面 3 个网址对应的 IP 地址
+
+github.com，192.30.253.112 192.30.253.113
+assets-cdn.github.com，101.184.133
+global.ssl.fastly.net，151.101.185.194
+中国访问GitHub为什么很慢，如何加速访问？ 建站经验 第1张
+
+2、修改本地电脑系统 hosts 文件（PS：路径一般都是 C:\Windows\System32\drivers\etc），直接在最后加入以下代码
+
+192.30.253.112 github.com
+192.30.253.113 github.com
+151.101.184.133 assets-cdn.github.com
+151.101.185.194 github.global.ssl.fastly.net
+4、用“WIN +Ｒ”快捷键打开运行窗口，输入命令：cmd 并回车进入命令行窗口，接着输入命令：ipconfig /flushdns 回车后执行刷新本地 DNS 缓存数据即可。
+ipaddress地址：https://www.ipaddress.com/
+
+当前日期下，我查阅到的IP对应为：
+
+151.101.44.249 github.global.ssl.fastly.net
+192.30.253.113 github.com
+
+修改的Github对应的完整hosts为：
+
+#GitHub
+151.101.185.194 github.global.ssl.fastly.net
+192.30.253.113 github.com
+185.199.108.153 assets-cdn.github.com 
+185.199.109.153 assets-cdn.github.com 
+185.199.110.153 assets-cdn.github.com
+185.199.111.153 assets-cdn.github.com
+185.199.108.153 documentcloud.github.com
+185.199.109.153 documentcloud.github.com
+185.199.110.153 documentcloud.github.com
+185.199.111.153 documentcloud.github.com
+192.30.253.118 gist.github.com
+192.30.253.119 gist.github.com
+107.21.116.220 help.github.com
+3.209.102.29 nodeload.github.com
+34.206.36.121 nodeload.github.com
+35.173.6.94 nodeload.github.com
+52.4.75.11 nodeload.github.com
+52.71.139.107 nodeload.github.com
+52.72.145.109 nodeload.github.com
+52.73.94.166 nodeload.github.com
+52.203.102.189 nodeload.github.com
+151.101.184.133 raw.github.com
+18.204.240.114 status.github.com
+18.211.136.12 status.github.com
+18.214.129.83 status.github.com
+192.30.253.166 training.github.com
+151.101.184.133 avatars0.githubusercontent.com
+151.101.184.133 avatars1.githubusercontent.com
+
+hosts文件是不允许修改的, 但是可以复制出来一个进行修改, 然后将原hosts删除, 将修改过的放到/etc/目录下就可以了
+
+修改完hosts还不会立即生效，你需要刷新DNS缓存，告诉电脑我的hosts文件已经修改了。
+
+输入指令：sudo /etc/init.d/networking restart 即可。(此处这个指令我用了不行, 用的是sudo killall -HUP mDNSResponder)
+
+然后，你关闭浏览器再访问github就不会出现速度很慢的现象了。（亲测不关闭浏览器直接访问也可）
+
+windows下刷新DNS的方法：
+
+打开CMD
+
+输入ipconfig /flushdns

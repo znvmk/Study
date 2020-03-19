@@ -1,0 +1,40 @@
+定时器实现
+public function index()
+    {
+        $cache = Cache::getInstance();
+        $angel=new AngelPlayer();
+        $sget=$cache->stringGet('updateTime:anglePlayer');
+        var_dump($sget);
+        var_dump($sget['date']);
+
+        $data = [
+            'timing'=>'0300',
+            'date'=>date("YmdHis", time())
+        ];
+        var_dump($data);
+        $cache->stringSet('updateTime:anglePlayer',$data);
+
+        $t1=strtotime("20180717114002");
+        var_dump($t1);
+        $t2=strtotime(date("YmdHis",time()));
+        var_dump($t2);
+        $sub=ceil(($t1-$t2)/60);
+        if($sub>=0){
+            var_dump("超过时间：".$sub);
+        }else{
+            $sub= ($sub>=0)? $sub:-$sub;
+            var_dump("差：".$sub);
+        }
+
+
+//        $d=mktime(3, 12, 31, 6, 10, 2015);
+//        echo "创建日期是 " . date("YmdHis", $d);
+//        $a="2018-07-16 17"
+//        var_dump(date("YmdHis", time())."\n");
+//        time());
+//        $ntime="17:12";
+//        var_dump(date("H:i:s"));
+//        var_dump(date("H:i"));
+//        if(date("H:i",date("H:i")==$ntime))
+//        {echo("时间到了");}
+    }

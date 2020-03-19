@@ -1,0 +1,33 @@
+
+C:\Users\SJRJY>sqlplus /nolog
+
+SQL*Plus: Release 12.2.0.1.0 Production on 星期四 8月 16 16:25:19 2018
+
+Copyright (c) 1982, 2016, Oracle.  All rights reserved.
+
+SQL> conn /as sysdba
+已连接。
+SQL> exit
+从 Oracle Database 12c Enterprise Edition Release 12.2.0.1.0 - 64bit Production 断开
+
+C:\Users\SJRJY>sqlplus
+
+SQL*Plus: Release 12.2.0.1.0 Production on 星期四 8月 16 16:26:56 2018
+
+Copyright (c) 1982, 2016, Oracle.  All rights reserved.
+
+请输入用户名:  sys as sysdba
+输入口令:
+
+连接到:
+Oracle Database 12c Enterprise Edition Release 12.2.0.1.0 - 64bit Production
+
+
+
+
+Oracle中用sys用户登录
+2014年01月01日 16:53:58
+阅读数：8514
+ 1、用sqlplus登陆sys用户的时候，用户名应该输入：sys as sysdba，否则会报错！
+
+在sql deverloper中新建一个sys的连接也是一样的，用户名要写为：sys as sysdba。

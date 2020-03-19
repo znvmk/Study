@@ -1,0 +1,19 @@
+ 1.websocket构造函数
+ function __construct(\swoole_websocket_frame $frame = null)
+    {
+        if($frame){//webSocket框架
+            $this->fd = $frame->fd;//fd:客户端文件标识，辨别码
+            $this->data = $frame->data;//二进制数据
+            $this->opCode = $frame->opcode;
+            /*
+            PHP执行这段代码会经过如下4个步骤：
+            1. Scanning (Lexing) ,将PHP代码转换为语言片段(Tokens)
+            2. Parsing , 将Tokens转换成简单而有意义的表达式
+            3. Compilation , 将表达式编译成Opocdes
+            4. Execution , 顺次执行Opcodes，每次一条，从而实现PHP脚本的功能。
+
+            注：现在有的Cache比如：APC ，可以使得PHP缓存Opcodes ，这样，每次有请求来临的时候，就不需要重复执行前面3步，从而能大幅的提高PHP的执行速度。
+            */
+            $this->isFinish = $frame->finish;//表示数据帧是否完整，一个WebSocket请求可能会分成多个数据帧进行发送
+        }
+    }

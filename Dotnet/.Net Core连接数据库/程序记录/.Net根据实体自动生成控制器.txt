@@ -1,0 +1,19 @@
+1.在Models文件夹下新建实体Table.cs(表名一致，首字母大写)，实体类名设置为“public”。
+2.声明实体所对应表：[Table("Table")]：在类定义类名的上方
+3.编写属性，属性的名称、类型要与数据表完全一致。
+4.声明主键（必须要注意，否则生成控制器会失败）（位置：在主键定义的上方，紧挨着主键声明）：[Key]；如果第一个字段（主键）名称为“ID”,“id”,"...ID"默认为主键。如果不成功会报错“运行所选代码生成器出错：“The entity type 'data' requires a primary key to be defined.””,只需声明主键[Key]，重新生成即可。
+5.右键Controllers文件夹->添加->控制器：视图使用 Entity Framework的MVC控制器->添加->模型类：Table（与实体名称一致）->数据上下文类：如果有选择，如果没有添加：TableContext（与实体名称相关联的数据上下文类）->视图：3个选项都选，也可自定义->控制器名称：TablesController(自动生成，与实体相关联，在实体名称后加"s",可自己定义)->添加->生成成功
+6.修改数据源：在appsettings.json中生将成的数据源  “TableContext”修改为自己的数据库连接字符串，注意双斜杠（会被自动修改为4个）
+7.编译运行，输入实体所生成控制器网址（http：//localhost:4925/Tables）(网址就是实体所对应控制器名称)，可以在网页中查看、添加、删除、修改数据库数据。
+8.SQL Server对象资源管理器：SQL Server->添加->浏览->本地（或网络）->选择自己所用的数据库->身份认证：选择SQL Server ->输入用户名、密码（或用Windows身份认证，直接连接）
+
+
+数据库设计
+CREATE TABLE [dbo].[Movie] (
+    [ID]    INT IDENTITY (1, 1) NOT NULL,
+    [num]   INT NULL,
+    [price] INT NULL,
+    PRIMARY KEY CLUSTERED ([ID] ASC)
+);
+
+“ID”为主键，且从1开始自增

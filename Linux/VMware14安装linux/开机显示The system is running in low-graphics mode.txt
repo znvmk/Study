@@ -1,0 +1,16 @@
+解决Ubuntu16.04 开机显示The system is running in low-graphics mode
+2018年02月05日 04:32:35
+阅读数：1391
+vmware装搜狗输入法的时候出错，后来重启的时候直接进不了图形界面了，黑屏下弹出一个提示框，The system is running in low-graphics mode...，找了网上的办法，列出来四五种，试了很多种没有效果。最后发现一种可行的方法：
+
+1. 不用管提示，直接按 ctrl+alt+F1，会进入一个命令输入的模式
+
+2. 输入用户名密码（这里我是root 加密码）
+
+3. 输入以下命令:
+
+cd /etc/X11  （X大写）
+
+sudo cp xorg.conf.failsafe xorg.conf 
+
+sudo reboot

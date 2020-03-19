@@ -1,0 +1,466 @@
+【C++】google protobuf库
+https://blog.csdn.net/fangjin_kl/article/details/60778039
+
+
+
+
+【C++】google protobuf库
+2017年03月07日 19:56:08 阅读数：2449更多
+个人分类： C++/C
+版权声明：本文为博主原创文章，未经博主允许不得转载。	https://blog.csdn.net/fangjin_kl/article/details/60778039
+1、安装
+github路径
+
+$ git clone https://github.com/google/protobuf
+C++的安装说明见src/README.md
+
+安装依赖库
+
+$ sudo apt-get install autoconf automake libtool curl make g++ unzip
+生成脚本
+
+$ ./autogen.sh
+编译
+
+$ ./configure
+$ make
+$ make check
+$ sudo make install
+$ sudo ldconfig # refresh shared library cache.刷新lib库
+注意，默认安装在/usr/local下，但是在某些平台下/usr/local/lib不是默认的系统路径，所以需要添加到LD_LIBRARY_PATH下，但是直接把路径改成/usr/lib下更加方便。所以可以
+
+./configure --prefix=/usr
+
+如果你已经使用了一个prefix，那么先要运行make clean再编译。
+
+安装完后，运行
+
+$ protoc --version
+
+如果输出版本号，则安装成功。
+
+2、介绍
+是google 的一种数据交换的格式，它独立于语言，独立于平台。
+
+优点 
+1. 性能好，效率高 
+2. 代码生成机制，数据解析类自动生成 
+3. 支持向后兼容和向前兼容 
+4. 支持多种编程语言（java，c++，python）
+
+缺点 
+1. 应用不够广 
+2. 二进制格式导致可读性差（二进制格式） 
+3. 缺乏自描述
+
+3、使用
+假如写了一个test.proto文件，可以使用
+
+protoc --cpp_out=. test.proto
+1
+会生成test.pb.cc和test.pb.h文件。
+
+当你使用protoc 来编译一个.proto文件的时候，编译器将利用你在文件中定义的类型生成你打算使用的语言的代码文件。生成的代码包括getting setting 接口和序列化，反序列化接口。
+
+对于C++，编译器对每个.proto文件生成一个.h和一个.cc文件。 每个消息生成一个class。
+对于Java ， 编译器为每个消息生成一个.java文件，外加一个特殊的Builder类来生成消息实例。
+对于Python ， 一点点不同 —– Python编译器生成有一个静态的对每个消息的描述器的模块。然后，用一个元类在运行时创建必要的Python数据访问类。
+对于Go ， 编译器对文件中的每个消息生成一个.pb.go文件。
+介绍如何写一个protobuf文件,以person.proto为例。 
+参考自 [翻译] Protobuf 语言指南 （ proto 2 ）
+
+(1) 版本号
+需要声明protobuf的版本号
+
+syntax = "proto2"
+
+或者
+
+syntax = "proto3"
+
+(2) 命名空间
+package foo.bar
+
+使用package来声明命名空间foo::bar
+
+(3) Message
+一个消息的示例
+
+message Person{
+    required string name = 1;
+    optional int32 age = 2;
+    repeated string hobby = 3;
+}
+消息是字段必须是下面的一种
+
+required 格式正确的消息必须有一个这个字段。
+optional 格式正确的消息可以有一个或者零个这样的消息。
+repeated 这个字段可以有任意多个。字段值的顺序被保留。
+由于历史原因， repeated字段的标量编码效率没有应有的效率高，新的代码可以使用[packet=true]来获得更高效的编码， 比如 ： 
+repeated int32 samples = 4 [packet=true]
+
+Required 字段意味着永久，当你要标记一个字段为required 的时候你必须非常小心 —– 如果某个时刻你想要不再使用这个字段，当你把它改成optional的时候就会出问题 ： 使用旧的协议的人会因为认为这个字段缺失而认为消息不完整，进而拒收或者丢弃这个消息。谷歌的一些工程师得出这样的结论：使用required造成的伤害比他们的好处多，他们更倾向于使用optional的和repeated的。然而，这种观点不是绝对的。
+
+一个proto里面可以有多个message。
+
+(4) 标量
+proto	Note	C++	Java	Python	Go
+float		float	float	float	*float32
+double		double	double	float	*float64
+int32	变长编码. 编码负数效率底下– 打算使用负数的话请使用 sint32.	int32	int	int	*int32
+int64	变长编码. 编码负数效率底下– 打算使用负数的话请使用 sint64.	int64	long	int/long	*int64
+uint32	变长编码.	uint32	int	int/long	*uint32
+uint64	变长编码.	uint64	long	int/long	*uint64
+sint32	U变长编码. 数值有符号，负数编码效率高于int32	int32	int	int	*int32
+sint64	U变长编码. 数值有符号，负数编码效率高于int64	int64	long	int/long	*int64
+fixed32	固定4byte， 如果数值经常大于2的28次方的话效率高于uint32.	uint32	int	int	*uint32
+fixed64	固定8byte，如果数值经常大于2的56次方的话效率高于uint64.	uint64	long	int/long	*uint64
+sfixed32	固定4byte.	int32	int	int	*int32
+sfixed64	固定8byte.	int64	long	int/long	*int64
+bool		bool	boolean	bool	*bool
+string	字符串内容应该是 UTF-8 编码或者7-bit ASCII 文本.	string	String	str/unicode	*string
+bytes	任意二进制数据.	string	ByteString	str	[]byte
+(5) 注释与默认值
+protobuf的注释与C++一样，使用//来表示。
+
+按照上面提到的，元素可以被标记为optional的。一个正确格式的消息可以有也可以没有包含这个可选的字段。再解析消息的时候，如果个可选的字段没有被设置，那么他的值就会被设置成默认值。默认值可以作为消息描述的一部分。
+
+如果没有明确指明默认值，那么这个字段的值就是这个字段的类型默认值。比如 ：
+
+字符串的默认值就是空串。
+数字类型的默认值就是0。
+枚举类型的默认值是枚举定义表的第一个值，这意味着枚举的第一个值需要被格外注意。
+optional int32 result_per_page = 3 [default = 10]; //默认值为10
+1
+(6) 保留字段
+当你在某次更新消息中屏蔽或者删除了一个字段的话，未来的使用着可能在他们的更新中重用这个标签数字来标记他们自己的字段。然后当他们加载旧的消息的时候就会出现很多问题，包括数据冲突，隐藏的bug等等。指定这个字段的标签数字（或者名字，名字可能在序列化为JSON的时候可能冲突）标记为reserved来保证他们不会再次被使用。如果以后的人试用的话protobuf编译器会提示出错。
+
+message Foo {
+  reserved 2, 15, 9 to 11;
+  reserved "foo", "bar";
+}
+注意一个reserved字段不能既有标签数字又有名字。
+
+(7) 枚举
+当你定义一个消息的时候，你可能希望它其中的某个字段一定是预先定义好的一组值中的一个。你如说我要在SearchRequest中添加corpus字段。它只能是 UNIVERSAL, WEB , IMAGES , LOCAL, NEWS ,PRODUCTS, 或者VIDEO 。你可以很简单的在你的消息中定义一个枚举并且定义corpus字段为枚举类型，如果这个字段给出了一个不再枚举中的值，那么解析器就会把它当作一个未知的字段。
+
+message SearchRequest {
+  required string query = 1;
+  optional int32 page_number = 2;
+  optional int32 result_per_page = 3 [default = 10];
+  enum Corpus {
+    UNIVERSAL = 0;
+    WEB = 1;
+    IMAGES = 2;
+    LOCAL = 3;
+    NEWS = 4;
+    PRODUCTS = 5;
+    VIDEO = 6;
+  }
+  optional Corpus corpus = 4 [default = UNIVERSAL];
+}
+只需要将相同的值赋值给不同的枚举项名字，你就在枚举中你可以定义别名 。当然你得先将allow_alias选项设置为true, 否则编译器遇到别名的时候就报错。
+
+enum EnumAllowingAlias {
+  option allow_alias = true;
+  UNKNOWN = 0;
+  STARTED = 1;
+  RUNNING = 1;
+}
+enum EnumNotAllowingAlias {
+  UNKNOWN = 0;
+  STARTED = 1;
+  // RUNNING = 1;  //取消这一行的屏蔽的话，编译器报错。
+}
+枚举常数必须是一个32为的整数。由于枚举值在通讯的时候使用变长编码，所以负数的效率很低，不推荐使用。你可以在（像上面这样）在一个消息内定义枚举，也可以在消息外定义 —– 这样枚举就在全文件可见了。如果你想要使用在消息内定义的枚举的话，使用语法 MessageType.EnumType。 
+在你编译带有枚举的.proto文件的时候，如果生成的是C++或者Java代码， 那么生成的代码中会有对应的枚举。
+
+(8) 其他类型
+你可以使用其他的消息类型作为字段的类型。比如我们打算在SearchResponse消息中包含一个Result类型的消息 ：
+
+message SearchResponse {
+  repeated Result result = 1;
+}
+
+message Result {
+  required string url = 1;
+  optional string title = 2;
+  repeated string snippets = 3;
+}
+(9) 导入定义
+在上面的例子中， Result消息类型是和SearchResponse定义在同一个文件中，如果你想使用的消息类型已经在另一个.proto文件中定义的话怎么办 ？ 
+只要你导入一个文件就可以使用这个文件内定义的消息。在你的文件头部加上这样的语句来导入其他文件：
+
+import "myproject/other_protos.proto"; 
+默认情况下你只能使用直接导入的文件中的定义。然而有的时候你需要将一个文件从一个路径移动到另一个路径的时候，与其将所有的引用这个文件的地方都更新到新的路径，不如在原来的路径上留下一个假的文件，使用import public来指向新的路径。import public语句可以将它导入的文件简介传递给导入本文减的文件。比如 ：
+
+// new.proto
+// 新的定义都在这里
+// old.proto
+// 其他的文件其实导入的都是这个文件
+import public "new.proto";
+import "other.proto";
+// client.proto
+import "old.proto";
+// 你可以使用 old.proto 和 new.proto 的定义， 但是不能使用other.proto的定义
+在命令行中试用-I/--proto_path来指定一系列的编译器搜索路径，如果这个参数没有被设置，那么默认在命令执行的路径查找。通常情况下使用-I/--proto_path来指定到你项目的根目录，然后使用完整的路径来导入所需的文件。
+
+你可以将proto3的消息类型导入并在proto2的消息中使用，反之亦然。不过proto2的枚举不能在proto3中使用。
+
+(10) 内嵌类型
+你可以在一个消息中定义并使用其他消息类型，比如下面的例子 —— Result消息是在SearchResponse中定义的 ：
+
+message SearchResponse {
+  message Result {
+    required string url = 1;
+    optional string title = 2;
+    repeated string snippets = 3;
+  }
+  repeated Result result = 1;
+}
+如果你打算在这个消息的父消息之外重用这个消息的话，你可以这样引用它 ： Parent.Type
+
+message SomeOtherMessage {
+  optional SearchResponse.Result result = 1;
+}
+你想嵌套多深就嵌套多深，没有限制 ：
+
+message Outer {       // Level 0
+  message MiddleAA {  // Level 1
+    message Inner {   // Level 2
+      required int64 ival = 1;
+      optional bool  booly = 2;
+    }
+  }
+  message MiddleBB {  // Level 1
+    message Inner {   // Level 2
+      required int32 ival = 1;
+      optional bool  booly = 2;
+    }
+  }
+}
+(11) 更新一个消息
+如果一个现有的消息类型不再满足你的需求，比如你需要额外的字段，但是你仍然希望兼容旧代码生成的消息的话，不要担心！ 在不破坏现有代码的前提下更新消息是很简单的。请铭记下面的规则 ：
+
+不要改变任何已有的数字标签
+你新添加的字段需要是optional或者repeated。由于任何required字段都没有丢失，这意味着你的旧代码序列化的消息能够被新代码解析通过。你应该给新的字段设置合理的默认值，这样新的代码可以合适解析使用旧的消息。同样的，新的代码产生的消息包也可以被旧的代码解析通过，旧的代码在解析的时候会忽略新的字段。不过新的字段并没有被丢弃,如果这个消息在旧的代码中再次被序列化，这些未知的字段还会在里面 —— 这样这些消息被传递回新的代码的时候，解析仍然有效。
+非required字段可以被移除，但是对应的数字标签不能被重用。或许你可以通过重命名这个字段，加上前缀OBSOLETE_来表示废弃。或者你可以标记reserverd。这样你未来就不会不小心重用这些字段了。
+只要保证标签数字一致，一个非required字段可以被转化扩展字段，反之亦然。
+int32, uint32, int64, uint64, 和 bool这些类型是兼容的 —— 这意味着你可以将一个字段的类型从其中的一种转化为另一种，不会打破向前向后兼容！ 如果通信的时候传输的数字不符合对应类型的那么你会得到和C++中强制类型转化一样的效果（64bit数字会被截断）。
+sint32 sint64相互兼容，但是不和其他的数字类型兼容。
+string bytes相互兼容 ，前提是二进制内容是有效的UTF-8。
+optional repeated是兼容的。当给定的输入字段是repeated的时候，如果接收方期待的是一个optional的字段的话，对与原始类型的字段，他会取最后一个值，对于消息类型的字段，他会将所有的输入合并起来。
+你可以改变一个默认初始值，反正这个初始值从来不再通讯中传递。因此， 如果一个字段没有被设置，那么解析程序就将它赋值为解析程序所使用的版本的默认初始值，而不是发送方的默认初始值。
+枚举类型和int32, uint32, int64, and uint64在传输格式中相互兼容（注意如果不合适会被 截断），但是接收方在发序列化的时候处理他们可不大一样。请注意： 反序列化的时候不正确的枚举数字会被丢弃，这样这个字段的has_xxx接口就返回false并且get_xxx接口返回枚举的第一个值。不过如果是一个整形字段的话，这个数值会一致保留。所以当你打算把一个整形更新为枚举的时候，请务必注意整数的值不要超出接收方枚举的值。
+(12) 扩展 extemsions
+extensions让你定义一段可用的数字标签来供第三方扩展你的消息。其他人可以在他们自己的文件里面使用这些标签数字来扩展你的下消息（无需修改你的消息文件）。 举个例子：
+
+message Foo {
+  //，，，
+  extensions 100 to 199;
+}
+这意味着Foo 消息在[ 100 , 199 ]区间的标签数字被保留做扩展使用。其他的使用者可以在他们自己的文件中导入你的文件，然后在他们自己的文件中给你的消息添加新的字段 ：
+
+extend Foo {
+  optional int32 bar = 126;
+}
+这样就意味着Foo消息现在有一个叫做bar的int32字段了。在编码的时候，通讯格式和使用者定义的新的消息一样。不过你的程序访问扩展字段的方式和访问常规字段的方式不太一样， 这里以C++代码为例 ：
+
+Foo foo;
+foo.SetExtension(bar, 15);
+类似的，Foo类有以下接口HasExtension(), ClearExtension(), GetExtension(), MutableExtension(), and AddExtension()。 
+注意扩展字段可以是除了oneof或者map外的其他任何类型，包括消息类型。
+
+重要的是，要确保两个使用者不会向同一个消息内扩展同一个数字的字段。否则如果类型恰好不兼容的话数据就混乱了。你需要为你的项目定义合适的扩展数字来避免这种事。 
+如果你打算使用一些非常大的数字来作为你的扩展的话，你可以让你的扩展字段区间一直到最大值，你可以max关键字 ：
+
+message Foo {
+  extensions 1000 to max;
+}
+max 是 2的29次方 - 1, 536,870,911. 
+同样的你不能使用19000-19999。 你可以定义扩展空间包含他们，不过当你定义扩展字段的时候不能真的使用这些数字。
+
+(13) Oneof 类似union
+如果你的消息中有很多可选字段，而同一个时刻最多仅有其中的一个字段被设置的话，你可以使用oneof来强化这个特性并且节约存储空间。
+
+oneof字段类似optional字段只不过oneof里面所有的字段共享内存，而且统一时刻只有一个字段可以被设着。设置其中任意一个字段都自动清理其他字段。在你的代码中，你可以使用case（）或者 WhichOneOf（）接口来查看到底是哪个字段被设置了。
+
+使用 Oneof
+使用Oneof特性你只需要在oneof关键字后面加上它的名字就行 ：
+
+message SampleMessage {
+  oneof test_oneof {
+     string name = 4;
+     SubMessage sub_message = 9;
+  }
+}
+你可以在oneof中使用oneof， 你可以使用任何类型的字段，但是你不能使用required, optional, 或者 repeated关键字。 
+在你的代码中，oneof内的字段和其他常规字段有一样的getter setter 接口。你还可以通过接口（取决于你的语言）判断哪个字段被设置。
+
+Oneof 特性
+设置一个oneof字段会自动清理其他的oneof字段。如果你设置了多个oneof字段，只有最后一个有效。
+
+SampleMessage message;
+message.set_name("name");
+CHECK(message.has_name());
+message.mutable_sub_message();   //清理name字段.
+CHECK(!message.has_name());
+如果解析器发现多个oneof字段被设置了，最后一个读到的算数。 
+扩展字段不能被设置为oneof类型。 
+oneof字段不能是repeated。 
+反射API对oneof字段有效。 
+如果你使用C++的话，下面的代码会崩溃，因为在set_name的时候sub_message字段已经被清理了。
+
+SampleMessage message;
+SubMessage* sub_message = message.mutable_sub_message();
+message.set_name("name");      // Will delete sub_message
+sub_message->set_...            // Crashes here
+对C++而言， 如果你对两个带有oneof的消息的使用Swap（）接口的话，每个消息会带有对方的oneof字段。
+
+SampleMessage msg1;
+msg1.set_name("name");
+SampleMessage msg2;
+msg2.mutable_sub_message();
+msg1.swap(&msg2);
+CHECK(msg1.has_sub_message());
+CHECK(msg2.has_name());
+向后兼容问题
+当你添加或者删除一个oneof中的字段的时候要小心点。如果你检测到oneof的值是None/NOT_SET的话，这意味着oneof字段没有被设置或者它被其他版本的消息设置为了一个未知的oneof字段。通讯中可没有办法告诉你两个版本的oneof到底哪里不一样了。 
+重用的注意事项：
+
+将optional字段移入或者移除oneof的话，在（被旧的版本代码）将消息序列化或者反序列化的时候，有些字段肯能会丢失。 
+先删除一个oneof中的字段再加回去：在（被旧的版本代码）将消息序列化或者反序列化的时候，当前设置可能被清理。. 
+合并或者拆分oneof： 同移入移除optional.
+
+(14) Maps
+如果你打算在你的数据结构中创建一个关联表的话，我们提供了很方便的语法：
+
+map<key_type, value_type> map_field = N;
+这里key_type可以是任意整形或者字符串。而value_tpye可以是任意类型。 
+举个例子，如果你打算创建一个Project表，每个Project关联到一个字符串上的话 ：
+
+map<string, Project> projects = 3;
+现在生成Map的API对于所有支持proto2的语言都可用了。
+
+Maps 特性
+扩展项不能是map. 
+Maps不能使 repeated, optional, 或者 required. 
+通讯格式中的顺序或者Map迭代器的顺序是未知的，你不能指望Map保存你的录入顺序。 
+在文本模式下，Map由Key排序。
+
+向后兼容
+在通讯中，map等价与下面的定义， 这样不支持Map的版本也可以解析你的消息：
+
+message MapFieldEntry {
+  key_type key = 1;
+  value_type value = 2;
+}
+
+repeated MapFieldEntry map_field = N;
+4、调用
+第三部分讲述了protobuf文件的书写规范，下面介绍在代码中如何使用，以C++为例。 
+示例
+
+package tutorial;
+
+message Person {
+  required string name = 1;
+  required int32 id = 2;
+  optional string email = 3;
+
+  enum PhoneType {
+    MOBILE = 0;
+    HOME = 1;
+    WORK = 2;
+  }
+
+  message PhoneNumber {
+    required string number = 1;
+    optional PhoneType type = 2 [default = HOME];
+  }
+
+  repeated PhoneNumber phones = 4;
+}
+
+message AddressBook {
+  repeated Person people = 1;
+}
+
+(1) proto的读写
+Person person;
+person.set_name("John Doe");
+person.set_id(1234);
+person.set_email("jdoe@example.com");
+fstream.output("myfile",ios::out | ios::binary);
+person.SerializeToOstream(&output);
+
+然后，你可以读取报文中的数据:
+
+fstream input("myfile",ios::in | ios:binary);
+Person person;
+person.ParseFromIstream(&input);
+cout << "Name: " << person.name() << endl;
+cout << "E-mail: " << person.email() << endl;
+
+一些可用函数
+
+// name
+  inline bool has_name() const;
+  inline void clear_name();
+  inline const ::std::string& name() const;
+  inline void set_name(const ::std::string& value);
+  inline void set_name(const char* value);
+  inline ::std::string* mutable_name();
+
+  // id
+  inline bool has_id() const;
+  inline void clear_id();
+  inline int32_t id() const;
+  inline void set_id(int32_t value);
+
+  // email
+  inline bool has_email() const;
+  inline void clear_email();
+  inline const ::std::string& email() const;
+  inline void set_email(const ::std::string& value);
+  inline void set_email(const char* value);
+  inline ::std::string* mutable_email();
+
+  // phone
+  inline int phone_size() const;
+  inline void clear_phone();
+  inline const ::google::protobuf::RepeatedPtrField< ::tutorial::Person_PhoneNumber >& phone() const;
+  inline ::google::protobuf::RepeatedPtrField< ::tutorial::Person_PhoneNumber >* mutable_phone();
+  inline const ::tutorial::Person_PhoneNumber& phone(int index) const;
+  inline ::tutorial::Person_PhoneNumber* mutable_phone(int index);
+  inline ::tutorial::Person_PhoneNumber* add_phone();
+
+(2) 枚举类型
+枚举类型，如果是内嵌，需要加上嵌 
+套的类名，具体见下示例
+
+Person person;
+Person_PhoneNumber enum_type = person.PhoneNumber().PhoneType(); //声明一个枚举类型
+string type_name = Person_PhoneNumber_Name(enum_type ); //获得枚举类型的名字，字符串格式
+(3) repeated
+新添加一个PhoneNumber
+
+Person *person;
+tutorial::Person::PhoneNumber* phone_number = person->add_phone();
+phone_number->set_number(number);
+PhoneNumber的个数
+
+for(int i = 0 ; i <person->PhoneNumber_size(); i++)
+PhoneNumber的指针，会改变指向内容
+
+PhoneNumber* phone_number = person->mutable_PhoneNumber(i);
+想删掉其中的第i项，protobuf只提供了删除最后一项的函数RemoveLast.但是也提供了SwapElements函数来调换两项。所以可以使用这两项组合来删除第i项。
+
+const google::protobuf::Descriptor  *descriptor = m_pMessage->GetDescriptor();
+const google::protobuf::Reflection  *reflection = m_pMessage->GetReflection();
+const google::protobuf::FieldDescriptor* field = descriptor->FindFieldByName("my_list_name");
+if (i<list_size-1)
+{
+    reflection->SwapElements(m_pMessage, field, i, list_size-1);
+}
+reflection->RemoveLast(m_pMessage, field);

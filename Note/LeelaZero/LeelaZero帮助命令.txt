@@ -1,0 +1,47 @@
+
+D:\gm\кт\LeelaZero\leela-zero\leela-zero-0.15-win64>leelaz.exe/?
+Unrecognized argument: /?
+Leela Zero 0.15  Copyright (C) 2017-2018  Gian-Carlo Pascutto and contributors
+This program comes with ABSOLUTELY NO WARRANTY.
+This is free software, and you are welcome to redistribute it
+under certain conditions; see the COPYING file for details.
+
+
+Generic options:
+  -h [ --help ]                  Show commandline options.
+  -g [ --gtp ]                   Enable GTP mode.
+  -t [ --threads ] arg (=2)      Number of threads to use.
+  -p [ --playouts ] arg          Weaken engine by limiting the number of
+                                 playouts. Requires --noponder.
+  -v [ --visits ] arg            Weaken engine by limiting the number of
+                                 visits.
+  -b [ --lagbuffer ] arg (=100)  Safety margin for time usage in centiseconds.
+  -r [ --resignpct ] arg (=-1)   Resign when winrate is less than x%.
+                                 -1 uses 10% but scales for handicap.
+  -w [ --weights ] arg           File with network weights.
+  -l [ --logfile ] arg           File to log input/output to.
+  -q [ --quiet ]                 Disable all diagnostic output.
+  --timemanage arg (=auto)       [auto|on|off|fast] Enable time management
+                                 features.
+                                 auto = off when using -m, otherwise on
+  --noponder                     Disable thinking on opponent's time.
+  --benchmark                    Test network and exit. Default args:
+                                 -v3200 --noponder -m0 -t1 -s1.
+
+GPU options:
+  --gpu arg                      ID of the OpenCL device(s) to use (disables
+                                 autodetection).
+  --full-tuner                   Try harder to find an optimal OpenCL tuning.
+  --tune-only                    Tune OpenCL only and then exit.
+
+Self-play options:
+  -n [ --noise ]                 Enable policy network randomization.
+  -s [ --seed ] arg              Random number generation seed.
+  -d [ --dumbpass ]              Don't use heuristics for smarter passing.
+  -m [ --randomcnt ] arg (=0)    Play more randomly the first x moves.
+  --randomvisits arg (=1)        Don't play random moves if they have <= x
+                                 visits.
+  --randomtemp arg (=1)          Temperature to use for random move selection.
+
+
+D:\gm\кт\LeelaZero\leela-zero\leela-zero-0.15-win64>

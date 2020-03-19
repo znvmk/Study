@@ -1,0 +1,167 @@
+2，烟花粒子 
+资源 
+这里写图片描述flare.bmp
+
+/** 初始化粒子 */
+bool InitProtechny()
+{
+    for (int i=0; i < Protechny.GetNumOfParticle(); ++i)
+    {
+        ///初始化颜色
+        //r = rand()%255;
+        //g = rand()%255;
+        //b = rand()%255;
+        r = 50;
+        g = 50;
+        b = 100;
+
+        Protechny.SetColor(i,r,g,b);
+
+        ///初始化坐标
+        x = 0.005f * (rand()%9);
+        y = 0.005f * (rand()%9)-1;
+        z = 0.005f * (rand()%6);
+        Protechny.SetPosition(i,x,y,z);
+
+        ///初始化速度
+        vx = 0.0000007f * (rand()%9000-rand()%9000);
+        vy = 0.0000042f * (rand()%9000);
+        vz = 0.0000001f * (rand()%9000);
+
+        Protechny.SetVelocity(i,vx,vy,vz);
+
+        ///初始化加速度
+        ax = 0;
+        ay = -0.0002;
+        az = 0;
+
+        Protechny.SetAcceleration(i,ax,ay,az);
+        ///初始化生命周期
+        lifetime = 100;
+        Protechny.SetLifeTime(i,lifetime);
+
+        ///消失速度
+        dec=0.05*(rand()%50);
+        Protechny.SetDec(i,dec);
+
+        ///初始化大小
+        Protechny.SetSize(i,0.02f);
+    }
+    return true;
+}
+
+/** 更新粒子 */
+void UpdateProtechny()
+{
+    /** 更新位置 */
+    x += vx;
+    y += vy;
+    z += vz;
+
+    /** 更新速度 */
+    vy += ay;
+
+    /** 更新生存时间 */
+    lifetime -= dec;
+
+    /** 如果粒子消失或生命结束 */
+    if (y <= -1 || lifetime <= 0)
+    {
+        /** 初始化位置 */
+        x = 0.005f * (rand()%9);
+        y = 0.005f * (rand()%9)-1;
+        z = 0.000001f * (rand()%9000);
+
+        /** 初始化速度 */
+        vx = 0.0000007f * (rand()%9000-rand()%9000);
+        vy = 0.0000042f * (rand()%9000);
+        vz = 0.0000001f * (rand()%90000);
+
+        lifetime = 100;
+        dec = 0.1 * (rand()%50);
+    }
+}
+
+
+3，瀑布粒子(资源同上)
+
+/** 初始化粒子 */
+bool InitParticle()
+{
+    for (int i=0; i < Waterfall.GetNumOfParticle(); ++i)
+    {
+        ///初始化颜色
+        //r = rand()%255;
+        //g = rand()%255;
+        //b = rand()%255;
+        r = 50;
+        g = 50;
+        b = 100;
+
+        Waterfall.SetColor(i,r,g,b);
+
+        ///初始化坐标
+        x = 0.005f * (rand()%9) - 1;
+        y = 0.005f * (rand()%9) + 1.6;
+        z = 0.0001f * (rand()%15000);
+
+        Waterfall.SetPosition(i,x,y,z);
+
+        ///初始化速度
+        vz = 0;
+        vx = 0.000001f*(rand()%9000);
+        vy = -rand()%5400 * vx * vx;
+
+        Waterfall.SetVelocity(i,vx,vy,vz);
+
+        ///初始化加速度
+        ax = 0;
+        ay = -0.0001;
+        az = 0;
+
+        Waterfall.SetAcceleration(i,ax,ay,az);
+
+        ///初始化生命周期
+        lifetime = 100;
+        Waterfall.SetLifeTime(i,lifetime);
+
+        ///消失速度
+        dec = 0.05 * (rand()%50);
+        Waterfall.SetDec(i,dec);
+
+        ///初始化大小
+        Waterfall.SetSize(i,0.02f);
+    }
+    return true;
+}
+
+/** 更新粒子 */
+void UpdateParticle()
+{
+    /** 更新位置 */
+    x += vx;
+    y += vy;
+
+    /** 更新速度 */
+    vy += ay;
+
+    /** 更新生存时间 */
+    lifetime -= dec;
+
+    /** 如果粒子消失或生命结束 */
+    if (y <= -1 || lifetime <= 0)
+    {
+        /** 初始化位置 */
+        x = 0.005f * (rand()%9) - 1;
+        y = 0.005f * (rand()%9) + 1.6;
+        z = 0.0001f * (rand()%15000);
+
+        /** 初始化速度 */
+        vz = 0;
+        vx = 0.000001f * (rand()%9000);
+        vy = -rand()%500 * vx * vx;
+
+        lifetime = 100;
+        dec = 0.05 * (rand()%50);
+    }
+}

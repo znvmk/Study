@@ -1,0 +1,113 @@
+原文：https://blog.csdn.net/qq_35820350/article/details/82347652
+
+QT5 解决中文显示乱码问题
+
+Qt中的中文显示，经常会出现乱码。从网上看了一些博客，大都是Qt4中的解决方法， 
+网上搜到的都是这种：
+
+    #include < QTextCodec >
+    int main(int argc, char **argv)
+    {
+    ....................
+    QTextCodec::setCodecForTr(QTextCodec::codecForName("UTF8"));
+    QTextCodec::setCodecForLocale(QTextCodec::codecForName("UTF8"));
+    QTextCodec::setCodecForCStrings(QTextCodec::codecForName("UTF8"));
+    ..........................
+    }
+
+Qt5中， 取消了QTextCodec::setCodecForTr()和QTextCodec::setCodecForCString()这两个函数，而且网上很多都是不推荐这种写法。
+我的问题
+
+代码：
+
+    #include "helloqt.h"
+    #include <QtWidgets/QApplication>
+    #include <qlabel.h>
+     
+    int main(int argc, char *argv[])
+    {
+        QApplication a(argc, argv);
+        HelloQt w;
+        w.setWindowTitle("学生事务管理系统");
+        w.resize(300, 140);
+     
+        QLabel label("test",&w);
+        label.setGeometry(100, 50, 160, 30);
+        w.show();
+        return a.exec();
+    }
+
+结果： 
+这里写图片描述
+解决方法
+
+有三种转换的方法： 
+1.加上#include <qtextcodec.h> 
+QTextCodec *codec = QTextCodec::codecForName(“GBK”);//修改这两行 
+w.setWindowTitle(codec->toUnicode(“学生事务管理系统”)); 
+代码改为：
+
+    #include "helloqt.h"
+    #include <QtWidgets/QApplication>
+    #include <qlabel.h>
+    #include <qtextcodec.h>
+     
+    int main(int argc, char *argv[])
+    {
+        QApplication a(argc, argv);
+        HelloQt w;
+        QTextCodec *codec = QTextCodec::codecForName("GBK");//修改这两行
+        w.setWindowTitle(codec->toUnicode("学生事务管理系统"));
+        w.resize(300, 140);
+     
+        QLabel label("test",&w);
+        label.setGeometry(100, 50, 160, 30);
+        w.show();
+        return a.exec();
+    }
+
+2.w.setWindowTitle(QString::fromLocal8Bit(“学生事务管理系统”)); 
+代码改为：
+
+    #include "helloqt.h"
+    #include <QtWidgets/QApplication>
+    #include <qlabel.h>
+     
+    int main(int argc, char *argv[])
+    {
+        QApplication a(argc, argv);
+        HelloQt w;
+        w.setWindowTitle(QString::fromLocal8Bit("学生事务管理系统"));//修改这一行
+        w.resize(300, 140);
+     
+        QLabel label("test",&w);
+        label.setGeometry(100, 50, 160, 30);
+        w.show();
+        return a.exec();
+    }
+
+3.w.setWindowTitle(QStringLiteral(“学生事务管理系统”)); 
+代码改为：
+
+    #include "helloqt.h"
+    #include <QtWidgets/QApplication>
+    #include <qlabel.h>
+     
+    int main(int argc, char *argv[])
+    {
+        QApplication a(argc, argv);
+        HelloQt w;
+        w.setWindowTitle(QStringLiteral("学生事务管理系统"));//修改这一行
+        w.resize(300, 140);
+     
+        QLabel label("test",&w);
+        label.setGeometry(100, 50, 160, 30);
+        w.show();
+        return a.exec();
+    }
+
+结果： 
+这里写图片描述
+
+ 
+原文出处：https://blog.csdn.net/sinat_36053757/article/details/70142078

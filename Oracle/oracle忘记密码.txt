@@ -1,0 +1,28 @@
+Oracle安装后修改用户名和密码
+2017年04月30日 15:55:33
+阅读数：3049
+Oracle安装后（windows操作系统为例）我们可能会忘记用户名和密码，这时就会想到需要修改用户名和密码，其具体操作步骤如下：
+
+1、打开cmd命令提示符，键入"sqlplus /nolog"，进入oracle控制台，输入"conn /as sysdba"；
+
+2、输入“select username from dba_users”查看用户列表;
+
+3、修改用户名和密码，键入"alter user newUser identified by newPassword"。（其中“newUser”和“newPassword”是要修改的新的用户名和密码）
+
+
+
+
+
+
+
+
+对于oracle10g来说：1.如果不记得sys用户的密码了，采用如下方法可以修改密码： 
+(1)打开cmd，输入sqlplus /nolog，回车。 
+(2)输入“conn / as sysdba”; 
+(3)输入“alter user sys identified by 新密码;”（新密码必须以字母开头，另外每条SQL语句后得分号不能忘） 其他用户方式同理
+2.
+(1)在cmd中启动sqlplus； 
+(2)用sqlplus/as sysdba登录，使其连接到: Oracle Database 10g Express Edition Release 10.2.0.1.0 - Production 
+(3)执行ALTER USER DBSNMP ACCOUNT UNLOCK； 
+(4) 从新用SQL/PLUS登录，设置用户名、密码； 
+附：Oracle 10g 默认安装带来的用户名/密码 UsernamePasswordDescriptionSee AlsoCTXSYSCTXSYSThe Oracle Text accountOracle Text ReferenceDBSNMPDBSNMPThe account used by the Management Agent component of Oracle Enterprise Manager to monitor and manage the databaseOracle Enterprise Manager Grid Control Installation and Basic ConfigurationLBACSYSLBACSYSThe Oracle Label Security administrator accountOracle Label Security Administrator's GuideMDDATAMDDATAThe schema used by Oracle Spatial for storing Geocoder and router dataOracle Spatial User's Guide and ReferenceMDSYSMDSYSThe Oracle Spatial and Oracle interMedia Locator administrator accountOracle Spatial User's Guide and ReferenceDMSYSDMSYSThe Oracle Data Mining account.Oracle Data Mining Administrator's GuideOracle Data Mining ConceptsOLAPSYSMANAGERThe account used to create OLAP metadata structures. It owns the OLAP Catalog (CWMLite).Oracle OLAP Application Developer's GuideORDPLUGINSORDPLUGINSThe Oracle interMedia user. Plug-ins supplied by Oracle and third party format plug-ins are installed in this schema.Oracle interMedia User's GuideORDSYSORDSYSThe Oracle interMedia administrator accountOracle interMedia User's GuideOUTLNOUTLNThe account that supports plan stability. Plan stability enables you to maintain the same execution plans for the same SQL statements. OUTLN acts as a role to centrally manage metadata associated with stored outlines.Oracle Database Performance Tuning GuideSI_INFORMTN_SCHEMASI_INFORMTN_SCHEMAThe account that stores the information views for the SQL/MM Still Image StandardOracle interMedia User's GuideSYSCHANGE_ON_INSTALLThe account used to perform database administration tasksOracle Database Administrator's GuideSYSMANCHANGE_ON_INSTALLThe account used to perform Oracle Enterprise Manager database administration tasks. Note that SYS and SYSTEM can also perform these tasks.Oracle Enterprise Manager Grid Control Installation and Basic ConfigurationSYSTEMMANAGERAnother account used to perform database administration tasks.

@@ -1,0 +1,48 @@
+gitbook安装与使用之windows下搭建gitbook平台
+
+最近需要在GitBook中去阅读电子书，过程：
+cnpm安装gitbook
+解压书籍文件，并cd到书籍文件目录
+gitbook serve
+浏览器访问localhost:4000
+
+
+
+2、搭建gitbook平台
+输入命令，全局安装gitbook。
+npm install gitbook-cli -g
+然后升级到最新版：gitbook update
+在CMD窗口中输入
+ mkdir   mybook                            创建文件夹
+切换到目录下.
+切换文件夹后在当前文件目录下的在窗口中输入如下命令
+gitbook init      //初始化目录文件
+初始化之后
+gitbook build
+gitbook安装好之后 解压书籍文件，并cd到书籍文件目录
+输入：gitbook serve
+然后就可以输入http://127.0.0.1:4000/ 访问了
+
+生成电子图书
+
+1)gitbook serve 之后可以在本地浏览（也就是上面讲述的方法）
+
+2)gtibook build 生成html静态文件，可以本地打开浏览
+
+***出现的问题：当我们执行gitbook build有时候会报错：
+Error: ENOENT: no such file or directory, stat 'E:\znp\Git\GitBook\mybook\_book\gitbook\gitbook-plugin-sharing\buttons.js'
+Error: ENOENT: no such file or directory, stat ‘C:\Users\Lenovo\www\mdspg\md\mybook_book\gitbook\gitbook-plugin-fontsettings\fontsettings.js’
+
+而gitbook serve的时候可能会报错
+random errors when using gitbook plugin on running "gitbook serve"
+
+原来是一个Bug（Vesion：3.2.3）。
+解决办法如下。
+用户目录下找到以下文件。
+.gitbook\versions\3.2.3\lib\output\website\copyPluginAssets.js
+
+Replace all
+  confirm: true
+with
+  confirm: false
+Ok完成，再次执行gitbook serve或者gitbook build  没有报错！正常运行

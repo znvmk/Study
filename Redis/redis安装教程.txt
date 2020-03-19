@@ -1,0 +1,50 @@
+1.下载地址：https://github.com/MicrosoftArchive/redis/releases
+下载Redis-x64-3.2.100.zip，解压
+
+2.打开一个 cmd 窗口 使用 cd 命令切换目录到 C:\redis 运行：
+redis-server.exe redis.windows.conf
+如果想方便的话，可以把 redis 的路径加到系统的环境变量里，这样就省得再输路径了，
+后面的那个 redis.windows.conf 可以省略，如果省略，会启用默认的。输入之后，会显示如下界面：
+3.这时候另启一个 cmd 窗口，原来的不要关闭，不然就无法访问服务端了。
+
+切换到 redis 目录下运行:
+
+redis-cli.exe -h 127.0.0.1 -p 6379
+设置键值对:
+
+set myKey abc
+取出键值对:
+
+get myKey
+
+
+RedisDesktopManager 连接reids
+1.点击Connect to Redis Server 
+2.Name：redis
+3.Address:127.0.0.1:6379(和之前建立的服务一致)
+4.测试，连接
+
+
+
+
+
+windows下自动启动Redis隐藏命令行窗口的方法
+对于Redis在windows下的安装和常规启动我就不多说了，添加启动Redis的windows服务，
+但是在启动服务的时候，会报错：错误1053，关于这个问题的解决方法如下
+这段时间看了看关于Redis的相关内容，对于Redis在windows下的安装和常规启动我就不多说了。添加启动Redis的windows服务，但是在启动服务的时候，会报错：错误1053：服务没有及时响应启动或控制请求。如下图： 
+我查了相关资料，有的人说是因为windows8系统权限问题。我就想能不能绕过这个错误，实现自动启动Redis，而不用再命令行中启动。 
+一，我把启动命令写入bat。如下： 
+F:\redis\workspace\redis-server.exe F:\redis\workspace\redis.conf 
+保存为createredis.bat 
+二，利用vbs调用bat。 
+新建vbs文件openredis.vbs。写入命令： 
+CreateObject("WScript.Shell").Run "cmd /c F:\redis\workspace\createredis.bat",0 
+下面就是考虑如何调用vbs了。 
+方法一：程序调用，代码如下 
+ProcessStartInfo startInfo = new ProcessStartInfo(); 
+startInfo.FileName = "wscript.exe"; 
+startInfo.Arguments = "F:\\redis\\workspace\\openredis.vbs"; 
+Process.Start(startInfo); 
+方法二：设置开机自动启动 
+在注册表键值 
+【HKEY_CURRENT_USER \Software \Microsoft \Windows \CurrentVersion \Run】新建字符串值openredis，如下图添加vbs路径，即可实现开机自动启动Redis。 

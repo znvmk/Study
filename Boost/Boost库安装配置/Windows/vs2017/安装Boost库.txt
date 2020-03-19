@@ -1,0 +1,251 @@
+VS2017下编译和配置boost库
+
+第一步：
+到官网http://www.boost.org/下载boost库，最好下载1.6x最新版
+第二步：解压。
+可解压到固定的目录，我是解压到E:\mylib\boost
+第三步：环境配置
+
+VS2017更加注重跨平台性，安装文件较多，VC有三个版本，分别是arm、Hostx64、Hostx86，本文使用Hostx64。
+注意，需要使用cl.exe. 默认安装时，编译器cl.exe并不在环境变量中，需要配置。
+
+测试环境变量：
+Ctrl+r输入cmd，输入cl，若显示：'cl' 不是内部或外部命令，也不是可运行的程序或批处理文件。说明没有环境变量。
+
+配置环境变量：
+计算机右击-属性-高级系统设置-环境变量-选择Path编辑-添加cl的路径:
+E:\VS2017\VC\Tools\MSVC\14.10.25017\bin\HostX64\x64
+
+
+cmd窗口：
+Microsoft Windows [版本 10.0.17134.165]
+(c) 2018 Microsoft Corporation。保留所有权利。
+
+C:\Users\SJRJY>cl
+用于 x64 的 Microsoft (R) C/C++ 优化编译器 19.14.26429.4 版
+版权所有(C) Microsoft Corporation。保留所有权利。
+
+用法: cl [ 选项... ] 文件名... [ /link 链接选项... ]
+
+
+得到上述结果，说明环境配置完成。
+
+第四步：开始编译
+右击--更多—以管理员身份运行VS2017开发人员命令提示，英文名称x64 Native Tools Command Prompt for VS 2017
+1.输入命令，进入目录：
+cd C:\Program Files (x86)\Microsoft Visual Studio\Boost\boost_1_67_0
+2.输入命令： bootstrap.bat
+
+等待一分钟左右在E:\mylib\boost\boost_1_64_0生成几个文件：
+b2.exe,bjm.exe,和project-config.jam。
+
+******一定不要修改！！！！！！
+ 3.在E:\mylib\boost\boost_1_64_0下有一个项目配置文件project-config.jam,打开作如下修改：******一定不要修改！！！！！！
+    很多资料说要编辑project-config.jam文件，如下
+     import option ;  
+     using msvc :14.1:"D:/Program Files (x86)/Microsoft Visual      Studio/2017/Enterprise/VC/Tools/MSVC/14.11.25503/bin/Hostx64/x64/cl.exe";  
+    option.set keep-going : false ;
+ 
+    编译没有成功。
+ 
+    不修改此文件，保持不变，编译成功。
+******一定不要修改！！！！！！
+
+第五步：安装
+
+在E:\mylib\boost\boost_1_64_0下新建一个目录build存放编译时产生的中间文件，编译结束后可以删除。
+运行：
+b2.exe stage --toolset=msvc-14.1 address-model=64 --stagedir="E:\mylib\boost\bin1.64.0\VC14.
+1" threading=multi --build-type=complete --build-dir="E:\mylib\boost\boost_1_64_0\build"
+
+b2.exe stage --toolset=msvc-14.2 address-model=64 --stagedir="D:\DSA\Boost\boost_1_72_0\VC14.2" threading=multi --build-type=complete --build-dir="D:\DSA\Boost\boost_1_72_0\VC14.2\build"
+参数说明：
+stage:静态库，只生成lib
+install:生成.h和lib,生成的include 可以用boost目录来代替。
+
+address-model=64/32,64位和32位。
+
+--stage-dir:生成目标文件的目录。
+--build-dir：生成中间过程文件的目录
+
+threading=multi：多线程
+
+--toolset=msvc-14.2：指定编译器版本
+
+
+注意版本问题：这里是VC14.1
+
+具体介绍：
+
+--toolset：设置编译器，如果用VC，设msvc, 用MinGW就设gcc。
+
+stage：可选install，选stage只生成库（静态库和动态库）,install还包含include目录，其实，可以直接用我们下载下来的BOOST包里的boost目录，这个目录和install生成的include目录内容基本一样。所以也就不用了。
+
+--build-dir=”[temporary folder name”：编译的临时文件存放位置。
+
+--stagedir=” stage folder name]”：存放编译后库文件的路径，默认是stage。
+
+--build-type=complete：编译所有版本
+
+{
+
+  variant=debug|release        决定编译什么版本(Debug or Release?)
+
+  link=static|shared           决定使用静态库还是动态库。
+
+  threading=single|multi       决定使用单线程还是多线程库。
+
+  runtime-link=static|shared   决定是静态还是动态链接C/C++标准库。
+
+}
+
+link：是动态库还是静态库，static | shared，一般默认静态。
+
+address-mode：address-model=64，如果没有这个属性的话，会默认生成32位的平台库，加入这个选项才能生成64位的DLL。如果运行在VS32位的命令行下需要添加” architecture=x86”，笔者使用x64 Native Tools Command Prompt for VS 2017没有x86与x64之间的矛盾，所以未设置。
+
+这个过程大致需要半个小时：生成的这个文件夹就是库文件和动态链接所在。中间文件build可以直接删除。
+**生成之后共4.13Gb，build：4.13Gb，lib：1.91Gb
+**选install只会生成build目录
+
+第六步：在VS2017中的配置：
+
+1.新建项目：
+
+VisualC++/win32控制台应用程序
+应用程序设置选择控制台应用程序，附加选项选择预编译头，完成即可。
+
+**我测试用C++空项目
+
+2.粘贴代码
+
+// boostest.cpp : 定义控制台应用程序的入口点。
+//
+
+//#include "stdafx.h"
+#include <boost/lexical_cast.hpp>
+#include <iostream>
+using namespace std;
+int main()
+{
+    using boost::lexical_cast;
+    int a = lexical_cast<int>("123");
+    double b = lexical_cast<double>("123.0123456789");
+    string s0 = lexical_cast<string>(a);
+    string s1 = lexical_cast<string>(b);
+    cout << "number: " << a << "  " << b << endl;
+    cout << "string: " << s0 << "  " << s1 << endl;
+    int c = 0;
+    try {
+            c = lexical_cast<int>("abcd");
+    }
+    catch (boost::bad_lexical_cast& e) {
+            cout << e.what() << endl;
+    }
+
+    system("pause");
+    return 0;
+}
+
+3.修改调试平台
+因为编译的静态库和动态链接选择是64位的，选择64位平台。
+*（但奇怪的是我用x86也可以编译成功）
+4.设置编译环境和链接文件
+选择x86平台,
+步骤：
+1.设置头文件目录：
+项目->属性->C/C++->常规->附加包含目录
+添加：E:\mylib\boost\bin1.64.0路径（只到boost解压目录就可以了，不需要进入boost_1_67_0\boost目录）：
+C:\Program Files (x86)\Microsoft Visual Studio\lib\Boost\boost_1_67_0
+
+2.设置库文件目录：
+项目->属性->链接器->常规->附加库目录
+添加：E:\mylib\boost\bin1.64.0\VC14.1\lib路径（注意，目录直到lib）：
+C:\Program Files (x86)\Microsoft Visual Studio\lib\Boost\Boost_stage\x64\VC14.1_x64\lib
+
+第七步：调试运行
+ctrl+F5
+测试无问题，再选择x64平台 重复步骤
+测试
+
+
+vs2017安装Boost库：1.解压可能会失败，要分几次解压 2.安装不要修改project-config.jam文件3.可以试试生成头文件，include
+
+
+boost b2/bjam 参数说明
+
+b2/bjam 参数说明：
+b2 命令的功能强大，用起来也比较复杂，因此在使用之前，最好先查看一下该命令的帮助：
+
+b2.exe --help
+以下是一些比较重要的参数说明：
+
+stage/install：
+
+stage 表示只生成库（dll 和 lib），install 还会生成包含头文件的 include 目录。推荐使用 stage，因为 install 生成的 include 目录实际就是源码包下的 boost 目录，需要 include 的时候可以直接使用，不需要再次生成，这样可以节省大量的编译时间。
+
+toolset：
+
+指定编译器，可选的如 borland、gcc、msvc-14.0（VS2015）等。如果不指定，会自动搜索本地可用的编译器（可查看 ./project-config.jam 文件以确认）。
+
+without/with：
+
+选择不编译/编译哪些库（类似于黑名单/白名单）。--with-python 的含义是仅编译 python，其他的都不编译。反过来，如果用 --without-python，意思就是除了 python， 其他的都编译。with/without 参数可以多次出现，以限定多个库。如果不设置 with/without 参数，默认全部编译，可能需要几个小时的时间！
+
+需要注意，编译 Boost.python 需要确保本地安装了 Python，并且 python 命令已加入环境变量。
+
+要查看 Boost 包含的所有库，可使用以下命令：
+
+b2.exe --show-libraries
+stagedir/prefix：
+
+stage 时使用 stagedir，install 时使用 prefix，表示编译生成文件的路径。推荐给不同的编译环境指定不同的目录，如 Visual Studio 2015 的 x86 应用对应的是 bin/lib32-msvc-14.0，x64 应用对应的是 bin/lib64-msvc-14.0。如果都生成到一个目录下，将没有任何益处，徒增管理难度。如果使用了 install 参数，那么还将在上述指定的目录下生成 include 目录，用于保存头文件。
+
+build-dir：
+
+编译生成的中间文件的路径，默认是 Boost 根目录下的 bin.v2 目录，一般无需设置。
+
+link：
+
+指定生成动态链接库还是静态链接库，取值为 static|shared。生成静态链接库使用 static，生成动态链接库需使用 shared。如不指定，默认使用 static。静态库的缺点是占用空间比较大，优点是程序发布的时候无需附带 Boost 库的 dll，比较整洁。推荐使用静态库的方式编译 Boost.python，这样发布程序的时候就不用 Boost 的 dll 了，并且也多占用不了太多空间。
+
+runtime-link：
+
+指定运行时是动态还是静态链接其他库。同样有 shared 和 static 两种方式。如果不指定，默认是 shared，一般无需设置。
+
+threading：
+
+要编译的库是单线程还是多线程，可取值 single|multi。如果不指定，默认是 multi，一般无需设置。
+
+variant
+
+debug|release，编译 debug 版本还是 release 版本。一般与最终发布的程序是 debug 还是 release 版相对应。如果不指定，默认两个都编译，一般无需设置。
+
+address-model
+
+编译成 32 位版本还是 64 位版本，可取值 32|64。如果不指定，默认两个版本都编译。如果是编译 Boost.python，该参数就要与本地安装的 Python 位数相对应，否则编译会出错，因此最好设置一下。
+
+Boost 静态库/动态库的命名规则
+以 Boost.python 为例，如果编译的是静态库（link=static），将会生成单个 .lib 文件：
+
+libboost_python36-vc140-mt-gd-x32-1_68.lib
+而如果编译的是动态库（link=shared），将会生成两个文件（.lib 和 .dll）：
+
+boost_python36-vc140-mt-gd-x32-1_68.lib
+boost_python36-vc140-mt-gd-x32-1_68.dll
+动态库虽然也生成 .lib 文件，但它与静态库的 .lib 文件差别很大。动态库的 .lib 更像是对 .dll 的声明，二者的关系类似于 .h 与 .cpp 的关系。因此，动态库中的 .lib 文件要比静态库的 .lib 文件小得多。
+
+下面以静态库的命名规则为例进行分析：
+
+libboost_python36-vc140-mt-sgd-x32-1_68.lib
+| ||   | |      | |   | || ||| | | |  |
+ -  ---   ------   ---  -- - -  -   --
+ 1   2       3      4    5 6 7  8    9
+静态库以 lib 开头，动态库开头没有 lib。
+所有的库都含有 boost 前缀。
+Boost 库名称，本例中为 python36。
+编译器名称及其版本，vc140 指的是 msvc-14.0，对应 Visual Studio 2015。
+有 mt 代表 threading=multi，没有则代表 threading=single。
+有 s 代表 runtime-link=static，没有则代表 runtime-link=shared。
+有 gd 代表 debug 版本，没有则代表 release 版本。
+目标位数，x32 代表 32 位，x64 代表 64 位。
+Boost 库的版本号，1_68 代表 Boost 1.68 版本。

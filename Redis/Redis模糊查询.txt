@@ -1,0 +1,59 @@
+ $cache = Cache::getInstance();
+var_dump($cache->client()->getKeys('horizon:m*'));
+//返回了一个数组，key：从0开始的序号，value：redis的key。
+
+array(5) {
+  [0]=>
+  string(15) "horizon:masters"
+  [1]=>
+  string(29) "horizon:monitor:time-to-clear"
+  [2]=>
+  string(19) "horizon:supervisors"
+  [3]=>
+  string(29) "horizon:master:homestead-PCjj"
+  [4]=>
+  string(46) "horizon:supervisor:homestead-PCjj:supervisor-1"
+}
+array(3) {
+  [0]=>
+  string(15) "horizon:masters"
+  [1]=>
+  string(29) "horizon:monitor:time-to-clear"
+  [2]=>
+  string(29) "horizon:master:homestead-PCjj"
+}
+
+
+
+Redis模糊查询
+最近使用Redis优化项目功能，其中有一部分为模糊查询，找了很多帖子，也没有找到很好的解决方案和思路，最终皇天不负有心人啊，终于让我找到了！！！
+
+感谢该帖作者：WalkerAlone  原文链接：http://blog.csdn.net/qq_28893679/article/details/53005057
+
+可以通过Redis中keys命令进行获取key值，具体命令格式：keys pattern 
+文中提到redis中允许模糊查询的有3个通配符，分别是：*，?，[]
+其中：
+*：通配任意多个字符
+?：通配单个字符
+[]：通配括号内的某一个字符
+
+=========================================================================
+
+在实际项目中有可能会使用spring集成redis的RedisTemplate进行操作，这样在注入模板时可能会出现模糊查询不好用的情况，是因为
+
+keys方法是存在于StringRedisTemplate子类中（父类-RedisTemplate）的
+
+在spring配置时，一定要注意！！！
+
+=========================================================================
+
+实际操作中具体的思路：
+
+1. 将要查询的条件当做key进行ZSet存储
+
+2. 在获取时，调用StringRedisTemplate.keys(pattern)，例：
+public Set keys(String pattern){
+　　return stringRedisTemplate.keys("*" + pattern + "*");
+   // return stringRedisTemplate.keys("?" + pattern);
+　　// return stringRedisTemplate.keys("[" + pattern + "]");
+}

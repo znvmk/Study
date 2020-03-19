@@ -1,0 +1,13 @@
+Opengl---gluLookAt函数详解
+
+视点转换
+函数原型
+void gluLookAt(GLdouble eyex,GLdouble eyey,GLdouble eyez,GLdouble centerx,GLdouble centery,GLdouble centerz,GLdouble upx,GLdouble upy,GLdouble upz);
+该函数定义一个视图矩阵，并与当前矩阵相乘。
+第一组eyex, eyey,eyez 相机在世界坐标的位置
+第二组centerx,centery,centerz 相机镜头对准的物体在世界坐标的位置
+第三组upx,upy,upz 相机向上的方向在世界坐标中的方向
+你把相机想象成为你自己的脑袋：
+第一组数据就是脑袋的位置
+第二组数据就是眼睛看的物体的位置
+第三组就是头顶朝向的方向（因为你可以歪着头看同一个物体）。

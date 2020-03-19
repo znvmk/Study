@@ -1,0 +1,7 @@
+从9501端口访问本机
+ckp_server服务器访问
+http://127.0.0.1:9501/test/index
+
+http://chuangke.jygeili.com:81/index.php?act=seller_login&op=show_login
+
+chat_server:9999

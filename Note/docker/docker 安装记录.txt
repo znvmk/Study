@@ -1,0 +1,55 @@
+1、win10下载最新版docker for windows 
+2、控制面板->程序和功能->启用或关闭Windows功能->Hyper-V:启用全部功能（如果不是Win10，安装virtual tool）
+3、安装docker for Windows，启动
+4、登录，如果有项目，设置将项目所在的磁盘的使用权限赋予docker
+5、检查docker是否正确安装：
+PS C:\Users\SJRJY> docker --version
+Docker version 18.06.0-ce, build 0ffa825
+PS C:\Users\SJRJY> docker version
+Client:
+ Version:           18.06.0-ce
+ API version:       1.38
+ Go version:        go1.10.3
+ Git commit:        0ffa825
+ Built:             Wed Jul 18 19:05:28 2018
+ OS/Arch:           windows/amd64
+ Experimental:      false
+
+Server:
+ Engine:
+  Version:          18.06.0-ce
+  API version:      1.38 (minimum version 1.12)
+  Go version:       go1.10.3
+  Git commit:       0ffa825
+  Built:            Wed Jul 18 19:13:46 2018
+  OS/Arch:          linux/amd64
+  Experimental:     false
+  6、要使用Linux环境，右键docker：Switch to Linux Containers...(Switch to Windows Containers...)
+  7、下载镜像：
+docker pull registry.cn-hangzhou.aliyuncs.com/ckp_game/easyswoole
+
+docker pull registry.cn-hangzhou.aliyuncs.com/dockerkjcx/alpine-php7.2
+8、查看镜像：
+docker images
+PS C:\Users\SJRJY> docker images
+REPOSITORY                                                   TAG                 IMAGE ID            CREATED             SIZE
+registry.cn-hangzhou.aliyuncs.com/ckp_game/easyswoole        latest              a0b342b25a11        7 weeks ago         431MB
+registry.cn-hangzhou.aliyuncs.com/dockerkjcx/alpine-php7.2   latest              0e5fa037206a        3 months ago        83.2MB
+9、删除镜像：
+docker rmi 镜像名称
+10、docker镜像名称过长，重命名镜像
+PS C:\WINDOWS\system32> docker tag registry.cn-hangzhou.aliyuncs.com/ckp_game/easyswoole easyswoole
+查看：
+PS C:\Users\SJRJY> docker images
+REPOSITORY                                                   TAG                 IMAGE ID            CREATED             SIZE
+easyswoole                                                   latest              a0b342b25a11        7 weeks ago         431MB
+registry.cn-hangzhou.aliyuncs.com/ckp_game/easyswoole        latest              a0b342b25a11        7 weeks ago         431MB
+registry.cn-hangzhou.aliyuncs.com/dockerkjcx/alpine-php7.2   latest              0e5fa037206a        3 months ago        83.2MB
+11、创建容器：
+将已有项目添加到容器，命名容器，创建容器
+PS C:\Users\SJRJY> docker run -it   -v E:/project/php:/code -p 9501:9501 -p 9999:9999  --name easyswoole easyswoole  /bin/sh
+/var/www/html # cd  /code/
+/code # ls
+chat_server       ckp_server        新建文本文档.txt
+/code # cd ckp_server/
+/code/ckp_server # php easyswoole start

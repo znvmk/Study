@@ -1,0 +1,31 @@
+//天使名人打开请求
+message AngelCelebrityOpenReq{
+}
+//天使名人打开返回
+message AngelCelebrityOpenResult{
+    //天使名人列表数据
+    map<int32, AngelPlayerInfo> AngelPlayerDic=1;
+    int32 Count=2;//天使名人列表数量
+}
+//天使名人详细数据
+message AngelPlayerInfo{
+    int32 AngelPlayerId=1;//天使玩家ID
+    string Name=2;//天使玩家名称
+    string Icon=3;//天使玩家头像
+    int32 Level=4;//天使玩家级别
+    int32 SocialStatus=5;//天使玩家身价
+    int32 Popularity=6;//天使玩家人气
+    int32 Vip=7;//vip充值
+    string Sign=8;//签名
+    int32 Like=9;//玩家是否对当前天使玩家点赞:1.true,2.false
+}
+//天使名人点赞请求
+message AngelCelebrityLikeReq{
+    int32 AngelPlayerId=1;//被点赞的天使玩家的ID
+}
+//天使名人点赞返回
+message AngelCelebrityLikeResult{
+    int32 LikeResult=1;//1.点赞成功，获得绑金500。2.点赞失败
+    int32 AngelPlayerId=2;//被点赞的天使玩家的ID
+    int32 Popularity=3;//天使玩家人气
+}

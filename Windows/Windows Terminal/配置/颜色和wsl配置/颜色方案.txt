@@ -1,0 +1,92 @@
+1.修改cmd
+#开头的是注释，不要复制进去，配置文件不带注释！！
+也不要全文复制，guid可能每台电脑都不一样
+{
+            "acrylicOpacity" : 0.75,
+            "backgroundImage" : "T://2.jpg", # 图片地址
+            "backgroundImageOpacity" : 0.9,
+            "closeOnExit" : true,
+            "colorScheme" : "CMD",# 配色方案
+            "commandline" : "cmd.exe",
+            "cursorColor" : "#FFFFFF",
+            "cursorShape" : "bar",
+            "fontFace" : "Consolas",
+            "fontSize" : 12,  #字体大小
+            "guid" : "{0caa0dad-35be-5f56-a8ff-afceeeaa6101}", #这个不要复制
+            "historySize" : 9001,
+            "icon" : "ms-appx:///ProfileIcons/{0caa0dad-35be-5f56-a8ff-afceeeaa6101}.png",
+            "name" : "cmd",
+            "padding" : "0, 0, 0, 0",
+            "snapOnInput" : true,
+            "startingDirectory" : "%USERPROFILE%",
+            "tabTitle" : "cmd",
+            "useAcrylic" : false  # 毛玻璃 关掉
+        },
+2.修改ubuntu
+        {
+            "acrylicOpacity" : 0.5,
+            "backgroundImage" : "T://2.jpg", # 图片地址
+            "backgroundImageOpacity" : 0.4, # 透明度
+            "closeOnExit" : true,
+            "colorScheme" : "Campbell",
+            "commandline" : "wsl.exe -d Ubuntu",
+            "cursorColor" : "#FFFFFF",
+            "cursorShape" : "bar",
+            "fontFace" : "Consolas",
+            "fontSize" : 12,
+            "guid" : "{2c4de342-38b7-51cf-b940-2309a097f518}",
+            "historySize" : 9001,
+            "icon" : "ms-appx:///ProfileIcons/{9acb9455-ca41-5af7-950f-6bca1bc9722f}.png",
+            "name" : "Ubuntu",
+            "padding" : "0, 0, 0, 0",
+            "snapOnInput" : true,
+            "tabTitle" : "Ubuntu (WSL)",
+            "useAcrylic" : false
+        },
+
+3.修改powershell
+        {
+            "acrylicOpacity" : 0.5,
+            "background" : "#000000",  # 背景颜色 因为ps默认是蓝底，这个和cmd ubuntu不一样
+            "backgroundImage" : "T://2.jpg", # 图片地址
+            "backgroundImageOpacity" : 0.9,  # 透明度
+            "closeOnExit" : true,
+            "colorScheme" : "CMD",  # 配色方案
+            "commandline" : "powershell.exe",
+            "cursorColor" : "#FFFFFF",
+            "cursorShape" : "bar",
+            "fontFace" : "Consolas",
+            "fontSize" : 12,
+            "guid" : "{61c54bbd-c2c6-5271-96e7-009a87ff44bf}", #这个不要复制
+            "historySize" : 9001,
+            "icon" : "ms-appx:///ProfileIcons/{61c54bbd-c2c6-5271-96e7-009a87ff44bf}.png",
+            "name" : "Windows PowerShell",
+            "padding" : "0, 0, 0, 0",
+            "snapOnInput" : true,
+            "startingDirectory" : "%USERPROFILE%",
+            "tabTitle" : "Powershell",  #tab名称
+            "useAcrylic" : false  # 毛玻璃 关掉
+        }
+
+4.修改schemes
+        {
+            "background" : "#000000",  #背景纯黑色
+            "black" : "#0C0C0C",
+            "blue" : "#0037DA",
+            "brightBlack" : "#767676",
+            "brightBlue" : "#3B78FF",
+            "brightCyan" : "#61D6D6",
+            "brightGreen" : "#16C60C",
+            "brightPurple" : "#B4009E",
+            "brightRed" : "#E74856",
+            "brightWhite" : "#F2F2F2",
+            "brightYellow" : "#F9F1A5",
+            "cyan" : "#3A96DD",
+            "foreground" : "#FFFFFF",  # 字体纯白色
+            "green" : "#13A10E",
+            "name" : "CMD",            #配置的名字
+            "purple" : "#881798",
+            "red" : "#C50F1F",
+            "white" : "#CCCCCC",
+            "yellow" : "#C19C00"
+        },

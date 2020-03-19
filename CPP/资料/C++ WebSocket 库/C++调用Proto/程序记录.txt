@@ -1,0 +1,15 @@
+C++使用Protobuf记录
+
+1、Protobuf：在项目文件目录下新建Protobuf文件夹：C:\Users\SJRJY\source\repos\Project1\Project1\Protobuf
+2、将protobuf-cpp-3.6.1生成的debug(在编写的程序调试的时候用debug目录下 的文件，用release目录下的文件，运行，无法给string，以及bytes类型的数据赋值，会报错：内存访问失败)目录下的所有文件（dll,lib,exe）拷贝到Protobuf目录下
+注意：必须将dll，lib文件包括在项目中：选择所有dll、lib文件，右键，包括在项目中；否则，protoc生成的协议文件运行会缺少库文件报错
+3、将protobuf-cpp-3.6.1目录下的src文件夹拷贝到Protobuf目录下，改名为Src。将所定义的协议.proto文件复制到Src目录下，并在Src目录下新建Src文件夹，用来存放protoc生成的协议文件。
+4、powershell进入到Protobuf目录下，用Project1\Project1\Protobuf\Src\Src目录下的protoback.proto文件在Project1\Project1\Protobuf\Src\Src\Src目录下生成协议文件：protoback.pb.h,protoback.pb.cc。
+PS C:\Users\SJRJY\source\repos\Project1\Project1\Protobuf> .\protoc.exe --cpp_out=./Src  ./Src/Src/protoback.proto
+5、项目->属性->C/C++->常规->附加包含目录，添加websocketpp目录：C:\Program Files (x86)\Microsoft Visual Studio\lib\websocketpp-master；添加protobuf-cpp-3.6.1 Src目录：C:\Users\SJRJY\source\repos\Project1\Project1\Protobuf\Src
+6、视图->显示所有文件，将Protobuf\Src\Src\Src目录包含到项目（Src目录，右键->包含到目录），Src目录下protoback.pb.h,protoback.pb.cc两个文件已经显示为头文件和++文件了。
+7、运行，程序报错无法找到libprotobuf-lite.dll等文件，将将protobuf-cpp-3.6.1生成的release目录下的所有文件（dll,lib，除了exe文件）复制到C:\Users\SJRJY\source\repos\Project1\Debug目录下，再次运行，成功。
+8、项目->属性->C/C++->预处理器：PROTOBUF_USE_DLLS
+9、依赖：boost（v1.68.0），boost-vc141(v1.68.0),vcpkg.Nuget(v1.3.0)
+
+vs如果报错无法找到xxx引用，但项目不需要该引用，在中所创建的项目目录的代码目录，打开project.vcxproj文件，找到<ItemGroup>，查找删除所要删除的引用

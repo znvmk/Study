@@ -1,0 +1,27 @@
+修改SQL Server 服务器名
+
+SQL Server 安装后服务器改名造成名称不一致的解决，这个多数是由于计算机改名之后引起的。
+
+此操作也适用于修改服务器名。
+
+工具/原料
+Microsoft SQL Server Management Studo
+方法/步骤
+1
+查询当前服务器名和旧服务器名
+
+SELECT @@servername AS 旧服务器名
+
+SELECT serverproperty('servername') AS 新服务器名
+运行
+
+查看服务器名是否一致。如果不一致，则以serverproperty('servername')为准
+
+3
+EXEC sp_dropserver  @server  = '旧服务器名'
+
+EXEC sp_addserver  @server  =  '新服务器名',  @local  =  'LOCAL' 
+
+4
+重启数据库服务后，再次检查是否一致
+注意是否有权限执行此操作

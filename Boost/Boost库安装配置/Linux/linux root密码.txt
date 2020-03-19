@@ -1,0 +1,31 @@
+Linux root初始密码设置
+2017年11月29日 09:51:36
+阅读数：1224
+Ubuntu刚安装后，不能在terminal中运行su命令，因为root没有默认密码，需要手动设定.
+以安装ubuntu时输入的用户名登陆，该用户在admin组中，有权限给root设定密码.
+
+给root用户设置密码的具体步骤：
+
+1. 打开一个terminal，然后输入下面的命令
+
+　　sudo passwd root
+
+回车后会出现让你输入原始密码，新密码和确认密码:
+
+[sudo] password for you: ---> 输入你的密码（你现在这个用户的密码）
+
+Enter new UNIX password: ---> 设置root 密码
+
+Retype new UNIX password: ---> 重复密码
+
+这样你的root的密码设置好了.
+
+注：root可以省略，命令为passwd而不是password，我犯过这个错误.
+
+2. 在terminal中利用su命令就可以切换到root用户了.
+
+注：su和sudo的区别是:
+
+　　1) su的密码是root的密码，而sudo的密码是用户的密码；
+
+　　2) su直接将身份变成root，而sudo是以用户登录后以root的身份运行命令，不需要知道root密码.

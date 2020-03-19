@@ -1,0 +1,91 @@
+OpenGL粒子系统详解及编程实现
+
+粒子系统的基本思想是：采用许多形状简单的微小粒子作为基本元素，用它们来表示不规则模糊物体。这些粒子都有各自的生命周期，在系统中都要经历“产生” 、 “运动和生长”及“消亡”三个阶段。粒子系统是一个有“生命”的系统，因此不象传统方法那样只能生成瞬时静态的景物画面，而是可以产生一系列运动进化的画面，这使得模拟动态的自然景物成为可能。
+
+这篇文章讲解不用GPU加速的一个粒子系统实例。
+
+利用粒子系统生成画面的基本步骤：
+1、产生新的粒子；
+2、赋予每一新粒子一定的属性；
+3、删去那些已经超过生存期的粒子；
+4、根据粒子的动态属性对粒子进行移动和变换；
+5、显示由有生命的粒子组成的图像。
+
+粒子系统采用随机过程来控制粒子的产生数量，确定新产生粒子的一些初始随机属性，如初始运动方向、初始大小、初始颜色、初始透明度、初始形状以及生存期等，并在粒子的运动和生长过程中随机地改变这些属性。粒子系统的随机性使模拟不规则模糊物体变得十分简便。
+粒子系统应用的关键在于如何描述粒子的运动轨迹，也就是构造粒子的运动函数。函数选择的恰当与否，决定效果的逼真程度。其次，坐标系的选定（即视角）也有一定的关系，视角不同，看到的效果自然不一样了。
+
+
+
+我们需要定义一个数据结构来描述粒子。这里定义一个struct类型，包含一些描述粒子特性的数据成员：
+
+typedef struct//structrue for particle
+{
+  bool active;//active or not
+  float life;//last time
+  float fade;//describe the decreasing of life
+  float r,g,b;//color
+  float x,y,z;//the position
+  float xi,yi,zi;//what direction to move
+  float xg,yg,zg;//gravity
+}particles;
+其数据成员的意义：
+active：粒子是否激活，没有激活的粒子将不会显示在屏幕上；
+
+life：粒子的生命时间，也就是持续显示的时间。后面会被用在粒子的颜色的a值上。当它为0时，粒子完全透明，也就看不见了。所以其值应该不大于1.0f。
+
+fade；描述life的衰减程度；
+
+r、g、b:粒子的颜色
+
+xi、yi、zi描述粒子的运动方向；
+
+xg、yg、zg：描述粒子运动受到的阻力的方向。
+
+
+
+接着我们要定义一个粒子集合，包含很多个粒子：
+
+#define MAX_PARTICLES 1000
+particles paticle[MAX_PARTICLES];
+对粒子系统进行初始化：
+
+for (loop = 0;loop < MAX_PARTICLES;++loop)
+  {
+    paticle[loop].active = true;
+    paticle[loop].life = 1.0f;
+    paticle[loop].fade = float(rand() % 100) / 1000.0f + 0.003f;
+    paticle[loop].r = colors[loop * (12 / MAX_PARTICLES)][0];
+    paticle[loop].g = colors[loop * (12 / MAX_PARTICLES)][1];
+    paticle[loop].b = colors[loop * (12 / MAX_PARTICLES)][2];
+
+    paticle[loop].xi = float((rand() % 50) - 26.0f) * 10.0f;
+    paticle[loop].yi = float((rand() % 50) - 25.0f) * 10.0f;
+    paticle[loop].zi = float((rand() % 50) - 25.0f) * 10.0f;
+
+    paticle[loop].xg=0.8f;
+    paticle[loop].yg=0.8f;
+    paticle[loop].zg=0.8f;
+  }
+
+colors是预定义的以供使用的颜色数组：
+static GLfloat colors[12][3]=     // Rainbow Of Colors
+{
+  {1.0f,0.5f,0.5f},{1.0f,0.75f,0.5f},{1.0f,1.0f,0.5f},{0.75f,1.0f,0.5f},
+  {0.5f,1.0f,0.5f},{0.5f,1.0f,0.75f},{0.5f,1.0f,1.0f},{0.5f,0.75f,1.0f},
+  {0.5f,0.5f,1.0f},{0.75f,0.5f,1.0f},{1.0f,0.5f,1.0f},{1.0f,0.5f,0.75f}
+};
+
+
+粒子系统的绘制：
+我们把每个粒子看成单独的一个对象来看待。在这里用由两个三角形组成的序列来表示，采用 GL_TRIANGLE_STRIP 方法绘制。
+glBegin(GL_TRIANGLE_STRIP);
+  glTexCoord2d(1,1); glVertex3f(x+0.5f,y+0.5f,z); // Top Right
+  glTexCoord2d(0,1); glVertex3f(x-0.5f,y+0.5f,z); // Top Left
+  glTexCoord2d(1,0); glVertex3f(x+0.5f,y-0.5f,z); // Bottom Right
+  glTexCoord2d(0,0); glVertex3f(x-0.5f,y-0.5f,z); // Bottom Left
+glEnd();
+这里不用绘制四边形的方法是因为绘制三角形速度要快很多，而且大多数图形卡本来就是把绘制i四边形的工作转化成为三角形实现。但是并不是所以的图形卡都这么做，所以我们手动实现。 GL_TRIANGLE_STRIP 的运作原理可以参考这里： GL_TRIANGLE_STRIP
+
+在本程序中，我们启用了混合。我们开启了混合功能，既为顶点绘制指定了颜色值，也使用了纹理贴图。
+
+我们从硬盘上读取bmp图像，加载纹理。采用了GLAUX库实现。可以参考： GLAUX

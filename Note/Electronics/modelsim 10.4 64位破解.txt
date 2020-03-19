@@ -1,0 +1,51 @@
+modelsim 10.4 64位破解版
+modelsim 10.4 是一款Mentor公司推出的专业的HDL语言仿真软件，提供强大的仿真环境，是业界唯一的单内核支持VHDL和Verilog混合仿真的仿真器。
+Modelsim全面支持VHDL和Verilog语言的IEEE 标准，支持C/C++功能调用，并采用直接优化的编译技术、Tcl/Tk技术、和单一内核仿真技术，编译仿真速度快，编译的代码与平台无关，便于保护IP核，个性化的图形界面和用户接口，为用户加快调错提供强有力的手段，是FPGA/ASIC设计的首选仿真软件。
+
+安装教程
+1、解压文件双击应用程序进行安装，点击next
+
+2、选择按装路径，点击next
+
+3、等待安装完成，弹出是否创建桌面快捷方式，点击yes
+
+4、弹出是否添加path路径，点击yes
+
+5、安装完成点击done退出
+
+6、进入modelsim安装目录下的win64目录，找到mgls64.dll和mgls.dll两个文件文件，右键属性，将只读前面的勾去掉，点击应用
+
+7、将解压文件下的MentorKG.exe和patch_dll.bat文件复制到modelsim安装目录下的win64目录下
+
+8、双击patch_dll.bat，等待片刻生成许可证文件，另存到modelsim安装目录下
+
+9、进入环境变量（系统和用户），新建变量名为：MGLS_LICENSE_FILE，变量值为：license.txt”所在的目录(C:\modeltech64_10.4\License.txt)
+
+10、进入软件查看，发现无法找到license文件
+11、重启电脑，再次打开，发现可以打开软件，破解完成
+***注意，必须重启才能生效***
+
+使用教程
+1、选择窗口中“File”然后点击"New"点击“Project”新建工程，输入工程名称
+
+2、返回Modelsim界面，在弹出的快捷菜单中选择“Create New File”
+
+3、设置文件名与文件类型
+
+4、选中文件右击，选择Edit，进行verilog HDL的代码编写，然后再按照上述方法添加一个测试平台文件
+
+5、选中两个文件后右击，在弹出的快 两个文件后右击，在弹出的快捷菜单中选择 Compile 然后点Compile Selected，对源代码进行编译
+
+6、编译通过后 ，后面的问号变成了对号
+
+主要特点
+1、RTL和门级优化，本地编译结构，编译仿真速度快，跨平台跨版本仿真
+2、单内核VHDL和Verilog混合仿真
+3、源代码模版和助手，项目管理
+4、集成了性能分析、波形比较、代码覆盖、数据流ChaseX、Signal Spy、虚拟对象Virtual Object、Memory窗口、Assertion窗口、源码窗口显示信号值、信号条件断点等众多调试功能
+5、C和Tcl/Tk接口，C调试
+6、对SystemC的直接支持，和HDL任意混合
+7、支持SystemVerilog的设计功能
+8、对系统级描述语言的最全面支持，SystemVerilog，SystemC，PSL
+9、ASIC Sign off
+10、可以单独或同时进行行为（behavioral）、RTL级、和门级（gate-level）的代码

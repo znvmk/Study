@@ -1,0 +1,20 @@
+git 回滚代码到某个commit
+
+    # 查看commit的版本
+    $ git log
+     
+    回退命令：
+     
+    # 回退到上个版本
+    $ git reset --hard HEAD^ 
+     
+    # 回退到前3次提交之前，以此类推，回退到n次提交之前        
+    $ git reset --hard HEAD~3  
+        
+    # 回退到指定commit的版本
+    $ git reset --hard commit_id 
+--------------------- 
+作者：马丁半只瞄 
+来源：CSDN 
+原文：https://blog.csdn.net/fenglongmiao/article/details/81546199 
+版权声明：本文为博主原创文章，转载请附上博文链接！

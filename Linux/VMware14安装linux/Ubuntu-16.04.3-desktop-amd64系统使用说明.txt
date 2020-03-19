@@ -1,0 +1,2 @@
+Ubuntu-16.04.3-desktop-amd64系统可被VMware-workstation-full-14.1.1-7528167虚拟机打开，秘钥CG54H-D8D0H-H8DHY-C6X7X-N2KG6。
+如果遇到vmware无法连接mks,需要将虚拟机的所有服务打开

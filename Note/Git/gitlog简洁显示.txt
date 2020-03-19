@@ -1,0 +1,15 @@
+git log简洁显示
+
+使用
+git log
+
+多屏显示控制方式：
+空格向下翻页
+b 向上翻页
+q 退出
+
+git log --pretty=oneline
+
+git log --oneline
+
+git reflog

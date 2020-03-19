@@ -1,0 +1,143 @@
+Git配置用户名密码
+配置Git
+在Linux下和windows下配置Git的方法差不多，只是在Linux下，可以在命令行里直接使用git config进行配置, 而在windows下则要先打开“Git Bash”，进入msysGit命令行界面，再用git config命令进行相应的配置操作。
+
+好了，前面安装好了Git，现在我们开始配置：
+
+第一个需要配置的就是用户的用户名和email，因为这些内容会出现在你的每一个提交（commit）里面的，像下面这样：
+
+下面的这两行命令就是设置用户名和email：
+
+$ git config --global user.name 'author' #将用户名设为author
+$ git config --global user.email 'author@corpmail.com' #将用户邮箱设为author@corpmail.com
+
+**注意：用户名和邮箱都要加单引号 ‘’
+
+配置完成后查看一下配置信息：
+git config --list
+
+
+Git的配置信息分为全局和项目两种，上面命令中带了“--global"参数，这就意味是在进行全局配置，它会影响本机上的每个一个Git项目。
+
+大家看到，上面我们用的是@corpmail（公司邮箱）；但是有时候我们可能也参与了一些开源项目，那么就需要新的用户名和自己的私人邮箱，Git 可以为每个项目设定不同的配置信息。
+
+在命令行环境，进入Git项目所在目录，执行下面的命令：
+
+$ git config　user.name nickname#将用户名设为nickname
+$ git config　user.email nickname@gmail.com #将用户邮箱设为nickname@gmail.com
+Git的设计哲学和Linux（*nix）一样，尽量的使用“文本化”（Textuality）；它里面尽量用文本化的形式存储信息，对于配置信息也更是如此，用户的这些配置信息全部是存储在文本文件中。Git的全局配置文件是存放在"~/.gitconfig"（用户目录下的.gitconfig）文件中：
+
+我们用cat、head命令查看全局配置信息文件，并假设相关配置信息存储在文件的前3行（当然也有可能不在前3行，这里只是为了方便表示）
+
+
+$ cat ~/.gitconfig | head -3 
+[user]
+name = author
+email = author@corpmail.com
+而项目配置文件是存放在Git项目所在目录的".git/config"文件中，这里也像上面一样用cat、head命令查看一下：
+
+$ cat .git/config | head -3
+[user]
+name = nickname
+email = nickname@gmail.com
+如果大家对于Git熟悉后，可以直修改”~/.gitconfig”,”.git/config”这两个文件进行配置。
+
+Git里还有很多可以配置的地方，大家可以参考一下git config 和 定制git。
+
+这一篇写起来有点平淡无奇，但这是一个Git用户迈出的第一步。后面我还会有一系列的文章出来，都是我个人使用过程中的感悟。
+
+有朋友问我：“为什么把文章叫作：‘Git历险记’”。这是因为在使用Git的历程中，我碰到过N多的问题；同时也觉得它有点小复杂。但是当这些问题解开后，就有时不得不赞叹它设计的巧妙之处。
+
+
+git 生成ssh 密钥
+
+在开始菜单中打开git下的git bash（当然，在其他目录下打开git bash也是一样的）： 
+然后执行：
+
+cd ~/.ssh
+1
+如果能进入到.ssh文件目录下 ，则证明，之前生成过.ssh秘钥，可以直接使用里面的秘钥。 
+如果不能进入到.ssh文件目录下，则： 
+检测下自己之前有没有配置：git config user.name和git config user.email（直接分别输入这两个命令）
+
+
+2.生成秘钥 
+ssh-keygen -t rsa -C ‘上面的邮箱’
+
+接着按3个回车 则：
+
+Generating public/private rsa key pair.
+Enter file in which to save the key (/c/Users/Mr.Yang/.ssh/id_rsa):
+Enter passphrase (empty for no passphrase):
+Enter same passphrase again:
+Your identification has been saved in /c/Users/Mr.Yang/.ssh/id_rsa.
+Your public key has been saved in /c/Users/Mr.Yang/.ssh/id_rsa.pub.
+The key fingerprint is:
+SHA256:zA6wNJrFB6NcqS6eBog/AHlzQuvFjYpG759Yhh1lWGI xxxxxx@xxxxx.xxx(上面自己的邮箱)
+The key's randomart image is:
++---[RSA 2048]----+
+|    +E .         |
+| ..+oo+          |
+| oo+*+.o         |
+|o.*===+o         |
+|==+*... S        |
+|B.+.o .o         |
+|++o. +  .        |
+| +o.+ .          |
+|.  o.o           |
++----[SHA256]-----+
+
+最后在.ssh目录下得到了两个文件：id_rsa（私有秘钥）和id_rsa.pub（公有密钥）
+
+如果想登陆远端，则需要将rsa.pub里的秘钥添加到远端。
+查看公钥
+cat ~/.ssh/id_rsa.pub
+
+如果在GitHub上已经添加了公钥，可还是没有权限克隆。
+如下：
+Permission denied (publickey).
+fatal: 无法读取远程仓库。
+
+请确认您有正确的访问权限并且仓库存在。
+
+
+运行
+ssh-add ~/.ssh/id_rsa
+让ssh和本地的秘钥（是秘钥，不是公钥）关联
+运行结果：
+Identity added: /home/znvmk/.ssh/id_rsa (/home/znvmk/.ssh/id_rsa)
+如果报错：
+$ssh-add ~/.ssh/id_rsa
+Could not open a connection to your authentication agent.
+执行：
+$eval `ssh-agent`
+Agent pid 5778
+再继续执行就可以了
+
+查询与远程库是否连接
+gitee:
+ssh -T git@gitee.com
+Hi ***! You've successfully authenticated, but GITEE.COM does not provide shell access.
+Connection to gitee.com closed.
+
+github:
+ ssh -T git@github.com
+Permission denied (publickey).
+
+本地ssh和gitee，github都已经连接成功
+
+
+ubuntu 系统下无法实现git clone问题
+在尝试了很多次子coding和github网站上均无法实现git clone命令时时，确认自己已经在本机上生成了ssh key，也已经将SSH 公钥添加到coding或者是github中，需要注意自己有没有在ubuntu系统中安装ssh服务，以及有没有开启SSH服务。
+
+输入 $ ssh localhost
+
+显示：ssh: connect to host localhost port 22: Connection refused 表示没有安装ssh server，通过如下命令安装
+
+$ sudo apt-get install openssh-server
+
+安装完成后启动服务
+
+$ sudo /etc/init.d/ssh start 
+
+然后进行git clone 就可以了

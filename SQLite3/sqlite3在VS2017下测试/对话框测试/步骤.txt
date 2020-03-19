@@ -1,0 +1,3 @@
+1.将生成的x86 sqlite3.lib,与sqlite3.h,sqlite3.dll复制到新建的对话框项目源文件中。
+2.在VS中将sqlite3.h与sqlite3.lib添加到项目中，注意，一定要将sqlite3.lib添加进去
+3.运行测试

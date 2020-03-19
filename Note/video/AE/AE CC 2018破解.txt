@@ -1,0 +1,16 @@
+1.双击Set-up启动安装程序
+2.如果没有AdobeID，需获取AdobeID；如果有的话直接点击运行
+3.等待片刻，正在安装。
+4.在开始按钮中，打开所有程序，看到AE软件，右键双击点击运行。
+5.单击“开始使用”按钮。
+6.然后AE界面会自动打开，当出现如图所示敬告时，我们点击“不再”后，单击“确认"按钮。
+7.我们单击AE界面打开后，不要着急新建，因为我们要破解软件，直接点解界面右上角的关闭按钮。
+8.打开AE文件夹所在位置，找到”amtemu.v0.9.2-painter“文件夹，单击打开运行。
+9.打开后在第一个框内找到"Adobe After Effects CC 2017”，点击右下角注册按钮Install，然后会跳出文件资源管理器让你找一个dll文件。如果是默认路径就打开C:\Program Files\Adobe\ Adobe After Effects CC2017，找到后选择软件根目录下的amtlib.dll ，双击打开。
+10.接下来就可以在注册机里看到OK字样，说明已破解完成。
+最后安装成功后，我们就可以使用了。
+
+由于无法选择安装路径，只需将破解完成的Adobe After Effects CC 2017复制到指定目录，再删除默认位置的“Adobe”文件夹（C:\Program Files\Adobe）。
+再将C:\ProgramData\Microsoft\Windows\Start Menu\Programs目录下的Adobe After Effects CC 2018快捷方式更改（属性，目标，起始位置）
+再到更改目录的安装位置将Adobe After Effects CC 2018和Adobe After Effects Render Engine两个快捷方式的属性位置更改，并将快捷方式发送到桌面。
+运行即可。

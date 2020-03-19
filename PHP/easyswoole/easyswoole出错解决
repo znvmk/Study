@@ -1,0 +1,46 @@
+/code/ckp_server # php easyswoole  start
+easySwoole framework has not been installed, Please run easyswoole install
+/code/ckp_server # php vendor/easyswoole/easyswoole/
+.gitignore     LICENSE        README.md      bin/           composer.json  src/           test/
+/code/ckp_server # php vendor/easyswoole/easyswoole/bin/easyswoole  install
+Config.php has already existed, do you want to replace it? [ Y / N (default) ] : n
+EasySwooleEvent.php has already existed, do you want to replace it? [ Y / N (default) ] : n
+Temp Directory has already existed, do you want to replace it? [ Y / N (default) ] : n
+Log Directory has already existed, do you want to replace it? [ Y / N (default) ] : n
+easySwoole server install complete!
+/code/ckp_server # php easyswoole start
+  ______                          _____                              _
+ |  ____|                        / ____|                            | |
+ | |__      __ _   ___   _   _  | (___   __      __   ___     ___   | |   ___
+ |  __|    / _` | / __| | | | |  \___ \  \ \ /\ / /  / _ \   / _ \  | |  / _ \
+ | |____  | (_| | \__ \ | |_| |  ____) |  \ V  V /  | (_) | | (_) | | | |  __/
+ |______|  \__,_| |___/  \__, | |_____/    \_/\_/    \___/   \___/  |_|  \___|
+                          __/ |
+                         |___/
+
+EasySwoole framework Version 2.1.1
+
+listen address      0.0.0.0
+listen port         9501
+worker num          20
+task worker num     8
+run at user         root
+daemonize           false
+debug enable        true
+swoole version      2.1.3
+swoole pid          16
+
+
+docker 启动后code 目录下无文件
+
+刪除 运行容器 docker rm -f easyswoole
+重新启动 docker run -it   -v E:/project/php:/code -p 9501:9501 -p 9999:9999  --name easyswoole easyswoole  /bin/sh
+
+PS C:\Users\SJRJY> docker rm -f easyswoole
+easyswoole
+PS C:\Users\SJRJY> docker run -it   -v E:/project/php:/code -p 9501:9501 -p 9999:9999  --name easyswoole easyswoole  /bin/sh
+/var/www/html # cd  /code/
+/code # ls
+chat_server       ckp_server        新建文本文档.txt
+/code # cd ckp_server/
+/code/ckp_server # php easyswoole start

@@ -1,0 +1,6 @@
+创建表：
+db.AnglePlayer.insert({Id:"主键",value:"身价",popularity:"人气",fans:"粉丝"})
+插入一条数据
+db.AnglePlayer.insert({Id:"5",value:"100",popularity:"1000",fans:"1,2,3,5"})
+更新一条数据
+db.AnglePlayer.update({Id:"5"},{$set:{fans:"3,4"}})

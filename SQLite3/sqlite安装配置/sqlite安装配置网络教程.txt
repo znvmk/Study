@@ -1,0 +1,54 @@
+
+Visual Studio 2017 中使用 SQLite3的方法
+工程中要用到的三个文件sqlite3.lib，sqlite3.dll，sqlite3.h
+下载后，可以看到下载后的软件文件夹中包含了sqlite3.dll, sqlite.def, 在sqlite-amalgamation-3170000目录内包含了sqlite3.h文件。（注意sqlite.def文件并没有直接带后缀.DEF,可以通过查看文件属性确定该文件为sqlite.def）
+现在已经有了sqlite3.dll，sqlite3.h文件，还需要sqlite3.lib。该文件是通过sqlite.def文件转换而来。转换方法如下：
+1 先找到lib.exe文件。该文件一般在Visual studio 软件的安装目录下，该目录下有lib.exe
+2   运行>cmd；并切换到lib.exe所在的目录下：不懂的可以百度下怎么在CMD中切换目录。
+3 运行命令：lib  /out:F:\sqlite3\sqlite3.lib /MACHINE:IX86 /DEF:F:\sqlite3\sqlite3.def    /out：是.lib文件生成的位置，/MACHINE:IX86：表示机器类型，32位机器，/DEF：表示的是.def存放的位置。
+4 运行完上面的命令之后就会在F:\sqlite3\目录下生成对应的.lib文件和.exp文件.如果生成的过程中提示缺少文件，去vc安装目录搜索，复制到lib.exe文件下就行了。
+5 将最后需要的三个文件sqlite3.lib，sqlite3.dll，sqlite3.h分别放在了软件安装目录的lib，bin，include文件夹下
+需要使用时，添加下面的代码即可
+#include"sqlite3.h"
+#pragmacomment(lib,"sqlite3.lib")
+#include <iostream>  
+#include <string>  
+using namespace std;  
+#include "sqlite/sqlite3.h"  
+#pragma comment(lib,"sqlite/sqlite3.lib")  
+int main()  
+{  
+    sqlite3* db;  
+    int nResult = sqlite3_open("test.db",&db);  
+    if (nResult != SQLITE_OK)  
+    {  
+        cout<<"打开数据库失败："<<sqlite3_errmsg(db)<<endl;  
+        return 0;  
+    }  
+    else  
+    {  
+        cout<<"数据库打开成功"<<endl;  
+    }  
+    char* errmsg;  
+    nResult = sqlite3_exec(db,"create table fuck(id integer primary key autoincrement,name varchar(100))",NULL,NULL,&errmsg);  
+    if (nResult != SQLITE_OK)  
+    {  
+         sqlite3_close(db);  
+         cout<<"创建表失败："<<sqlite3_errmsg(db)<<endl;  
+        return 0;  
+    }  
+    string strSql;  
+    for (int i=0;i<100;i++)  
+    {  
+        strSql+="insert into fuck values(null,'heh');";  
+    }  
+    cout<<strSql<<endl;  
+    nResult = sqlite3_exec(db,strSql.c_str(),NULL,NULL,&errmsg);  
+    if (nResult != SQLITE_OK)  
+    {  
+        sqlite3_close(db);  
+        cout<<"插入数据失败："<<sqlite3_errmsg(db)<<endl;  
+        return 0;  
+    }  
+    return 0;  
+}  

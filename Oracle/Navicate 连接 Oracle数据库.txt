@@ -1,0 +1,12 @@
+打开Navicate Premium
+工具->选项->OCI:
+OCI LIB:C:\app\Administrator\product\11.2.0\dbhome_1\BIN\oci.dll
+SQL*PLUS:C:\app\Administrator\product\11.2.0\dbhome_2\BIN\sqlplus.exe
+文件->新建连接->Oracle
+连接名：local（自定义）
+连接类型：basic
+主机或IP地址：localhost
+端口：1521（查看：Net Manager->Oracle Net 配置->本地->服务命名->orcl->地址配置:ip,主机名，端口）
+服务名或SID：ORCL，选服务名
+用户名：system
+密码：

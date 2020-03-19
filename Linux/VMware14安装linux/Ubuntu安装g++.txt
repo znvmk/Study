@@ -1,0 +1,64 @@
+ubuntu 安装g++
+2013年01月28日 23:53:01
+阅读数：72389
+　Ubuntu缺省情况下，并没有提供C/C++的编译环境，因此还需要手动安装。
+
+
+　　如果单独安装gcc以及g++比较麻烦，幸运的是，为了能够编译Ubuntu的内核，Ubuntu提供了一个build-essential软件包。
+
+
+　　查看该软件包的依赖关系，可以看到以下内容：
+
+
+　　$ apt-cache depends build-essential
+
+　　build-essential
+
+　　依赖: libc6-dev
+
+　　依赖:
+
+　　libc6-dev
+
+　　依赖: gcc
+
+　　依赖: g++
+
+　　依赖: make
+
+　　依赖: dpkg-dev
+
+
+　　也就是说，安装了该软件包，编译c/c++所需要的软件包也都会被安装。因此如果想在Ubuntu中编译c/c++程序，只需要安装该软件包就可以了。
+
+
+　　安装方法如下：
+
+
+　　$sudo apt-get install build-essential
+
+
+  问题为main.o125.
+ 原因缺少G++
+主要来自ubuntu中文社区http://www.ubuntu.org.cn/support/documentation/doc/VMware
+首选,确认你已经安装了build-essential程序包:
+apt-get install build-essential
+确认你已经安装了内核头文件包:
+uname -r
+apt-get install linux-headers-'kernel version'
+如果你遇到gcc版本错误,你需要安装编译你内核的gcc版本:
+cat /proc/version
+这会告诉你,你的内核是用什么版本的gcc编译的.
+$ cat /proc/version 
+Linux version 2.6.12-8-386 (buildd@rothera) (gcc version 3.4.5 20050809 (prerelease) (Debian 3.4.4-6ubuntu6)) #1 Tue Aug 30 22:41:30 BST 2005
+ls /usr/bin/gcc*
+/usr/bin/gcc /usr/bin/gcc-4.0 /usr/bin/gccbug /usr/bin/gccbug-4.0
+
+可以看到,我的核心是用gcc-3.4编译的,但我只装了gcc-4.0.如果你的也不同于/usr/bin/gcc*,你需要安装核心所用的版本.
+apt-get install gcc-3.4
+这是我需要的版本,你的可能不同.
+人 们忘记的,并困扰我的是g++版本.一些人好像安装gcc之后就可以正常安装vmware-config.pl.但我的在编译vmmon模块时遇到 "cannot exec 'cc1plus'"错误并停止了.你需要安装的是和gcc一样版本的gcc-c++,只是Debian/Ubuntu把它叫做g++.
+apt-get install g++-3.4
+编辑添加: 我忘记你要设定CC为需要的gcc版本了:
+export CC=/usr/bin/gcc-3.4
+./runme.pl

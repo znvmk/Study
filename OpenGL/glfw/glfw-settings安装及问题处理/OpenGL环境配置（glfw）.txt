@@ -1,0 +1,222 @@
+https://blog.csdn.net/weixin_42513339/article/details/82860004
+
+
+OpenGL 关于旧版glut和新版本glfw和glad的环境配置
+目录
+一.OpenGL的环境：
+    1.OpenGL
+    2.gult:OpenGL工具库 OpenGL Utility Toolkit
+    3.glew
+    4.glfw
+    5.glad（2018.9）
+    二.旧版本 glut的安装方法 （资料最多的OpenGL,跳过此步骤即可，这里只是为了记录）
+    1.方法
+    2.使用VS的插件
+    三.新版本 glfw和glad的安装
+    1.下载glfw（管理窗口）和glad
+    2.打开vs，创建新的空白工程
+    3.添加cpp
+    4.OpenGL属性
+    5.glad文件
+    6.运行测试代码
+    7.警告解决办法
+ 
+
+    在初学一讲了写基本概念，之后红宝书直接放上了代码，所以我这里先配置一下OpenGL的环境。
+
+    首先介绍下OpenGL环境的演变：
+
+一.OpenGL的环境：
+    1.OpenGL
+    OpenGL函数库相关的API有核心库(gl)，实用库(glu)，辅助库(aux)、实用工具库(glut)，窗口库(glx、agl、wgl)和扩展函数库等。gl是核心，glu是对gl的部分封装。glx、agl、wgl 是针对不同窗口系统的函数。glut是为跨平台的OpenGL程序的工具包，比aux功能强大（aux很大程度上已经被glut库取代。）。扩展函数库是硬件厂商为实现硬件更新利用OpenGL的扩展机制开发的函数。
+    2.gult:OpenGL工具库 OpenGL Utility Toolkit
+    glut是实用工具库，基本上是用于做窗口界面的，并且是跨平台。这部分函数以glut开头，主要包括窗口操作函数，窗口初始化、窗口大小、窗口位置等函数；回调函数：响应刷新消息、键盘消息、鼠标消息、定时器函数等；创建复杂的三维物体；菜单函数；程序运行函数。gult对应的开源实现是freegult。
+    GLUT库下载地址：http://www.transmissionzero.co.uk/software/freeglut-devel/
+    3.glew
+    glut 或者 freegult 主要是1.0的基本函数功能；glew是使用OpenGL2.0之后的一个工具函数。
+    不同的显卡公司，也会发布一些只有自家显卡才支 持的扩展函数，你要想用这函数，不得不去寻找最新的glew.h，有了glew扩展库，你就再也不用为找不到函数的接口而烦恼，因为glew能自动识别你的平台所支持的全部OpenGL高级扩展函数。也就是说，只要包含一个glew.h头文件，你就能使用gl,glu,glext,wgl,glx的全部函数。（这里需要注意，glew并不包括glut）
+    GLEW库下载地址：http://glew.sourceforge.net/
+    4.glfw
+    glfw 无愧于其号称的 lightweight 的OpenGL框架，的确是除了跨平台必要做的事情都没有做，所以一个头文件，很少量的API，就完成了任务。glfw 的开发目的是用于替代 glut 的，从代码和功能上来看，我想它已经完全的完成了任务。
+    一个轻量级的，开源的，跨平台的library。支持OpenGL及OpenGL ES，用来管理窗口，读取输入，处理事件等。因为OpenGL没有窗口管理的功能，所以很多热心的人写了工具来支持这些功能，比如早期的glut，现在的freeglut等。
+    那么 glfw 有何优势呢？glut太老了，最后一个版本还是90年代的。freeglut完全兼容glut，算是glut的代替品，功能齐全，但是bug太多。稳定性也不好（不是我说的啊），glfw应运而生。
+    5.glad（2018.9）
+    glad与glew相比，简单说glad是glew的升级版。用哪个都行。就是glew比较老，glad比较新。
+    所以综上所述，我们需要安装的就是 glad+glfw
+    我使用的是VS2017,以下主要讲解组装的办法。
+
+    首先：
+
+二.旧版本 glut的安装方法 （资料最多的OpenGL,跳过此步骤即可，这里只是为了记录）
+    1.方法
+        下载OpenGL的所需要的文件
+
+        http://www.opengl.org/resources/libraries/glut/glutdlls37beta.zip
+
+        然后得到5个文件：
+
+        glut.dll glut32.dll glut.lib glut32.lib glut.h
+
+        然后：
+
+        1.找到目录..\VC\Tools\MSVC\14.10.25017\include\gl(没有的话就建立一个)。 将glut.h放到里面。
+
+        2.找到目录..\VC\Tools\MSVC\14.10.25017\lib\x86  将glut.lib，glut32.lib放到里面。
+
+        3.最后把glut.dll和glut32.dll放到C:\Windows\system32文件夹内（电脑32位系统）或‪C:\Windows\SysWOW64(电脑64位系统）。
+
+    
+
+    2.使用VS的插件
+        打开vs创建一个C++项目（Win32控制台-空白项目）
+
+        然后点击 项目—管理Nuget程序包(若没有找到项目底下的这个选项，请点击这里)
+
+        然后点击浏览—在搜索栏输入 NupenGL
+
+        然后安装（如果有两个就安装两个）。
+
+        装完后测试一下，输入以下代码
+
+        #include <GL/glut.h>
+        void Show()
+        {
+            glClear(GL_COLOR_BUFFER_BIT);
+            glRectf(-0.1f, -0.1f, 0.5f, 0.5f);
+            glFlush();
+        }
+        
+        int main(int argc, char *argv[])
+        {
+            glutInit(&argc, argv);
+            glutInitDisplayMode(GLUT_RGB | GLUT_SINGLE);
+            glutInitWindowPosition(100, 100);
+            glutInitWindowSize(400, 400);
+            glutCreateWindow("OpenGL");
+            glutDisplayFunc(Show);
+            glutMainLoop();
+            return 0;
+        }
+        运行后就会看到一个白色的正方形
+
+
+三.新版本 glfw和glad的安装
+    1.下载glfw（管理窗口）和glad
+        首先是glfw
+
+        http://www.glfw.org/download.html
+
+        在这里我们选择编译好的版本 想自己编译的朋友可以下载 Source package(用CMake)
+
+        我们选择64-bit，这里不是按照电脑来选的，是按照vs里面的
+
+        x64就是64位的
+
+        其次是glad:https://glad.dav1d.de/
+
+        glad有一个在线服务，直接下下来就可以用了（编译好的），将语言(Language)设置为C/C++，在API选项中，选择3.3以上的OpenGL版本（3.3是可编程管线版本，但更新的版本也能正常工作）。之后将模式(Profile)设置为Core，并且保证生成加载器(Generate a loader)的选项是选中的。现在可以先（暂时）忽略拓展(Extensions)中的内容。都选择完之后，点击生成(Generate)按钮来生成库文件。
+
+        下载是个压缩文件。
+
+        压缩文件里包含两个头文件目录（内有头文件glad.h和khrplatform.h），和一个src文件夹下的glad.c文件。
+
+        然后我们把这下载好的两个文件夹移到某个文件下。
+
+    2.打开vs，创建新的空白工程OpenGL
+
+    注：如果新建Windows控制台应用程序，程序内部会自动包含stdafx.h的头文件，你必须在源文件的开头写上“#include“stdafx.h”相关语句，而且之后引入glew，glfw包会有莫名其妙的错误。所以创建一个空项目。
+
+    3.添加cpp
+    将之前下载好的 glfw-3.3.bin.WIN64 和 glad 解压好的文件夹复制到现在所建项目OpenGL的OpenGL/OpenGL文件夹下。
+    将glfw-3.3.bin.WIN64 和 glad目录下的glad.h,glad.c复制到OpenGL/OpenGL文件夹下
+    点击“解决方案资源管理器”，右键点击源文件，添加新项，创建.cpp源文件，输入代码，正常的代码即可。（我这里加了一个graphics.cpp）
+
+    4.OpenGL属性
+    平台选为X64 debug
+
+    添加包含目录（glfw和glad）：
+    项目->属性->VC++目录->包含目录->编辑->新建:F:\znp\C++\VS2017\Projects\OpenGL\OpenGL\glad\include，新建:F:\znp\C++\VS2017\Projects\OpenGL\OpenGL\glfw-3.3.bin.WIN64\include
+
+    添加库目录(glfw，glad不用添加)：
+    项目->属性->VC++目录->包含目录->编辑->新建:F:\znp\C++\VS2017\Projects\OpenGL\OpenGL\glfw-3.3.bin.WIN64\lib-vc2017（vs2019则用lib-vc2019）
+
+
+
+    之后包含的库文件VS还认不出来，我们需要指定一下。配置链接器：
+    项目->属性->链接器->输入->附加依赖项->编辑：
+    opengl32.lib
+    glfw3.lib
+    注：行与行之间请按回车，opengl32.lib是系统自带的。
+
+    点击确定
+
+    5.glad文件
+    将glad.c文件复制到源文件夹下，直接复制，然后右击源文件夹粘贴即可。
+    在项目中右键->添加->现有项：在OpenGL/OpenGL目录下选择glad.h,glad.c
+
+    至此OpenGL的环境就初步配好了
+
+ 
+
+6.运行测试代码
+在之前的cpp中添加如下代码：（初始化一个Opengl窗口）
+
+#include <glad/glad.h>
+#include <GLFW/glfw3.h>
+ 
+#include <iostream>
+ 
+const unsigned int SCR_WIDTH = 800;
+const unsigned int SCR_HEIGHT = 600;
+ 
+int main()
+{
+    glfwInit();
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+ 
+    GLFWwindow* window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "LearnOpenGL", NULL, NULL);
+    if (window == NULL)
+    {
+        std::cout << "Failed to create GLFW window" << std::endl;
+        glfwTerminate();
+        return -1;
+    }
+    glfwMakeContextCurrent(window);
+ 
+    if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
+    {
+        std::cout << "Failed to initialize GLAD" << std::endl;
+        return -1;
+    }    
+ 
+    while (!glfwWindowShouldClose(window))
+    {
+ 
+        glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+        glClear(GL_COLOR_BUFFER_BIT);
+ 
+        glfwSwapBuffers(window);
+        glfwPollEvents();
+    }
+ 
+    glfwTerminate();
+    return 0;
+}
+点击“运行”，成功初始化了一个OpenGL的窗口
+
+
+
+但是，当我们关掉程序回到“错误列表”中会发现警告LNK4098默认库“MSVCRT”与其他库的使用冲突；
+
+请使用 /NODEFAULTLIB:libraryOpenC:\Users\g1018\source\repos\Open\Open\LINK1
+
+解决方法如下。
+
+7.警告解决办法
+    项目->属性->链接器->输入->忽略特定默认库->编辑：
+    MSVCRT.lib
+    点击“确定”。注：如果往后还有库冲突，解决方法同理。
+
+    至此，环境已经搭建完成。

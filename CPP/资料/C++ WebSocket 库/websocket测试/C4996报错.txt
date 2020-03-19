@@ -1,0 +1,23 @@
+严重性代码说明项目文件行	禁止显示状态错误 C4996 fopen（'fscanf'、strcmp）：This function or variable may be unsafe. 最全解决办法
+2018年05月18日 09:31:27
+阅读数：4018
+解决fopen、fscanf 在VS中要求替换为fopen_s、fscanf_s的最全解决办法
+                                                              -------------- ps：在使用MFC中遇到上述问题，可以通过方法三解决
+
+
+
+方法一：在程序最前面加#define _CRT_SECURE_NO_DEPRECATE；
+
+方法二：在程序最前面加#define _CRT_SECURE_NO_WARNINGS；
+
+方法三：在程序最前面加#pragma warning(disable:4996)；
+
+方法四：把scanf、scanf改为scanf_s、fopen_s，具体方法请百度；
+
+方法五：无需在程序最前面加那行代码，只需在新建项目时取消勾选“SDL检查”即可；
+
+方法六：若项目已建立好，在项目属性里关闭SDL也行；
+
+方法七：在工程项目设置一下就行；将报错那个宏定义放到 项目属性 -- C/C++-- 预处理器 -- 预处理器定义；
+
+方法八：在 项目属性 -- c/c++ -- 命令行 添加：/D _CRT_SECURE_NO_WARNINGS 就行了。

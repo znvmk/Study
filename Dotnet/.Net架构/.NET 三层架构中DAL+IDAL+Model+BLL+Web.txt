@@ -1,0 +1,44 @@
+.NET 三层架构中DAL+IDAL+Model+BLL+Web
+其实三层架构是一个程序最基本的，在.Net开发中通常是多层开发。
+BLL就是business logic layer(业务逻辑层)他只负责向数据提供者也就是DAL调用数据然后传递给客户进程（UI）
+DAL就是data access laywer(数据访问层)，负责对实体数据库相应表的增删改查
+IDAL就是抽象的接口模块体现了"抽象"的概念,或者说是"面向接口编程"的最佳体现。
+Model：实体数据库中表的映射，一般一个实体类对应一张表
+DBUtility:数据应用层
+Common：常用处理组件层
+web：（web）网站项目
+
+在程序中调用BLL，BLL中调用DAL
+
+类似MVC
+Model层：负责与后台数据通信，一般用LINQ
+View层：负责前台显示
+Control：负责业务逻辑处理
+
+各层间访问过程
+1、传入值，将值进行类型转换为整型
+2、创建BLL层的content.cs对象，通过对象c访问BLL层的方法GetContentInfo（ID）调用BLL层
+3、BLL层方法GetContentInfo（ID）中取得数据库访问层SQLServerDAL的实例，实例化IDAL层的接口对象dal，这个对象是由工厂层DALFactory创建的，然后返回IDAL层传入值所查找的内容方法dal,GetContentInfo(id)。
+4、数据工厂通过web.config配置文件中给定的webdal字符串访问SQLServerDAL层，访问一个完整的调用SQLServerDAL层的路径给BLL层。
+5、到此要调用SQLSeverDAL层，SQLServerDAL层返程赋值Model层的对象值为空，给定一个参数，调用SWLServerDAL层SQLHelper的ExecuteReader方法，读出每个字段的数据赋值给定义为空的Model层的对象。
+6、SQLHelper执行SQL命令，返回一个指定的数据库记录集，在这里需要引用参数类仓库，提供为打开连接命令执行做好准备PrepareCommand。
+7、返回Model层把查询得到的一行记录赋值给SQLServerDAL层的引入的Model层对象ci，然后把这个对象返回给BLL。
+8、回到web层的BLL层的方法调用，把得到的对象值赋值给Lable标签，在前台显示给界面。
+
+实现步骤：
+1、Model，实现业务实体
+2、IDAL，实现接口
+3、SQLServerDAL，实现接口里的方法
+4、增加web.config配置信息，为SQLServerDAL的程序集
+5、DALFactory，返回程序集的指定类的嗯实例
+6、BLL，调用DALFactory，得到程序集指定类的实例，完成数据操作方法
+7、web，调用BLL里的数据库操作方法
+
+注意：
+1、web.config 里的程序集名称必须与SQLServerDAL里的而书城程序集名称一致。
+2、DALFactory里只需要一个DataAccess类，可以完成创建所有的程序集实例。
+3、项目创建后，注意修改各项目的默认命名空间和程序集名称
+4、注意修改解决方案里的项目依赖。
+5、注意在解决方案里增加各个项目引用
+
+

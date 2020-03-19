@@ -1,0 +1,24 @@
+[
+    'type'=>'send',
+    'message'=>'AngelCelebrityOpenReq',
+    'msgid'=>'5000',
+    'desc'=>'天使名人打开请求'
+],
+[
+    'type'=>'rec',
+    'message'=>'AngelCelebrityOpenResult',
+    'msgid'=>'5001',
+    'desc'=>'天使名人打开返回'
+],
+[
+    'type'=>'send',
+    'message'=>'AngelCelebrityLikeReq',
+    'msgid'=>'5002',
+    'desc'=>'天使名人点赞请求'
+],
+[
+    'type'=>'rec',
+    'message'=>'AngelCelebrityLikeResult',
+    'msgid'=>'5003',
+    'desc'=>'天使名人点赞返回'
+],

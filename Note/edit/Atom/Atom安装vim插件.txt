@@ -1,0 +1,2 @@
+Atom安装vim插件：
+首先在Atom中安装vim-mode，但这个插件对命令模式支持不太好。因此还需安装ex-mode，用来给vim-mode这个插件优化命令行模式。或者也可以安装vim-mode-plus。

@@ -1,0 +1,4 @@
+在E:\project\php\ckp_server\Application\Conf\msgDefine.php中定义消息，然后用powershell进入easyswoole:
+//协议生成
+/code/ckp_server # php createDefine.php
+将会在msgDefine文件中生成对应消息号协议

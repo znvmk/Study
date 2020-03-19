@@ -1,0 +1,80 @@
+1.下载
+下载地址：http://download.qt.io/archive/qt/
+
+
+各目录说明如下： 
+ ①gdb是针对Android开发的调试器。 
+②jom可以百度一下，http://qt-project.org/wiki/jom ，是nmake克隆版，支持多条独立命令并行构建软件，加快软件构建速度。
+③online_installers是在线安装器。 
+④Pyside是用于支持Python语言编写Qt程序的。 
+⑤qbs是Qt Build Suite (QBS) ，http://qt-project.org/wiki/qbs，QBS是新创的Qt程序生成工具，因为Qt一般使用qmake来生成项目进行编译，qmake必须根据qt版本变化而变化，不便于管理，qt开发者对qmake又爱又恨，因此创建了不依赖Qt版本的生成工具QBS。
+⑥qt，当然是qt库本身了。
+⑦qt-installer-framework，是专门用于发布开发好的程序用的，生成程序安装器，可以为Linux、Windows、MacOS生成安装器。Qt自己的QtCreator、QtSDK等安装程序就是使用qt-installer-framework打包的。
+⑧qtcreator是集成开发环境。 
+⑨vsaddin，是针对VisualStudio的Qt开发插件。
+
+qt-creator-opensource-windows-x86_64-4.9.1.exe，qt-opensource-windows-x86-5.9.8.exe，qt-vsaddin-msvc2019-2.3.4.vsix四个文件
+
+2.安装
+qt-opensource-windows-x86-5.9.8.exe和qt-creator-opensource-windows-x86_64-4.9.1.exe
+(1)两项可同时安装，因为安装速度比较慢
+目录设置：
+    D:\ls\Qt\Qt5.9.8
+    D:\ls\Qt\qtcreator-4.9.1
+(2)Qt5.9.8:下一步，skip，选择Tools:mingw53_32,msvc2017_64两项和下面的CDB，安装。大约有7.7Gb
+qt-creator-opensource-windows-x86_64-4.9.1.exe默认安装即可，大约560Mb
+(3)qt-vsaddin-msvc2019-2.3.4.vsix，运行安装到VS2019
+
+3.配置
+（1）打开VS2019，扩展->QtTools->Qt Options->Add->Path:D:\ls\Qt\Qt5.9.8\5.9.8\msvc2017_64
+ (2)D:\ls\Qt\Qt5.9.8\Tools\QtCreator\bin目录下的QtCreator，版本是4.8.2
+ 环境：Dark
+ 文本编辑器->Color Scheme for Theme "Dark":Qt Creator Dark
+ (3)打开D:\ls\Qt\qtcreator-4.9.1\bin目录下的QtCreator,版本是4.9.1
+ 同上：
+ 环境：Dark
+ 文本编辑器->Color Scheme for Theme "Dark":Qt Creator Dark
+ 但是还需要配置编译器
+ 控件->选项->Kits:
+ a.构建套件（Kit）->手动设置->添加：
+ 名称：Desktop Qt %{Qt:Version} MSVC2017 64bit
+ 并将其：设为默认
+ Device type: 桌面
+ Device:Local PC(桌面 类型的默认设备)
+ Compiler:C:Microsoft Visual C++ Compiler 15.0(amd64)
+          C++:Microsoft Visual C++ Compiler 15.0(amd64)
+ Debugger:GUN gdb 7.10.1 for MinGW 5.3.0 32bit
+ Qt version:Qt 5.9.8(msvc2017_64)
+ 其他默认
+添加：
+名称：Desktop Qt %{Qt:Version} MinGW 32bit
+Device type: 桌面
+ Device:Local PC(桌面 类型的默认设备)
+ Compiler:C:MinGW 5.3.0 32bit for C
+          C++:MinGW 5.3.0 32bit for C++
+ Debugger:GUN gdb 7.10.1 for MinGW 5.3.0 32bit
+ Qt version:Qt 5.9.8(mingw53_32)
+b.Qt Versions->手动设置：
+添加：
+D:\ls\Qt\Qt5.9.8\5.9.8\mingw53_32\bin\qmake.exe
+D:\ls\Qt\Qt5.9.8\5.9.8\msvc2017_64\bin\qmake.exe
+c.Debuggers->Auto-detected:
+D:\ls\Qt\Qt5.9.8\Tools\mingw530_32\bin\gdb.exe
+
+设置完成
+
+4.测试
+(1)示例->Qt 5.9.8(msvc2017_64)：Blutooth Low Energy Heart Rate Game
+(2)左下角：heartrate-game->构建套件（Kit）:Desktop Qt %{Qt:Version} MSVC2017 64bit->Debug
+构建->执行Qmake
+运行,窗口生成成功
+
+5.定位到刚刚生成的项目目录，打开：build-heartrate-game-Desktop_Qt_5_9_8_MSVC2017_64bit-Debug\Debug
+运行heartrate-game,发现缺少很多动态链接库。虽然可以将这些缺少的动态链接库复制到当前目录下，但是每次都要这么做和麻烦，并且这些动态链接库都比较大，很占空间。
+所以将以下两个目录添加到系统的环境变量中：
+系统->path:
+D:\ls\Qt\Qt5.9.8\5.9.8\mingw53_32\bin\
+D:\ls\Qt\Qt5.9.8\5.9.8\msvc2017_64\bin\
+就可以在任何位置直接运行Qt程序了。
+
+

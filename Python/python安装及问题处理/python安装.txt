@@ -1,0 +1,5 @@
+Python下载：https://www.python.org/
+pip下载：https://pypi.org/project/pip/
+Python 标准库：https://docs.python.org/zh-cn/3.7/library/index.html
+python37x64安装
+环境变量-用户变量-path:D:\ls\Python\Python37\Scripts\，D:\ls\Python\Python37

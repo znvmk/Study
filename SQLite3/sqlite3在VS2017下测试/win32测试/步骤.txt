@@ -1,0 +1,3 @@
+1.将sqlite3.h,sqlite3.lib,sqlite3.dll三个文件拷贝到vs2017的项目源码目录下：
+2.将sqlite3.h与sqlite3.lib添加到项目中
+3.运行测试

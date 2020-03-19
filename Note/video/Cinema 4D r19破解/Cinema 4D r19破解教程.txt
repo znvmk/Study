@@ -1,0 +1,7 @@
+1.运行安装
+2.语言选择Chinaese
+3.公司，地址，组织随意填写，序列号，任选一个输入。
+4.编辑->设置（或直接按Ctrl+E快捷键），设置语言为中文，重启。
+5.如果弹出对话框缺少limmd.dll,在安装包目录：Cinema4Dr19_102109\R19_Install_Web_Win\bin目录下，将libmmd.dll，msvcp140.dll，svml_dispmd.dll，vcruntime140.dll四个动态链接库复制到D:\ls\Video\MAXON\Cinema 4D R19目录下，再次运行即可。
+6.如果运行还是提示0xc0000007，删除桌面C4D的所有快捷方式，在D:\ls\Video\MAXON\Cinema 4D R19目录下将CINEMA 4D.exe快捷方式发送到桌面。运行。
+7.如果还是报错0xc0000007，关机重新启动电脑，再次运行即可。

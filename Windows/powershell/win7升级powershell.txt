@@ -1,0 +1,21 @@
+https://blog.csdn.net/songfadan/article/details/80827446
+【PowerShell】Windows 7 如何升级 PowerShell
+2018年06月27日 12:39:08
+阅读数：490
+操作环境：
+Windows 7 旗舰版 Service Pack 1 x64
+PowerShell 2.0 –> PowerShell 4.0
+解决过程：
+1、下载Windows6.1-KB2819745-x64-MultiPkg.msu （到该网址选择下载项：https://www.microsoft.com/zh-TW/download/details.aspx?id=40855    下载页网址：https://www.microsoft.com/zh-CN/download/details.aspx?id=40855）
+2、下载.net4环境，如已安装请忽略（https://www.microsoft.com/en-us/download/details.aspx?id=17851）
+备注：由于windows系统的限制，windows 7 可以升级到 PowerShell 4.0
+
+3、直接双击Windows6.1-KB2819745-x64-MultiPkg.msu进行安装，并在安装后重启系统
+测试：
+重启系统之后测试下PowerShell 4.0是否安装成功？
+命令：get-host;$PSVersionTable
+
+显示版本为4.0
+这里写图片描述
+
+结论：升级成功！~~

@@ -1,0 +1,46 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312">
+<meta name="GENERATOR" content="Microsoft FrontPage 4.0">
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<title>游戏进度保存</title>
+</head>
+
+<body background="images/background.JPG">
+<p align="center">
+<font size="5" color="#000080"><b>
+
+学OpenGL编3D游戏</b></font><p align="center"><font color="#800000">第十三章 游戏进度保存</font></p>  
+
+<p align="left" style="line-height: 150%"><font size="2" color="#0000FF"><img border="0" src="images/0004.GIF" width="65" height="40"></font><font size="2"><font color="#0000FF">场景(或进度)保存和调入是游戏必不可少的。<br>
+</font><br>
+&nbsp;&nbsp;&nbsp; 在我们这个游戏中，有这样一些数据随调入的文件不同，可以决定游戏的场景不同。它们可以由外部文件来决定。诸如地形、地表贴图、天空背景、树木的分布，也可以有一些道具模型。还有一些数据表示了当前的游戏进度，如视点位置（我们走到那里了）、游戏中角色的活动情况、敌人的存活数量等等。我们将这些数据保存到一个文件中，下次有调入这个文件，游戏就回到上次保存时的状态了。</font></p>   
+<p align="left" style="line-height: 150%"><font size="2">&nbsp;&nbsp;&nbsp; 在这章我们调整了游戏中的基本对象的数据结构。建立了以下文件操作</font></p>
+<div align="center">
+  <center>
+  <table border="0" width="71%">
+    <tr>
+      <td width="33%">
+        <p style="line-height: 150%"><font size="2"><img border="0" src="images/YELBTN.GIF" width="11" height="11">  
+        新建场景文件</font></p>
+      </td>
+      <td width="33%">
+        <p style="line-height: 150%"><font size="2"><img border="0" src="images/YELBTN.GIF" width="11" height="11">  
+        调入场景文件</font></p>
+      </td>
+      <td width="34%">
+        <p style="line-height: 150%"><font size="2"><img border="0" src="images/YELBTN.GIF" width="11" height="11">  
+        存贮场景文件</font></p>
+      </td>
+    </tr>
+  </table>
+  </center>
+</div>
+<p style="line-height: 150%"><font size="2">&nbsp;&nbsp;&nbsp; 程序开始运行时调入盘上的场景(进度)文件&quot;aa.txt&quot;。如果没有</font><font size="2">场景(进度)文件，就调用新建场景文件功能，初始场景。程序退出时提示存贮，场景(进度)将存为&quot;aa.txt&quot;文件。下次运行时就自动调入了。</font></p>
+
+<p style="line-height: 150%"><font size="2">注:场景文件在&quot;运行程序/data/&quot;目录下，为.txt文件。</font></p>
+
+</body>
+
+</html>

@@ -1,0 +1,34 @@
+orm实体默认设置“Id”"ID"为主键
+其他需要自己声明 
+ 
+
+如果要实现自增插入，则需要将主键设为标识列：表设计->属性->表设计器->标识列：选择主键“ID”,然后将实体主键标识为自动增长
+ 
+ 
+ 
+ public class TUsers
+    {
+        [Key]
+        [DatabaseGenerated(System.ComponentModel.DataAnnotations.Schema.DatabaseGeneratedOption.None)]//不自动增长
+        public int UserId { get; set; }
+
+        public string Account { get; set; }
+
+        public string Password { get; set; }
+
+        public DateTime CreateDate { get; set; }
+
+        public List<TRoles> Roles { get; set; }
+    }
+    public class TRoles
+    {
+        [Key]
+        [DatabaseGenerated(System.ComponentModel.DataAnnotations.Schema.DatabaseGeneratedOption.Identity)]//添加时自动增长
+        public int Id { get; set; }
+
+        public string RoleName { get; set; }
+
+        public string RoleRemark { get; set; }
+
+        public List<TUsers> Users { get; set; }
+    }

@@ -1,0 +1,37 @@
+下载STLport
+https://sourceforge.net/projects/stlport/
+将STLport-5.1.5提取
+
+
+
+Ubuntu下使用STLport
+
+看了很多文章，编译安装stlport之后，总是会提示出现找不到头文件，或者链接不到什么库之类的，很是苦恼，今日按照自带的文档操作了一次，竟然可以了，神奇啊。
+
+实际很简单，步骤如下：
+
+进入stlport目录，cd stlport/build/lib
+
+make -f gcc.mak depend
+
+make -f gcc.mak install
+
+然后就可以使用了，不需要包含usr/local 下include.lib目录，也许在执行make -f gcc.mak install 已经加到环境变量了，也不知道Linux 下有没有环境变量的概念。
+
+#include<stdio.h>   
+#include<vector>   
+  
+int main()  
+{  
+    std::vector<int>  v1;  
+    v1.push_back(0);  
+    printf("the first element of vector is %d\n",v1[0]);  
+    return 0;  
+}  
+www.linuxidc.com@Ubuntu:~/project$ g++ -g -o use_stl  use_stl.cpp
+
+www.linuxidc.com@ubuntu:~/project$ ./use_stl
+
+the first element of vector is 0
+
+咦，原来如此简单，之前费了不少力啊，其实按照文档走就可以了，嘿嘿，切记切记！

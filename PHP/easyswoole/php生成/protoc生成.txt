@@ -1,0 +1,5 @@
+将protoc-3.6.0-win32的protoc.exe放在项目的E:\project\php\ckp_server\Protobuf目录下，编写protomsg.proto文件，完成后打开powershell：
+//Protobuf自动生成类automsg
+
+PS E:\project\php\ckp_server\Protobuf>.\protoc.exe --php_out=./Src  ./Src/protomsg.proto
+将会在E:\project\php\ckp_server\Protobuf\Src\AutoMsg目录下生成类

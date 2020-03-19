@@ -1,0 +1,60 @@
+Windows 下安装 swoole 具体步骤
+原创轻吟蒹葭 最后发布于2015-11-19 13:05:00 阅读数 32187  收藏
+展开
+Windows 下安装 swoole 具体步骤：
+
+Swoole,原本不支持在Windows下安装的，所以我们要安装Cygwin来使用。在安装Cygwin下遇到了很多坑，百度经验上的文档不是很全，所以我把自己安装Cygwin和Swoole写下来相当于对自己的沉淀吧。
+
+首先准备工具：
+
+Cygwin 官方地址：http://www.cygwin.com/
+
+swoole 官方下载地址：https://github.com/swoole/swoole-src/releases
+
+一。下载Swoole和Cygwin
+下载Cygwin,我的是64位的
+
+二 1安装Cygwin
+
+
+选择安装的软件包，这里需要安装gcc、php、php开发工具、autoconf、pcre-devel，其它默认，这里注意的是，在上方的搜索栏搜索后，在下边找到对应的软件包选中，点击下一步按钮开始安装。（注意：下方的截图是我安装后界面，点击的位置一样，后边的图标可能不一样哦）
+版本选择：best ,full
+autoconf:13.x
+gcc-core
+gcc-g++
+libgmp-devel
+libmpc-devel
+libm
+
+最后一直下一步安装就行。
+
+2 安装Swoole
+解压swoole的源程序到Cygwin的家目录，打开Cygwin软件（注意：要是你的Cygwin也安装在C盘，那你得注意了，安装swoole的时候有可能报错，解决办法是右键管理员身份打开Cygwin）
+
+
+1此时的环境就好似linux的终端，而根目录就是Cygwin的安装目录，在界面输入命令：cd /home/swoole-src,其中swool-src是解压的源程序
+
+
+2此时的环境就好似linux的终端，而根目录就是Cygwin的安装目录，在界面输入命令：cd /home/swoole-src,其中swool-src是解压的源程序
+
+
+3输入命令：phpize，生成编译的配置文件configure
+
+4输入命令：./configure && make && make install
+
+配置、编译、编译安装swoole
+
+（PS:执行./configure，除了编译配置，还会检测环境等等）
+
+
+5使用命令: php -i | grep php.ini，找到php cli使用的配置文件php.ini的路径，修改php.ini文件，在文件中添加一行：extension=swoole.so，然后关闭退出
+
+6 /extension 查找 按n再次查找
+
+7 添加extension=swoole.so
+
+8 :wq 保存退出
+
+9 使用命令：php -m,查看加载的模块，如果看到swoole，则扩展添加成功，到此环境搭建成功！
+
+好了，希望可以帮到大家！！！！

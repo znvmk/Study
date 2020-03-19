@@ -1,0 +1,84 @@
+1.查看SQLServer命令
+osql ?/
+2.连接
+然后我们知道connect 服务器是-S，登陆ID是-U，密码是-P 
+那我们现在来操作试试看。
+运行 osql -S 【数据库服务器】 -U 【登陆用户名】 -P 【登陆密码】
+出现 1> 表示连接成功，这时候你可以输入sql语句来进行操作了。
+
+PS C:\Users\SJRJY> osql -S DESKTOP-L6H201M\SQLEXPRESS -U sa -P 123456
+1>
+
+请记住在2>时输入GO，执行Sql语句
+
+
+
+PS C:\Users\SJRJY> osql -S DESKTOP-L6H201M\SQLEXPRESS -U sa -P 123456
+1> use owe
+2> go
+消息 911，级别 16，状态 1，服务器 DESKTOP-L6H201M\SQLEXPRESS，第 1 行
+数据库 'owe' 不存在。请确保正确地输入了该名称。
+1> use wer
+2> go
+1> select *from Table_1
+2> go
+ a          b          c          d          e          f          g
+ ---------- ---------- ---------- ---------- ---------- ---------- ----------
+ a          b          c          d          e          f          a
+ A          A          A          AA         A          A          A
+
+(2 行受影响)
+1>
+
+
+
+
+使用SQL查询所有数据库名和表名
+https://blog.csdn.net/qq_33342287/article/details/78692624
+
+SqlServer 获取表结构
+https://blog.csdn.net/CCCstudyer/article/details/53534925
+2016年12月09日 09:34:17
+阅读数：2385
+http://www.cnblogs.com/eflylab/archive/2008/06/23/1227838.html
+获取SqlServer2005表结构(字段，主键，外键，递增，描述)
+1.获取表的基本字段属性
+--获取SqlServer中表结构 
+SELECT syscolumns.name,systypes.name,syscolumns.isnullable,
+syscolumns.length 
+FROM syscolumns, systypes 
+WHERE syscolumns.xusertype = systypes.xusertype 
+AND syscolumns.id = object_id('你的表名')
+
+2.如果还想要获取字段的描述信息则
+复制代码
+--获取SqlServer中表结构 主键，及描述
+declare @table_name as varchar(max)
+set @table_name = '你的表名' 
+select sys.columns.name, sys.types.name, sys.columns.max_length, sys.columns.is_nullable, 
+  (select count(*) from sys.identity_columns where sys.identity_columns.object_id = sys.columns.object_id and sys.columns.column_id = sys.identity_columns.column_id) as is_identity ,
+  (select value from sys.extended_properties where sys.extended_properties.major_id = sys.columns.object_id and sys.extended_properties.minor_id = sys.columns.column_id) as description
+  from sys.columns, sys.tables, sys.types where sys.columns.object_id = sys.tables.object_id and sys.columns.system_type_id=sys.types.system_type_id and sys.tables.name=@table_name order by sys.columns.column_id
+
+3.单独查询表的递增字段
+--单独查询表递增字段
+select [name] from syscolumns where 
+id=object_id(N'你的表名') and COLUMNPROPERTY(id,name,'IsIdentity')=1
+运行效果
+
+4.获取表的主外键
+--获取表主外键约束
+exec sp_helpconstraint   '你的表名' ;
+
+[SQL Server]创建表-自动增长字段且为主键
+Create Table DS_TCategory                               -- 问题分类信息表
+(
+    CategoryID      int identity(1,1) primary key,      -- 分类ID,主键，自动增长
+    CategoryName    varchar(20) unique  not null,       -- 分类名称(如Default, Major, C++, C, C#, Java, Javascript, Web(html,css,xml), JS)
+    QCount          int default 0,                      -- 此分类下的问题数量
+    Show            int default 1,                      -- 是否在问题列表里显示此类(1-显示(默认)，0-不显示)
+    Description     varchar(500)                        -- 对此类的描述，说明
+)
+
+SQL Server自动递增设置
+将列设置为主键，表设计器中，将该列设置为：标识列

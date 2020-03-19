@@ -1,0 +1,69 @@
+.NET Entity Framework(EF)使用SqlQuery直接操作SQL查询语句或者执行过程
+2017年09月04日 08:48:20
+阅读数：3353
+Entity Framework是微软出品的高级ORM框架，大多数.NET开发者对这个ORM框架应该不会陌生。本文主要罗列在.NET(ASP.NET/WINFORM)应用程序开发中使用Entity Framework直接执行SQL语句或者存储过程的一些代码片段。具体请见以下正文：
+
+1.使用SqlQuery在已知的实体上执行SQL查询语句
+using (var context = new MyDBContext()) 
+{ 
+    var posts = context.Posts.SqlQuery("SELECT * FROM dbo.Posts").ToList(); 
+}
+
+这里的Posts必须是程序项目或者引用中已声明的实体类，ToList()是必须的，否则SQL查询将不会被执行。
+注意：如果使用原始的SQL查询语句，请一定要注意处理SQL注入攻击相关的安全问题。
+2.使用SqlQuery在已知的实体上执行存储过程
+using (var context = new MyDBContext()) 
+{ 
+    var posts = context.Posts.SqlQuery("dbo.spGetTopPosts").ToList(); 
+}
+这里的Posts必须是程序项目或者引用中已声明的实体类，ToList()是必须的，否则SQL查询将不会被执行。以上代码将执行存储过程: spGetTopPosts
+
+3.使用SqlQuery在已知实体上执行带参数的存储过程
+using (var context = new MyDBContext()) 
+{ 
+    var postID = 99; 
+    var posts = context.Posts.SqlQuery("dbo.spGetTopPosts @p0", postID).Single(); 
+}
+这里的Posts必须是程序项目或者引用中已声明的实体类，Single()是必须的，否则SQL查询将不会被执行。以上代码将执行存储过程: spGetTopPosts，并带一个传入参数postID
+
+4.使用SqlQuery在未知实体上执行SQL查询语句
+using (var context = new MyDBContext()) 
+{ 
+     var postTitles = context.Database.SqlQuery<string>("SELECT Title FROM dbo.Posts").ToList(); 
+}
+5.使用SqlQuery执行带参数的SQL查询语句
+这是一种相比更安全的，可避免SQL注入攻击的执行原始SQL查询语句的方式
+using (var context = new MyDBContext()) 
+{ 
+     var userSuppliedAuthor = new SqlParameter("@author", "Adi");
+     context.Database.SqlQuery(typeof(Post), "SELECT * FROM dbo.Posts WHERE Author = @author", userSuppliedAuthor);
+}
+这里的SQL语句将查询Posts表，所以用到了typeof(Post)。如果JOIN语句来查询不同的两张表的话，就需要写一个内部类来返回SQL语句的查询结果。
+
+以下则是一个使用JOIN连接查询的具体实例。
+
+假如有Posts,Category,Posts_Category这三张表。Posts_Category是Post表中Post Id列以及Category表中Category Id列的映射表。如果我们执行如下的JOIN连接SQL查询：
+
+internal class MappingData
+ {
+  public string CategoryTitle { get; set; }
+  public string PostTitle { get; set; }
+  public long? MappingId { get; set; }
+ }
+ 
+using (var context = new MyDBContext())
+ {
+ var userSuppliedId = new SqlParameter("@PostId", PostID);
+ string sqlQuery = @"select c.Name CategoryTitle, pcm.Id MappingId, p.Title PostTitle from Posts_Categories pcm 
+                                join Categories c on pcm.CategoryId = c.Id
+                                join Posts p on pcm.PostId = p.Id where pcm.PostId =@PostId";
+ var Results = db.Database.SqlQuery<MappingData>(sqlQuery,userSuppliedId).ToList();
+ }
+查询结果将是所有给定Post的Categories列表。
+6.使用ExcuteSqlCommand在未知实体上执行更新操作
+using (var context = new MyDBContext()) 
+{ 
+      context.Database.ExecuteSqlCommand( 
+        "UPDATE dbo.Posts SET Title = 'Updated Title' WHERE PostID = 99"); 
+}
+总结：以上的SqlQuery和ExecuteSqlCommand方法均是DbContext对应数据库实例的方法，如果是执行原始的未经处理的SQL语句时，请一定注意SQL注入攻击等安全性问题！！！

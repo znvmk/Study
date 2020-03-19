@@ -1,0 +1,7 @@
+svn://139.129.119.229/ckzc_client/
+
+Username:songjiaxing
+Password:songjiaxing123
+
+SVN忘记密码和账户：
+下载TSvnPwd，运行，查看所有的用户名密码：http://www.leapbeyond.com/ric/TSvnPD/

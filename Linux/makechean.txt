@@ -1,0 +1,4 @@
+make clean 和make distclean的区别：
+make clean仅仅是清除之前编译的可执行文件及配置文件。
+而make distclean要清除所有生成的文件
+make distclean类似make clean，但同时也将configure生成的文件全部删除掉，包括Makefile。

@@ -1,0 +1,58 @@
+mier
+vmw14升级vmw15：点击升级，从原有系统升级
+
+deepin 跨版本升级问题
+首先在设置-升级：选择升级，会失败，但必须有这个过程
+然后终端输入sudo apt full-upgrade 来升级
+这个问题的方式只有通过终端输入sudo apt full-upgrade 来升级，对无任何电脑知识的用户易用性极差。
+问题根源：当前所有版本deepin系统的系统更新和系统升级混在一起
+
+解决方式：向所有老版本的deepin和当前版本中推送一个补丁，将系统更新和系统版本升级分开。（即使用户现在也可以无痛从15.4直接点击鼠标升级到15.7）
+
+升级完成后，重新安装vmtools，全部选“y”，不要默认选择。
+
+Deepin系统安装vscode之后打开资源管理器默认变成了vscode
+在终端执行：
+gio mime inode/directory dde-file-manager.desktop
+
+
+dpkg被中断，您必须。。。
+运行下面的命令即可解决
+sudo rm /var/lib/dpkg/updates/*
+sudo apt-get update
+sudo apt-get upgrade
+主要原因应该是/var/lib/dpkg/updates 文件夹里面的资料有错误，使得更新软件的程序出现错误，所以得把它们完全删除，通过sudo apt-get update这个指令会重新建立这些资料，使用sudo apt-get upgrade更新你的电脑里面已安装的软件的明细，根据软件的明细更新软件到最新版。
+
+
+
+
+Deepin15.10下ibus输入法的解决方案和ibus-rime及小鹤鹤型的安装
+
+deepin默认居然只给选择fcitx+sogou，对吾等鹤型双拼用户极不友好。我期待可以使用ibus+rime，因qt5对fcitx的支持不佳，但deepin不给我选择。因此本贴是记录我如何在deepin15.10下手动把fcitx换为ibus，并装上ibus-rime。
+
+首先，请卸载完整卸载sogou和fcitx。
+sudo apt purge -y sogou* fcitx*
+
+然后安装ibus、im-config和ibus-rime。再根据 @chenzhiwei 大佬说的安装下面这些依赖包。
+sudo apt install -y ibus ibus-gtk ibus-gtk3 libibus-qt1 ibus-qt4 ibus-pinyin im-config zenity ibus-rime
+
+把xinputrc里面的fcitx换成ibus。
+nano ~./xinputrc
+
+然后把export gtk_im_module=ibus、export xmodifiers=@im=ibus、export qt_im_module=ibus粘到bashrc里面。
+echo -e "export gtk_im_module=ibus\nexport xmodifiers=@im=ibus\nexport qt_im_module=ibus" >> ~/.bashrc
+复制代码
+
+*****以上步骤无法正确安装，使用。的在上面的基础上，再运行下面的命令就成功了。
+[已经解决]ibus 输入法好像不能在 Deepin 使用，将输入法切换成中文之后，屏幕上仍然显示英文。我用 ibus 的原因是 ibus 是 Rime 官方支持的引擎，我喜欢用 Rime。
+
+    * 安装 ibus 和 im-config
+
+         sudo apt install ibus ibus-gtk ibus-gtk3 libibus-qt1 ibus-qt4 ibus-pinyin im-config
+
+    * 删除冗余文件
+
+         sudo rm -f /usr/share/im-config/data/23_ibus.* ~/.xinputrc
+
+    * 退出并重新登录即可
+

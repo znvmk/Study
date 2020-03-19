@@ -1,0 +1,37 @@
+1.vs2019创建一个基于对话框的程序
+2.在framework.h中添加（在#include <afxcontrolbars.h>之后 ）：
+#include <afxdb.h>
+#import "C:\Program Files\Common Files\System\ado\msado15.dll" no_namespace rename("EOF", "adoEOF") rename("BOF","adoBOF")
+3.在Dlg.h中添加公有成员变量：
+
+	_ConnectionPtr m_pConnection;//连接access数据库的链接对象  
+	_RecordsetPtr m_pRecordset;//结果集对象
+在OnInitDlg()函数中添加：
+AfxOleInit();
+4.添加测试连接按钮，双击进入函数编辑：
+//AfxOleInit();
+	HRESULT hr;
+	m_pConnection.CreateInstance(__uuidof(Connection));
+	CString strSQL;
+    //两种都可以
+	//strSQL = _T("Provider=SQLOLEDB;Server=(local);Database=udb;UID=sa;PWD=pw123");
+	strSQL = _T("Provider=SQLOLEDB;Server=CHEN-PC;Database=udb;UID=sa;PWD=pw123");
+	//m_pConnection->ConnectionTimeout = 8;
+	try
+	{
+		
+		hr = m_pConnection->Open(_bstr_t(strSQL.GetBuffer(strSQL.GetLength())), _T(""), _T(""), adModeUnknown);
+		if (FAILED(hr))
+		{
+			AfxMessageBox(_T("不能连接数据库!"));
+			return;
+		}
+		else
+			AfxMessageBox(_T("连接数据库成功!"));
+	}
+	catch (_com_error e)
+	{
+		AfxMessageBox(e.ErrorMessage());
+
+		return;
+	}

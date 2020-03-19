@@ -1,0 +1,15 @@
+查看镜像
+docker images
+查看容器
+docker ps -a
+删除容器
+首先关闭容器：docker stop 容器ID
+删除容器：docker rm 容器ID
+
+删除镜像：
+首先关闭镜像里的容器
+删除镜像：docker rmi 镜像ID
+
+查找镜像：docker search php(例子)
+
+拉取镜像：docker pull php:7.2.5

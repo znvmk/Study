@@ -1,0 +1,93 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312">
+<meta name="GENERATOR" content="Microsoft FrontPage 4.0">
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<link rel="stylesheet" href="style.css">
+<title>开天辟地</title>
+</head>
+
+<body background="images/background.JPG">
+
+<p align="center">
+
+<font size="5" color="#000080"><b>
+
+学OpenGL编3D游戏</b></font>
+<p align="center"><font size="3" color="#800000">第五章 开天辟地</font></p>
+
+<table border="0" width="94%">
+  <tr>
+    <td width="69%" valign="top"><p align="left" style="line-height: 200%"><font size="2" color="#0000FF"><img border="0" src="images/0004.GIF" width="65" height="40"></font>&nbsp;  
+      <font color="#0000FF">在这一章的示范程序中，我们在OpenGL场景中显示了天、地、物。<br>
+      <br>
+      </font>&nbsp;&nbsp;&nbsp; 我们可以在OpenGL场景中建立有一定真实感的天空、地面。这个地面还有起伏的山峦，你在其中漫游时还有翻山越岭、爬坡过堑的视觉效果，正是我们做山地游戏的绝好场景。</p>     
+
+      <p align="left" style="line-height: 200%"><img border="0" src="images/YELBTN.GIF" width="11" height="11">  
+      <font color="#800000"><b>用曲面构成地面</b></font><br>
+      &nbsp;&nbsp;&nbsp; 在用双重FOR循环生成地面MAP_W * MAP_W的平面，这个平面是一个三维量，其中的高(Y分量)取随机数。并形成顶点索引和贴图索引。</p>    
+
+    </td>
+    <td width="31%" valign="top"><img border="0" src="fileimg/图5-4漫游天地间.GIF" width="196" height="161"></td>
+  </tr>
+</table>
+<p align="left" style="line-height: 200%">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; for (int z = 0; z &lt; MAP_W; z++)<br>     
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; for (int x = 0; x &lt; MAP_W; x++)<br>     
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; { Vertex = z * MAP_W + x;<br>     
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; g_terrain [Vertex][0] = float(x)*MAP_SCALE; //地域数据X分量<br>     
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; g_terrain [Vertex][1] = h + FRAND * h;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;     
+//Y分量，随机产生山的高度<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; g_terrain [Vertex][2] = -float(z)*MAP_SCALE;//地域数据Z分量<br>    
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; g_texcoord[Vertex][0] = (float) x;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;     
+//索引数组x<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; g_texcoord[Vertex][1] = (float) z;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;     
+//索引数组z<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; g_index [index++] = Vertex;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;     
+//顶点数组1维<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; g_index [index++] = Vertex+     
+MAP_W;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }</p>    
+
+<p align="left">&nbsp;&nbsp;&nbsp; 显示时用命令glDrawElements(...);显示由顶点数组指定的面，结果就形成了高低不平的曲面。</p>  
+
+<p align="left">&nbsp;&nbsp;&nbsp; 在这个曲面上贴上表示地面的图形，就形成了&quot;山&quot;。</p>  
+
+<p align="left"><img border="0" src="images/YELBTN.GIF" width="11" height="11">  
+ <b><font color="#800000">等高线图地面</font></b></p>
+
+<p align="center"><img border="0" src="fileimg/图5-2-1%20等高线地图原理.GIF" width="350" height="233"></p>
+
+<p align="left">&nbsp;&nbsp;&nbsp;  
+地面的高度由读入的等高线地图图片数据决定，就可以生成与等高图相同的&quot;山&quot;。</p> 
+
+<p align="left"><img border="0" src="images/YELBTN.GIF" width="11" height="11">  
+ <b><font color="#800000">天是由一个方盒构成</font></b></p>
+
+<p align="left">&nbsp;&nbsp;&nbsp; 天是由一个长方体(称为天空盒)，在它的各个面上贴有表示天的图片形成的。</p>  
+
+<p align="left">&nbsp;&nbsp;&nbsp; 用于天空背景的图片有特殊要求。4面图的边与顶图的边相连，4面图前后相连。图片大小为2的N次方(32、64、128...)</p>  
+
+<div align="center">
+  <center>
+  <table border="0" width="82%">
+    <tr>
+      <td width="24%"><img border="0" src="fileimg/图5-3-2%20天空贴图的要求1.GIF" width="200" height="195"></td>
+      <td width="76%"><img border="0" src="fileimg/图5-3-3%20天空贴图的要求2.GIF" width="400" height="66"></td>
+    </tr>
+  </table>
+  </center>
+</div>
+<p align="left">&nbsp;&nbsp;&nbsp; 这是构成的天空(正面远处观看)。</p>  
+
+<p align="center"><img border="0" src="fileimg/图5-3-1天空盒.GIF" width="400" height="204"></p>
+
+<p align="center"> 本章示范程序效果</p>
+
+<p align="center"><img border="0" src="fileimg/图5-4漫游天地间.GIF" width="400" height="299"></p>
+
+<p align="center">　</p>
+
+</body>
+
+</html>

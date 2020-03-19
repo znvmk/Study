@@ -1,0 +1,123 @@
+一、
+Git clone
+在D:/znp/Git目录下初始化git:git init，生成.git文件
+在Git目录下新建ckp_server目录。查看Git秘钥：cd ~/.ssh，复制公钥，打开云仓库：http://git.jygeili.com/ckp/ckp_server。打开用户设置->打开SSH秘钥，添加秘钥：命名，将刚才复制的公钥粘贴进去。接下来，在项目ckp_server中选择SSH而不是HTTP，复制SSH：git@git.jygeili.com:ckp/ckp_server.git。在本地Git Brush中输入：git clone git@git.jygeili.com:ckp/ckp_server.git，将项目复制到本地ckp_server目录(注意本地的目录一定要和云仓库目录一样，否则会失败)，显示项目正在克隆。克隆完毕后进入到项目目录：cd ckp_server，查看当前分支：git checkout:显示当前分支是主分支master。输入：git pull，显示已经全部更新。至此，克隆已经成功。
+
+
+使用Windows的童鞋要特别注意：
+
+  千万不要使用Windows自带的记事本编辑任何文本文件。原因是Microsoft开发记事本的团队使用了一个非常弱智的行为来保存UTF-8编码的文件，他们自作聪明地在每个文件开头添加了0xefbbbf（十六进制）的字符，你会遇到很多不可思议的问题，比如，网页第一行可能会显示一个“?”，明明正确的程序一编译就报语法错误，等等，都是由记事本的弱智行为带来的。建议你下载Notepad++代替记事本，不但功能强大，而且免费！记得把Notepad++的默认编码设置为UTF-8 without BOM即可：
+
+git 命令： 1.创建文件夹：mkdir <文件夹名>
+          2.用命令git add告诉Git，把文件添加到仓库：$ git add readme.txt
+          3.使用命令git add <file>，注意，可反复多次使用，添加多个文件；
+          4.使用命令git commit -m <message>，完成。
+
+二、
+版本控制系统肯定有某个命令可以告诉我们历史记录，在Git中，我们用git log命令查看：
+
+$ git log
+commit 1094adb7b9b3807259d8cb349e7df1d4d6477073 (HEAD -> master)
+Author: Michael Liao <askxuefeng@gmail.com>
+Date:   Fri May 18 21:06:15 2018 +0800
+
+    append GPL
+
+    好了，现在我们启动时光穿梭机，准备把readme.txt回退到上一个版本，也就是add distributed的那个版本，怎么做呢？
+
+首先，Git必须知道当前版本是哪个版本，在Git中，用HEAD表示当前版本，也就是最新的提交1094adb...（注意我的提交ID和你的肯定不一样），上一个版本就是HEAD^，上上一个版本就是HEAD^^，当然往上100个版本写100个^比较容易数不过来，所以写成HEAD~100。
+
+现在，我们要把当前版本append GPL回退到上一个版本add distributed，就可以使用git reset命令：
+
+$ git reset --hard HEAD^
+HEAD is now at e475afc add distributed
+--hard参数有啥意义？这个后面再讲，现在你先放心使用。
+
+看看readme.txt的内容是不是版本add distributed：
+
+$ cat readme.txt
+Git is a distributed version control system.
+Git is free software.
+果然被还原了。
+
+还可以继续回退到上一个版本wrote a readme file，不过且慢，然我们用git log再看看现在版本库的状态：
+$ git log
+commit e475afc93c209a690c39c13a46716e8fa000c366 (HEAD -> master)
+Author: Michael Liao <askxuefeng@gmail.com>
+Date:   Fri May 18 21:03:36 2018 +0800
+
+    add distributed
+
+commit eaadf4e385e865d25c48e7ca9c8395c3f7dfaef0
+Author: Michael Liao <askxuefeng@gmail.com>
+Date:   Fri May 18 20:59:18 2018 +0800
+
+    wrote a readme file
+最新的那个版本append GPL已经看不到了！好比你从21世纪坐时光穿梭机来到了19世纪，想再回去已经回不去了，肿么办？
+
+办法其实还是有的，只要上面的命令行窗口还没有被关掉，你就可以顺着往上找啊找啊，找到那个append GPL的commit id是1094adb...，于是就可以指定回到未来的某个版本：
+
+$ git reset --hard 1094a
+HEAD is now at 83b0afe append GPL
+版本号没必要写全，前几位就可以了，Git会自动去找。当然也不能只写前一两位，因为Git可能会找到多个版本号，就无法确定是哪一个了。
+
+再小心翼翼地看看readme.txt的内容：
+$ cat readme.txt
+Git is a distributed version control system.
+Git is free software distributed under the GPL.
+果然，我胡汉三又回来了。
+在Git中，总是有后悔药可以吃的。当你用$ git reset --hard HEAD^回退到add distributed版本时，再想恢复到append GPL，就必须找到append GPL的commit id。Git提供了一个命令git reflog用来记录你的每一次命令：
+
+$ git reflog
+e475afc HEAD@{1}: reset: moving to HEAD^
+1094adb (HEAD -> master) HEAD@{2}: commit: append GPL
+e475afc HEAD@{3}: commit: add distributed
+eaadf4e HEAD@{4}: commit (initial): wrote a readme file
+终于舒了口气，从输出可知，append GPL的commit id是1094adb，现在，你又可以乘坐时光机回到未来了。\
+
+
+
+三、创建分支
+创建分支：git checkout -b dev1-dev
+定位分支：1.选择位置：git checkout dev1(即切换到dev1分支下，选择dev1分支的状态内容)
+          2.拉取目标分支内容：git pull
+按照这种模式，你可以在任意分支（git checkout）的任意位置(版本回滚，但暂时不能提交到云代码仓库)创建新的分支。但是要注意，拉取分支前本地新建的分支目录一定是空的，或者版本不能比要拉取的分支的版本新
+提交分支：git push --set-upstream origin dev1-dev；成功后编辑内容提交：git commit -m""
+首先创建分支就像是定义了一个指针，它默认指向本地的代码仓库版本。然后选择你需要的版本，找到其所在的分支，通过该分支的头指针（即该分支线的所有提交版本号），找到你所需要的版本提交码，回滚拉取（git reset --hard 1094a；git pull），就可以了。要注意的是如果本地的版本过高，出现冲突，并且无法解决，可以考虑清除本地仓库，直接克隆你所需要的版本。
+
+创建分支dev1-dev:
+SJRJY@DESKTOP-L6H201M MINGW64 /d/Git/writing/make (dev1)
+$ git checkout -b dev1-dev
+Switched to a new branch 'dev1-dev'
+
+提交分支dev1-dev:
+SJRJY@DESKTOP-L6H201M MINGW64 /d/Git/writing/make (dev1-dev)
+$ git push --set-upstream origin dev1-dev
+Enumerating objects: 7, done.
+Counting objects: 100% (7/7), done.
+Delta compression using up to 4 threads.
+Compressing objects: 100% (4/4), done.
+Writing objects: 100% (4/4), 363 bytes | 363.00 KiB/s, done.
+Total 4 (delta 2), reused 0 (delta 0)
+remote: Resolving deltas: 100% (2/2), completed with 2 local objects.
+To github.com:znvmk/writing.git
+ * [new branch]      dev1-dev -> dev1-dev
+Branch 'dev1-dev' set up to track remote branch 'dev1-dev' from 'origin'.
+
+
+编辑内容：
+SJRJY@DESKTOP-L6H201M MINGW64 /d/Git/writing/make (dev1-dev)
+$ vim test.txt
+检查提交到缓存区：
+SJRJY@DESKTOP-L6H201M MINGW64 /d/Git/writing/make (dev1-dev)
+$ git add .
+提交到本地：
+SJRJY@DESKTOP-L6H201M MINGW64 /d/Git/writing/make (dev1-dev)
+$ git commit -m ""
+提交到云代码仓库：
+SJRJY@DESKTOP-L6H201M MINGW64 /d/Git/writing/make (dev1-dev)
+$ git push
+Everything up-to-date
+
+git更新
+git update-git-for-windows

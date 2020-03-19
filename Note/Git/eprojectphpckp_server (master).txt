@@ -1,0 +1,8 @@
+
+SJRJY@DESKTOP-L6H201M MINGW64 /e/project/php/ckp_server (master)
+$ git reset --hard origin/master
+HEAD is now at 6ca69f2 Merge branch 'master' of git.jygeili.com:ckp/ckp_server
+
+SJRJY@DESKTOP-L6H201M MINGW64 /e/project/php/ckp_server (master)
+$ git pull
+Already up to date.

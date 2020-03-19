@@ -1,0 +1,6 @@
+https://github.com/nothings/stb.git
+克隆stb图像处理库
+将sdb文件夹放在OpenGL的include目录下面
+
+纹理贴图，图片大小必须是2的n次幂，不然图片会变成灰色条纹
+

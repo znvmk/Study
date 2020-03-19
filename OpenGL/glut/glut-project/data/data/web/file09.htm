@@ -1,0 +1,88 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312">
+<meta name="GENERATOR" content="Microsoft FrontPage 4.0">
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<link rel="stylesheet" href="style.css">
+<title>New Page 1</title>
+</head>
+
+<body background="images/background.JPG">
+
+<p align="center">
+<font size="5" color="#000080"><b>
+
+学OpenGL编3D游戏</b></font><p align="center"><font size="3" color="#800000">第十章 MDL动画模型</font></p>        
+
+<p align="left" style="line-height: 150%"><font size="2" color="#0000FF"><img border="0" src="images/0004.GIF" width="65" height="40">MDL骨骼动画的资料不多吧，这里我们就给大家介绍MDL骨骼动画在OpenGL上的调用和显示。</font> 
+</p>    
+
+<p align="left" style="line-height: 150%">&nbsp;&nbsp;&nbsp;<font size="2" color="#0000FF"> 
+</font><font size="2">现在风行的“halflife（半条命）”和“CS”游戏则采用了更先进的mdl格式的3D动画模型。mdl动画模型是一种称为骨骼动画的3D动画模型，它与MD2关键帧动画在构成方法上有本质的区别。<br>
+&nbsp;&nbsp;&nbsp; 骨骼动画模型是形象模型为蒙皮，动作架构为骨骼而有机组成的3D动画。骨骼动画的优势所在，是用线段代表动物的骨骼关节，动物的一切复杂动作，是用数据量极小的线段在空间位置的变化来表示。不管动作什么变，动物的形象模型只有一个，这个形象模型就象动物的皮肉一样，随着骨骼的位置变化而变化。所以即使很小MDL模型文件，却可以做出极为丰富的动作。</font>   
+</p>    
+
+<p align="center" style="line-height: 150%"><font size="2"><img border="0" src="fileimg/骨骼动画.GIF" width="500" height="105"></font> 
+</p>    
+
+<p align="left" style="line-height: 150%"><font size="2">&nbsp;&nbsp;&nbsp; 在本书配套光盘的 “运行程序\data\MDL模型” 目录下，有几个mdl类型的动画模型文件，它们是“3D第一人称枪手”动画模型。</font>    
+</p>    
+
+<p align="center"><font size="2"><img border="0" src="fileimg/枪手模型.GIF" width="400" height="214"></font> 
+</p>    
+
+<p align="left" style="line-height: 150%"><font size="2"><br>
+&nbsp;&nbsp;&nbsp; 玩过“CS”、“三角洲部队”等射击游戏的朋友对这些枪手是很熟悉的吧。这些动画模型为射击游戏增加了不小的风采，形象的枪击动作、逼真的拉枪栓、换弹匣操作，再加上声效，犹如身临其景。嘿嘿，你现在也可以做了，本章的任务就是在我们的游戏场景中加入这种第一人称枪手模型，也来玩玩心跳的感觉。</font>   
+</p>    
+
+<p align="center"><img border="0" src="fileimg/从背后偷袭.GIF" width="400" height="299"> 
+</p>    
+
+<p align="center" style="line-height: 150%"><font size="2">&nbsp;&nbsp;&nbsp; 
+怎么样？够酷吧。是不是真有点三角洲部队的味道了。</font>   
+</p>    
+
+<p align="left" style="line-height: 150%"><font size="2"> 
+&nbsp;&nbsp;&nbsp; 在书的配套光盘“源程序\include” 目录下有“MDLModel.cpp” 、“MDLModel.h” 文件和“MDLFormat.h”文件。“MDLModel.cpp”就是调入并显示MDL动画模型文件的算法，在“MDLFormat.h”文件中是MDL模型算法的一些重要结构定义（有兴趣的朋友可以研究它）。<br>     
+&nbsp;&nbsp;&nbsp; 这里我们建立一个新类“mdlobj.cpp” ，作为我们调用MDL算法文件“MDLModel.cpp”的接口。<br>     
+我们后面使用到“MDLModel.cpp” 中函数有：</font>    
+</p>    
+
+<div align="center">
+  <center>
+  <table border="0" width="71%">
+    <tr>
+      <td width="47%" align="left"><font size="2" color="#000080">  
+	void Init(char *Filename);&nbsp;</font></td>  
+      <td width="53%" align="left"><font size="2" color="#000080">			//调入文件名为“Filename”的MDL文件。</font></td>
+    </tr>
+    <tr>
+      <td width="47%" align="left"><font size="2" color="#000080">  
+	void DrawModel();</font></td>   
+      <td width="53%" align="left"><font size="2" color="#000080">					//显示MDL模型</font></td>
+    </tr>
+    <tr>
+      <td width="47%" align="left"><font size="2" color="#000080">  
+	void AdvanceFrame(float Time);</font></td>   
+      <td width="53%" align="left"><font size="2" color="#000080">//动作步进</font></td>
+    </tr>
+    <tr>
+      <td width="47%" align="left"><font size="2" color="#000080">  
+	long SetSequence(long Sequence);&nbsp;</font></td>  
+      <td width="53%" align="left"><font size="2" color="#000080"> 	//设置MDL模型的动作序列。</font></td>
+    </tr>
+  </table>
+  </center>
+</div>
+
+<p align="left"><font size="2"><br>  
+<br>  
+&nbsp;<br>  
+<br>  
+</font><br>  
+</p>    
+
+</body>
+
+</html>

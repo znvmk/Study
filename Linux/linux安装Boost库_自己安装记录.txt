@@ -1,0 +1,90 @@
+切换root用户
+ubuntu@VM-0-5-ubuntu:/etc/docker$ su
+Password: 
+root@VM-0-5-ubuntu:/etc/docker# exit
+exit
+ubuntu@VM-0-5-ubuntu:/etc/docker$ 
+1.用xShell6将boost压缩包上传到Linux，注意要用boot权限，不然会失败
+（1）安装：yum install  lrzsz -y(ubuntu用：apt-get install lrzsz)；检查是否安装成功：#rpm -qa|grep lrzsz
+（2）上传文件的执行命令：
+rz  
+就会打开本地选择文件对话框，选择文件，确定就可以上传到当前所在目录。
+如果覆盖原文件，执行：
+rz   -y
+下载文件，执行：
+sz {文件}
+弹出选择本地保存文件对话框。
+（3）注意以上命令都要在管理员（root）模式下进行，否则会失败！
+
+2.移动位置
+（1）在home目录下新建boost目录：mkdir boost;
+(2)进入到压缩文件上传目录：cd uplode
+(3)移动压缩包到boost目录：mv boost_1_67_0 /home/boost
+(4)查看是否成功：
+cd ../
+cd home
+cd boost
+ls
+存在，成功。
+
+3.解压
+在boost目录下执行：sudo tar -zxvf boost_1_67_0.tar.gz
+ls   查看booststrap.sh等文件是否存在
+
+4.编译安装
+（1）./bootstrap.sh --help
+查看是否可以执行和了解命令
+（2）sudo ./bootstrap.sh
+生成了b2等文件，用来编译boost库
+（3）sudo ./b2 install
+编译，注意一定要要用root权限：sudo，否在创建文件夹和文件会失败
+编译会进行30分钟到1个点
+
+5.检查是否成功
+boost默认安装在/usr/local的lib, include中
+（1）查看boost库
+cd /
+cd /usr/local/lib
+ls
+（2）查看包含库
+cd ..
+cd include
+ls
+cd boost
+ls
+已经成功安装
+
+6.测试
+（1）回到根目录：cd /
+(2)进入代码目录：cd /home/mycode/cpp
+(3)创建cpp文件：sudo touch boosttest.cpp
+(4)编辑：sudo vim boosttest.cpp (一定要在root权限下编辑，不然只是在只读模式下，无法保存)
+test.cpp
+
+#include <iostream>
+#include <boost/version.hpp>
+#include <boost/config.hpp>
+
+using namespace std;
+using namespace boost;
+
+int main()
+{
+        cout <<BOOST_VERSION <<endl;
+        cout <<BOOST_LIB_VERSION <<endl;
+        cout <<BOOST_PLATFORM<<endl;
+        cout <<BOOST_COMPILER <<endl;
+        cout <<BOOST_STDLIB <<endl;
+}
+(5)编译
+ sudo g++ -o b.out test.cpp -I.//生成为b.out
+ (6)运行
+ sudo ./b.out
+ (7)结果
+ 106700
+1_67
+linux
+GNU C++ version 5.4.0 20160609
+GNU libstdc++ version 20160609
+
+

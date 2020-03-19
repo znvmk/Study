@@ -1,0 +1,10 @@
+//兑换绑金请求
+message GoldExchangeReq{
+    int32 Grade=1;//绑金兑换档次:1-5，请求打开页面为0
+}
+//兑换绑金返回
+message GoldExchangeResult{
+    int32 Success=1;//绑金兑换成功：1.成功，2.失败
+    int32 FreeGold=2;//非绑金
+    int32 BindGold=3;//绑金兑换档次
+    int32 SurplusTimes=4;//剩余次数

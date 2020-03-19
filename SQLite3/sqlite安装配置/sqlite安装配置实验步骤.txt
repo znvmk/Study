@@ -1,0 +1,74 @@
+1.在SQLite官网下载文件：https://www.sqlite.org/download.html
+sqlite-amalgamation-3260000.zip
+sqlite-dll-win32-x86-3260000.zip
+sqlite-dll-win64-x64-3260000.zip
+sqlite-tools-win32-x86-3260000.zip
+2.这里需要使用到vs2017安装目录下的lib.exe和一些其他的依赖库；
+简单起见，直接将vs2017安装目录下的HostX86/x86文件夹拷贝（如C:\Program Files (x86)\Microsoft VisualStudio\2017\Community\VC\Tools\MSVC\14.10.25017\bin\HostX86\x86）到一个新的文件夹（若x64则要拷贝x64对应的文件夹）；
+再将步骤2中的sqlite3.dll和sqlite3.def拷贝到这个新文件夹；
+在新文件夹中打开powershell，输入：
+
+.\lib.exe /def:sqlite3.def /machine:x86
+即可生成：sqlite3.exp，sqlite3.lib
+保存
+3.如果要生成X64位，可保存移除x86库文件后，直接用当前文件夹输入命令：.\lib.exe /def:sqlite3.def /machine:x64
+即可生成：sqlite3 X64位库。
+4.在vs2017中创建win32控制台程序，将活动平台改为64位Release；
+创建测试代码文件Source.cpp：
+在该目录下找到刚刚生成的sqlite3.lib；
+在sqlite-amalgamation-3180000目录下找到sqlite3.h；
+在sqlite-dll-win64-x64-3180000 目录下找到sqlite3.dll；
+将sqlite3.h,sqlite3.lib,sqlite3.dll三个文件拷贝到vs2017的项目源码目录下：
+运行代码，进行测试：
+#include <iostream>
+#include <string>
+#include "sqlite3.h"
+#pragma comment(lib,"sqlite3.lib")
+using namespace std;
+
+
+int main()
+{
+	sqlite3 * db;
+	int nResult = sqlite3_open("test.db", &db);
+	if (nResult != SQLITE_OK)
+	{
+		cout << "open db failed" << sqlite3_errmsg(db) << endl;
+		system("pause");
+	}
+	else
+	{
+		cout << "open db successed" << endl;
+	}
+	char* errmsg;
+	nResult = sqlite3_exec(db, "create table test.a(\
+			id int primary key not null,\
+			name varchar(255) not null,\
+			); ", NULL, NULL, &errmsg);
+	if (nResult != SQLITE_OK)
+	{
+		sqlite3_close(db);
+		cout << "create table failed" << sqlite3_errmsg(db) << endl;
+		system("pause");
+	}
+	string strSql,stmpi;
+	for (int i = 0; i < 100; i++)
+	{
+
+		strSql += "insert into a(id,name) \
+			values(";
+		stmpi = to_string(i);
+		strSql += stmpi;
+		strSql += ",'heh');";
+	}
+	cout << strSql << endl;
+	nResult = sqlite3_exec(db, strSql.c_str(), NULL, NULL, &errmsg);
+	if (nResult != SQLITE_OK)
+	{
+		sqlite3_close(db);
+		cout << "insert failed" << sqlite3_errmsg(db)<<endl;
+		system("pause");
+	}
+	system("pause");
+	return 0;
+}

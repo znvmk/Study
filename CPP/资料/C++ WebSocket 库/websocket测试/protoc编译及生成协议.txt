@@ -1,0 +1,12 @@
+下载Cmake
+https://cmake.org/download/
+
+下载protobuf-cpp-3.6.1
+https://github.com/google/protobuf/releases
+ 
+打开cmake.gui ：选择cmake文件夹：protobuf-cpp-3.6.1解压，目录的cmake文件夹；选择生成目录cmake\build（x86,x64）
+编辑cmake.gui 的Configure，选择vs2017（32位）（或vs2017 winx64(64位)），确定，等待生成；完成后选择生成动态运行库dll，点击Generate，生成vs项目；在生成目录（cmake\build）中选择protobuf.sln,用中2017打开。选择release编译，在release目录即可生成protoc.exe
+编写game.proto，将release目录下所有文件复制到项目的protobuf目录下，在Src目录下生成协议：.\protoc.exe --cpp_out=./Src  ./Src/game.proto
+
+
+  .\protoc.exe --cpp_out=./Src  ./Src/Src/protoback.proto

@@ -1,0 +1,12 @@
+http://www.cnblogs.com/zhouyang209117/p/7218719.html
+
+https://www.cnblogs.com/DswCnblog/p/6700660.html
+
+下载Cmake
+https://cmake.org/download/
+
+Windows下google/protobuf v3.5.1--VS2017 x86 x64编译、使用
+https://blog.csdn.net/qing666888/article/details/79137963
+
+在windows上一键编译各种版本的protobuf(2017-12-05修改)
+https://www.cnblogs.com/tangxin-blog/p/5698137.html
