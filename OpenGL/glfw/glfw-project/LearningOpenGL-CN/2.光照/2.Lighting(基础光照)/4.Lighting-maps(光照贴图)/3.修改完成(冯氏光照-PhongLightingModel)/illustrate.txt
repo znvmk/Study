@@ -1,0 +1,4 @@
+冯氏光照模型 主要结构由三个分量组成：
+环境（Ambient）
+漫反射（Diffuse）
+镜面反射（Specular）
