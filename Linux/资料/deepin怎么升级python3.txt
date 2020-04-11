@@ -1,0 +1,55 @@
+deepin怎么升级python3
+系统自带的Python2，不建议把默认Python版本改为Python3，毕竟很多软件用的Python2，要是把默认的换成Python3会有很多奇怪的问题。
+但是你可以手动安装Python3，然后用python3命令启动。安装命令如下
+sudo apt-get install python3.5
+最后那个3点几随意，只要仓库里面有就可以，要查看有哪些版本可以使用下面的命令：
+apt search python3
+
+
+Deepin源码安装Python3.8.1
+https://www.python.org/downloads/release/python-381/
+下载Gzipped source tarball即可
+Python3.8.1.tgz
+2. 解压缩到指定文件夹
+tar zxvf ./Python-3.8.1.tgz -C [指定解压缩的文件路径]
+3.安装相关依赖
+1. sudo apt-get update
+2. sudo apt-get upgrade
+3. sudo apt install make build-essential libssl-dev zlib1g-dev
+4. sudo apt install libbz2-dev libreadline-dev libsqlite3-dev wget curl llvm
+5.  sudo apt install libncurses5-dev libncursesw5-dev xz-utils tk-dev
+
+4.编译安装
+
+切换到解压之后的Python文件夹，执行下面的三行命令，即可完成编译安装。注意prefix之后是具体的安装路径，根据自己的需要可以修改.
+
+./configure --with-ssl --prefix=/opt/python3.7  
+sudo make
+sudo make install
+5.建立软链接
+因为Deepin自带了Python3.5，为了与Python3.5区分，在这里将软链接名字设置为python3.8和pip3.8.
+
+ln -s /opt/python3.8/bin/python3.8 /usr/bin/python3.8
+ln -s /opt/python3.8/bin/pip3.8  /usr/bin/pip3.8
+
+运行报错
+python3.8: error while loading shared libraries: libpython3.6m.so.1.0:cannot open shared object file: No such file or directory
+使用命令ldd /opt/Python-3.8/bin/python3.8 检查其动态链接发现确实缺少了这个；
+
+使用如下方法解决：
+拷贝文件到lib库；
+sudo cp /opt/python3.8/lib/libpython3.8.so.1.0 /usr/local/lib64
+sudo cp /opt/python3.8/lib/libpython3.8.so.1.0 /usr/lib64
+sudo cp /opt/python3.8/lib/libpython3.8.so.1.0 /usr/lib
+
+
+Deepin自带的Python3没有pip
+
+ 
+
+需要安装一下：
+
+sudo apt install python3-pip
+更新pip
+
+sudo pip3 install --upgrade pip

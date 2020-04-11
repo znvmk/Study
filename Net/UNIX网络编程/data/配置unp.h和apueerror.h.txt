@@ -1,0 +1,15 @@
+1、先在官网 http://www.unpbook.com/unpv13e.tar.gz 下载源文件
+
+2、解压：tar -xzvf unpv13e.tar.gz
+
+3、cd unpv13e; ./configure
+
+4、cd lib; make
+
+5、以上生成了libunp.a 的静态库，将生成的静态库复制到系统的库目录中(/usr/lib)， cd ..; sudo cp libunp.a /usr/lib/
+
+6、将unp.h和config.h放入系统的引用目录中，以便快速的引用(注意：config.h在lib目录外)，所以此处需要一些修改，即将unp.h中的某行 #include "../config.h" 的 ../ 去掉，然后拷贝这两个文件到/usr/include 中(我的习惯是在include 目录下新建一个目录，cd /usr/lib; mkdir unpv13e; sudo cp unp.h /usr/lib/unpv13e; sudo cp ../config.h /usr/lib/unpv13e)
+
+7、在使用的过程中只需要 #include <unpv13e/unp.h> 即可　　// 此处注意目录结构。
+
+8、err_sys() 等函数，需要配置并引用另一个库，apue.h 和 apueerror.h 可以在 http://blog.csdn.net/lyh66/article/details/7375411 中获取，我是把这两个文件也放在了 /usr/lib/unpv13e 中，然后修改apueerror.h 中的 #include <apue.h> 行，改为了 #include <unpv13e/apue.h>，保存即可。引用同样是 #include <unpv13e/apueerror.h> 就可以了

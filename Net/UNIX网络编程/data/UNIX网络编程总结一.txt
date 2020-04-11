@@ -1,0 +1,412 @@
+UNIX网络编程总结一
+    客户与服务器通信使用TCP在同一网络通信时，大致按下面的方式通信：client→TCP→IP→以太网驱动程序→以太网→以太网驱动程序→IP→TCP→server。若不在同一网络则需要路由器连接。
+
+客户端程序解析：
+
+
+#include <stdio.h>
+
+#include "unp.h"
+
+ 
+
+int main(int argc, char **argv){
+
+    int socketfd=-1, n, inet, con;
+
+    char reciveline[MAXLINE + 1];
+
+    struct sockaddr_in  servaddr;
+
+    if (argc != 2){
+
+         printf("usage: a.out <IPaddress>\n");
+
+         return 0;
+
+    }
+
+    if( (socketfd = socket(AF_INET, SOCK_STREAM, 0)) < 0){
+
+        printf("socket error\n");
+
+        return 0;
+
+    }
+
+    bzero(&servaddr, sizeof(servaddr));
+
+    servaddr.sin_family = AF_INET;
+
+    servaddr.sin_port  = htons(2329);    /* daytime server */
+
+    if ((inet = inet_pton(AF_INET, argv[1], &servaddr.sin_addr)) <= 0){
+
+        printf("inet_pton error for %s\n", argv[1]);
+
+        return 0;
+
+    }
+
+    if ((con = connect(socketfd, (SA *) &servaddr, sizeof(servaddr))) < 0){
+
+        printf("connect error\n");
+
+        return 0;
+
+    }
+
+    while ( (n = read(socketfd, reciveline, MAXLINE)) > 0) {
+
+        reciveline[n] = 0;    /* null terminate */
+
+        if (fputs(reciveline, stdout) == EOF){
+
+            printf("fputs error\n");
+
+            return 0;
+
+        }
+
+}
+
+    if (n < 0){
+
+        printf("read error\n");
+
+        return 0;
+
+    }
+
+    return 0;
+
+}
+
+上面是一个简单客户端程序，通过这个程序可以知道客户端在通信时的过程，下面我们详细解析：
+
+sockaddr_in
+（在netinet/in.h中定义）：
+
+
+struct sockaddr_in
+
+ 
+
+{
+
+short sin_family;/*Address family一般来说AF_INET（地址族）PF_INET（协议族）*/
+
+unsigned short sin_port;/*Port number(必须要采用网络数据格式,普通数字可以用htons()函数转换成网络数据格式的数字)*/
+
+struct in_addr sin_addr;/*IP address in network byte order（Internet address）*/
+
+unsigned char sin_zero[8];/*Same size as struct sockaddr没有实际意义,只是为了　跟SOCKADDR结构在内存中对齐*/ 
+
+};
+
+（在ws2def.h中定义）：
+
+struct sockaddr_in
+
+{
+
+    #if(_WIN32_WINNT<0x0600)
+
+    short sin_family;
+
+    #else//(_WIN32_WINNT<0x0600)
+
+    address_family sin_family;
+
+    #endif//(_WIN32_WINNT<0x0600)
+
+    ushort sin_port;
+
+    in_addr sin_addr;
+
+    char sin_zero[8];
+
+}
+
+（在WinSock2.h中定义）：
+
+
+struct sockaddr_in {
+
+        short   sin_family;
+
+        u_short sin_port;
+
+        struct  in_addr sin_addr;
+
+        char    sin_zero[8];
+
+};
+
+在linux下：
+
+in_addr结构
+
+
+typedef uint32_t in_addr_t;
+
+struct in_addr
+
+  {
+
+    in_addr_t s_addr;
+
+  };
+
+在windows下：
+
+
+typedef struct in_addr
+
+{
+
+    union{
+
+            struct { unsigned char s_b1,s_b2,s_b3,s_b4; } S_un_b;
+
+            struct { unsigned short s_w1,s_w2; } S_un_w;
+
+            unsigned long S_addr;
+
+    }S_un;
+
+}in_addr;
+
+int socket(int domain, int type, int protocol);
+即创建一个socket，即套接字。就是对通信端点的抽象。返回套接字描述符，就如程序通过文件描述符访问文件一样，套接字描述符是访问套接字的一种路径。从某种意义上说，套接字也在文件，所以许多对文件描述符使用的函数，对套接字描述符同样适用，但是有些是不可使用的：参数说明如下：
+
+1、在参数表中，domain指定使用何种的地址类型，比较常用的有：
+
+PF_INET, AF_INET： Ipv4网络协议；
+
+PF_INET6, AF_INET6： Ipv6网络协议。
+
+2、type参数的作用是设置通信的协议类型，可能的取值如下所示：
+
+    SOCK_STREAM： 提供面向连接的稳定数据传输，即TCP协议。
+
+    OOB： 在所有数据传送前必须使用connect()来建立连接状态。
+
+    SOCK_DGRAM： 使用不连续不可靠的数据包连接。
+
+    SOCK_SEQPACKET： 提供连续可靠的数据包连接。
+
+    SOCK_RAW： 提供原始网络协议存取。
+
+    SOCK_RDM： 提供可靠的数据包连接。
+
+    SOCK_PACKET： 与网络驱动程序直接通信。
+
+3、参数protocol用来指定socket所使用的传输协议编号。这一参数通常不具体设置，一般设置为0即可。
+
+该函数如果调用成功就返回新创建的套接字的描述符，如果失败就返回INVALID_SOCKET。套接字描述符是一个整数类型的值。每个进程的进程空间里都有一个套接字描述符表，该表中存放着套接字描述符和套接字数据结构的对应关系。该表中有一个字段存放新创建的套接字的描述符，另一个字段存放套接字数据结构的地址，因此根据套接字描述符就可以找到其对应的套接字数据结构。每个进程在自己的进程空间里都有一个套接字描述符表但是套接字数据结构都是在操作系统的内核缓冲里。
+
+extern void bzero(void *s, int n);
+  该函数在#include <string.h>，功能是置字节字符串s的前n个字节为零，该函数bzero无返回值。在这里就是给套接字清零，也就是从&servaddr指针所指的地址位置开始,将sizeof(sevaddr)字节置为0，有的实现就是用函数：memset(&servaddr,0x00,sizeof(sevaddr))；
+
+AF_INET & AF_INET6 & AF_UNIX
+AF_INET（又称 PF_INET）是 IPv4 网络协议的套接字类型，AF_INET6 则是 IPv6 的；而 AF_UNIX 则是 Unix 系统本地通信。
+    选择 AF_INET 的目的就是使用 IPv4 进行通信。因为 IPv4 使用 32 位地址，相比 IPv6 的 128 位来说，计算更快，便于用于局域网通信。而且 AF_INET 相比 AF_UNIX 更具通用性，因为 Windows 上有 AF_INET 而没有 AF_UNIX。
+
+htons(), ntohl(), ntohs()，htons()
+在C/C++写网络程序的时候，往往会遇到字节的网络顺序和主机顺序的问题。这是就可能用到htons(), ntohl(), ntohs()，htons()这4个函数。
+
+网络字节顺序与本地字节顺序之间的转换函数：
+
+    htonl()--"Host to Network Long"
+
+    ntohl()--"Network to Host Long"
+
+    htons()--"Host to Network Short"
+
+    ntohs()--"Network to Host Short"    
+
+之所以需要这些函数是因为计算机数据表示存在两种字节顺序：NBO与HBO
+
+网络字节顺序NBO（Network Byte Order）：按从高到低的顺序存储，在网络上使用统一的网络字节顺序，可以避免兼容性问题。
+
+主机字节顺序（HBO，Host Byte Order）：不同的机器HBO不相同，与CPU设计有关，数据的顺序是由cpu决定的,而与操作系统无关。如 Intelx86结构下,short型数0x1234表示为34 12, int型数0x12345678表示为78 56 34 12如IBM power PC结构下,short型数0x1234表示为12 34, int型数0x12345678表示为12 34 56 78
+
+由于这个原因不同体系结构的机器之间无法通信，所以要转换成一种约定的数序,也就是网络字节顺序,其实就是如同power pc那样的顺序。在PC开发中有ntohl和htonl函数可以用来进行网络字节和主机字节的转换。   
+
+在Linux和Windows网络编程时需要用到htons和htonl函数，用来将主机字节顺序转换为网络字节顺序。
+
+在Intel机器下，执行以下程序
+
+int main()
+
+{
+
+    printf("%d \n",htons(16));
+
+    return 0;
+
+}
+
+得到的结果是4096，初一看感觉很怪。
+
+解释如下，数字16的16进制表示为0x0010，数字4096的16进制表示为0x1000。由于Intel机器是小尾端，存储数字16时实际顺序为1000，存储4096时实际顺序为0010。因此在发送网络包时为了报文中数据为0010，需要经过htons进行字节转换。如果用IBM等大尾端机器，则没有这种字节顺序转换，但为了程序的可移植性，也最好用这个函数。另外用注意，数字所占位数小于或等于一个字节（8 bits）时，不要用htons转换。这是因为对于主机来说，大小尾端的最小单位为字节(byte)。
+
+inet_pton和inet_ntop函数
+Linux下这2个IP地址转换函数，可以在将IP地址在“点分十进制”和“整数”之间转换，而且，inet_pton和inet_ntop这2个函数能够处理ipv4和ipv6。算是比较新的函数了。
+
+inet_pton函数原型如下[将“点分十进制”→“整数”]
+
+int inet_pton(int af, const char *src, void *dst);
+
+这个函数转换字符串到网络地址，第一个参数af是地址族，转换后存在dst中，inet_pton 是inet_addr的扩展，支持的多地址族有下列：
+
+af = AF_INET    
+
+Src为指向字符型的地址，即ASCII的地址的首地址（ddd.ddd.ddd.ddd格式的），函数将该地址转换为in_addr的结构体，并复制在*dst中
+
+af =AF_INET6     
+
+src为指向IPV6的地址，，函数将该地址转换为in6_addr的结构体，并复制在*dst中
+
+如果函数出错将返回一个负值，并将errno设置为EAFNOSUPPORT，如果参数af指定的地址族和src格式不对，函数将返回0。
+
+inet_ntop函数原型如下[将“点分十进制”→“整数”]
+
+const char *inet_ntop(int af, const void *src, char *dst, socklen_t cnt);
+
+这个函数转换网络二进制结构到ASCII类型的地址，参数的作用和上面相同，只是多了一个参数socklen_t cnt,他是所指向缓存区dst的大小，避免溢出，如果缓存区太小无法存储地址的值，则返回一个空指针，并将errno置为ENOSPC。
+
+connect()
+用来将参数sockfd 的socket 连至参数serv_addr 指定的网络地址. 结构sockaddr请参考bind(). 参数addrlen 为sockaddr 的结构长度.
+
+返回值：成功则返回0, 失败返回-1, 错误原因存于errno 中
+
+定义在#include <sys/socket.h>
+
+函数原型: int connect(int s, const struct sockaddr * name, int namelen);
+
+参数:
+
+s：标识一个未连接socket
+
+name：指向要连接套接字的sockaddr结构体的指针
+
+namelen：sockaddr结构体的字节长度
+
+ssize_t read(int fd,void *buf,size_t nbyte)
+read()会把参数fd所指的文件传送nbyte个字节到buf指针所指的内存中。read函数是负责从fd中读取内容.当读成功 时,read返回实际所读的字节数,如果返回的值是0 表示已经读到文件的结束了,小于0表示出现了错误.如果错误为EINTR说明读是由中断引起 的,如果是ECONNREST表示网络连接出了问题。
+
+int fputs(const char *str, FILE *stream)
+参数
+
+str：这是一个数组，包含null结尾的要写入的字符序列。
+
+stream：这是一个文件对象的标识字符串将被写入流的指针。
+
+返回值：这个函数返回一个非负的值，否则，错误返回EOF。
+
+有了上面这些概念，这段代码就比较容易看懂了，即，指定地址类型、协议类型，协议编号创建socket，返回套接口描述字，然后清空地址缓存，指定地址族和端口号，将输入地址转换为网络地址，然后与服务端建立链接，把数据读入缓存区并输出到标准输出。
+
+服务端程序解析：
+
+
+#include <stdio.h>
+
+#include "unp.h"
+
+#include <time.h>
+
+ 
+
+int main(int argc, char **argv){
+
+    int listenfd, connfd;
+
+    struct sockaddr_in  servaddr;
+
+    char buff[MAXLINE];
+
+    time_t ticks;
+
+ 
+
+    listenfd = socket(AF_INET, SOCK_STREAM, 0);
+
+    bzero(&servaddr, sizeof(servaddr));
+
+    servaddr.sin_family = AF_INET;
+
+    servaddr.sin_addr.s_addr = htonl(INADDR_ANY);
+
+    servaddr.sin_port = htons(2329);   /* daytime server */
+
+    bind(listenfd, (SA *) &servaddr, sizeof(servaddr));
+
+    listen(listenfd, LISTENQ);
+
+    for ( ; ; ) {
+
+        connfd = accept(listenfd, (SA *) NULL, NULL);
+
+        ticks = time(NULL);
+
+        snprintf(buff, sizeof(buff), "%.24s\r\n", ctime(&ticks));
+
+        write(connfd, buff, strlen(buff));
+
+        close(connfd);
+
+    }
+
+}
+
+ 
+
+int PASCAL FAR bind (SOCKET s, const struct sockaddr FAR *addr, int namelen);
+将一本地地址与一套接口捆绑。本函数适用于未连接的数据报或流类套接口，在connect()或listen()调用前使用。当用socket()创建套接口后，它便存在于一个名字空间（地址族）中，但并未赋名。bind()函数通过给一个未命名套接口分配一个本地名字来为套接口建立本地捆绑（主机地址/端口号）。
+
+int listen( int sockfd, int backlog);
+创建一个套接口并监听申请的连接.
+
+#include <sys/socket.h>
+
+sockfd：用于标识一个已捆绑未连接套接口的描述字。被listen函数作用的套接字，sockfd之前由socket函数返回。在被socket函数 返回的套接字fd之时，它是一个主动连接的套接字，也就是此时系统假设用户会对这个套接字调用connect函数，期待它主动与其它进程连接，然后在服务 器编程中，用户希望这个套接字可以接受外来的连接请求，也就是被动等待用户来连接。由于系统默认时认为一个套接字是主动连接的，所以需要通过某种方式来告 诉系统，用户进程通过系统调用listen来完成这件事。
+
+backlog：等待连接队列的最大长度，一般这个值会在30以内。
+
+listen函数使用主动连接套接口变为被连接套接口，使得一个进程可以接受其它进程的请求，从而成为一个服务器进程。在TCP服务器编程中listen函数把进程变为一个服务器，并指定相应的套接字变为被动连接。
+
+int accept(int sockfd,struct sockaddr *addr,socklen_t *addrlen);
+#include <sys/types.h>
+
+#include <sys/socket.h>
+
+accept()系统调用主要用在基于连接的套接字类型，比如SOCK_STREAM和SOCK_SEQPACKET。它提取出所监听套接字的等待连接队列中第一个连接请求，创建一个新的套接字，并返回指向该套接字的文件描述符。新建立的套接字不在监听状态，原来所监听的套接字也不受该系统调用的影响。
+
+sockfd, 利用系统调用socket()建立的套接字描述符，通过bind()绑定到一个本地地址(一般为服务器的套接字)，并且通过listen()一直在监听连接；
+
+addr,指向structsockaddr的指针，该结构用通讯层服务器对等套接字的地址(一般为客户端地址)填写，返回地址addr的确切格式由套接字的地址类别(比如TCP或UDP)决定；若addr为NULL，没有有效地址填写，这种情况下，addrlen也不使用，应该置为NULL；
+
+addrlen, 一个值结果参数，调用函数必须初始化为包含addr所指向结构大小的数值，函数返回时包含对等地址(一般为服务器地址)的实际数值；
+
+如果队列中没有等待的连接，套接字也没有被标记为Non-blocking，accept()会阻塞调用函数直到连接出现；如果套接字被标记为Non-blocking，队列中也没有等待的连接，accept()返回错误EAGAIN或EWOULDBLOCK。
+
+int snprintf(char*str, size_t size,constchar*format, ...);
+最多从源串中拷贝size－1个字符到目标串中，然后再在后面加一个0。所以如果目标串的大小为size的话，将不会溢出。
+
+若成功则返回欲写入的字符串长度，若出错则返回负值。
+
+ssize_t write (int fd, const void * buf, size_t count);
+write()会把参数buf 所指的内存写入count 个字节到参数fd 所指的文件内. 当然, 文件读写位置也会随之移动。
+
+\r\n和\n区别
+计算机还没有出现之前，有一种叫做电传打字机（Teletype Model 33）的玩意，每秒钟可以打10个字符。但是它有一个问题，就是打完一行换行的时候，要用去0.2秒，正好可以打两个字符。要是在这0.2秒里面，又有新的字符传过来，那么这个字符将丢失。 
+于是，研制人员想了个办法解决这个问题，就是在每行后面加两个表示结束的字符。一个叫做“回车”，告诉打字机把打印头定位在左边界；另一个叫做“换行”，告诉打字机把纸向下移一行。 
+    这就是“换行”和“回车”的来历，从它们的英语名字上也可以看出一二。 
+    后来，计算机发明了，这两个概念也就被般到了计算机上。那时，存储器很贵，一些科学家认为在每行结尾加两个字符太浪费了，加一个就可以。于是，就出现了分歧。Unix 系统里，每行结尾只有“<换行>”，即“\n”；Windows系统里面，每行结尾是“<回车><换行>”，即“ \r\n”；Mac系统里，每行结尾是“<回车>”。一个直接后果是，Unix/Mac系统下的文件在Windows里打开的话，所有文字会变成一行；而Windows里的文件在Unix/Mac下打开的话，在每行的结尾可能会多出一个^M符号。
+
+OSI模型
+OSI模型是一个七层模型，从上到下依次为应用层，表示层，会话层，传输层，网络层，数据链路层，物理层。我们一般认为下面两层是随系统提供的设备驱动程序和网络硬件，而上面三层一般也合并为一层应用层，我们处理的是传输层和网络层。
+
+传输层可选择TCP或UDP，有时候也会直接绕过传输层，直接操作IPv4和IPv6，这称为原始套接口。网络层就是IPv4和IPv6。

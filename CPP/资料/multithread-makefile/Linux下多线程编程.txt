@@ -1,0 +1,93 @@
+Linux下的pthread多线程编程
+
+
+#include <pthread.h>
+
+int pthread_create(pthread_t *restrict tidp,
+                   const pthread_attr_t *restrict attr,
+                   void *(*start_rtn)(void), 
+                   void *restrict arg);
+
+Returns: 0 if OK, error number on failure
+
+第一个参数为指向线程标识符的指针。
+第二个参数用来设置线程属性。
+第三个参数是线程运行函数的起始地址。
+最后一个参数是运行函数的参数。
+ 
+
+#include <pthread.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <stdio.h>
+#include <sys/types.h>
+
+#define ERROR -1
+#define OK 0
+ 
+/*************************
+ *函数名:thread_function
+ *描述：线程函数，打印
+ *输入参数：无
+ *输出参数：无
+ *返回值：无
+ * **********************/
+void *thread_function(void *arg)
+{	
+	int i = 0;
+	for ( i = 0; i < 20; i++)
+	{
+		printf("Thread says hi,%d!\n",i);
+	}
+}
+
+int main(void)
+{
+	pthread_t mythread;
+	if ( pthread_create(&mythread,NULL,thread_function,NULL) )
+	{
+		printf("Error creating thread\n");
+		return ERROR;
+	}
+	
+	/*等待另一个线程执行完毕*/
+	if ( pthread_join(mythread,NULL))
+	{
+		printf("Error Joining thread");
+		return ERROR;
+	}
+	printf("main over!\n");
+	return OK;
+}
+gcc thread.c -o thead 编译一把：会报错,如下，
+
+/tmp/ccIlZgdh.o: In function `main':
+thread.c:(.text+0x65): undefined reference to `pthread_create'
+thread.c:(.text+0x91): undefined reference to `pthread_join'
+collect2: ld 返回 1
+ 
+
+需要更改一下，因为pthread默认是不在Linux库中的。
+
+gcc thread.c -o -lpthread thread
+或者
+gcc -lpthread -o thread thread.c 
+
+即可
+
+
+
+如果是cpp文件（直接将上面的.c文件该为cpp文件即可），则编译命令应该是
+g++ -lpthread -o thread thread.c
+
+如果是Makefile则应该在相关联每一条编译语句中加 “-lphtread”
+Eg:
+main.out:main1.o main.o 
+	g++ -lpthread -o main.out main1.o main2.o #加"-lphtread"
+
+main1.o:main1.cpp 
+	g++ -c -o main1.o main1.cpp #main1中不含有"pthread.h"文件及函数
+
+main2.o:main2.cpp  pthread.cpp #只在main2中含有"pthread.h"文件及函数
+	g++ -c -o main2.o main2.cpp pthread.cpp
+

@@ -1,0 +1,14 @@
+挂载C:\Program Files\Oracle\VirtualBox\VBoxGuestAdditions.iso
+点击安装增强功能，点击文件夹，打开光盘。
+进入到目录，打开终端
+sudo ./VBoxLinuxAddition
+重启系统即可。
+
+
+挂载共享目录：
+
+我在terminal中敲入的是：
+sudo mkdir /mnt/share                                     
+在mnt目录下创建一个目录，mnt目录是专门挂载用的
+sudo mount -t vboxsf download /mnt/share     
+其中mount是挂载操作，-t vfstype 指定文件系统的类型，通常不必指定,mount 会自动选择正确的类型。 download是主机共享的文件夹，/mnt/share是选定的挂载位置，这样你打开/mnt/share就能看到主机分享的文件夹啦~

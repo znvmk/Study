@@ -1,2 +1,281 @@
+项目命令：ctrl + p 
+编辑器设置命令：ctrl + shift + p 
 Atom安装vim插件：
 首先在Atom中安装vim-mode，但这个插件对命令模式支持不太好。因此还需安装ex-mode，用来给vim-mode这个插件优化命令行模式。或者也可以安装vim-mode-plus。
+glsl插件：
+language-glsl
+autocomplete-glsl
+glsl-preview
+
+
+ATOM常用插件推荐
+
+simplified-chinese-menu
+
+ATOM的汉化插件
+
+file-icons
+
+文件图标美化
+
+atom-beautify
+
+代码格式一键美化
+
+last-cursor-position
+
+光标自由切换到上一次/下一次编辑位置
+
+minimap
+
+代码小地图
+
+sync-settings
+
+插件备份、按键绑定备份
+
+activate-power-mode
+
+输入时有震撼效果
+
+tortoise-svn
+
+svn插件
+
+atom-terminal-panel
+
+atom内置命令行工具
+
+Git/github
+
+git-plus—在 Atom 里面执行 Git 命令，不用来回切换终端和编辑器
+
+git-control—git面板
+
+tree-view-git-status—文件夹git状态
+
+gist-it—快速分享代码到gist.github.com
+
+
+git-log
+
+图形化git提交记录
+
+
+markdown
+
+markdown-preview-plus—markdown预览
+
+vim-mode
+
+支持vim模式
+
+script
+
+在atom下运行脚本，支持多种开发语言。
+
+remote-edit
+
+编辑机远程文件
+
+browser-plus
+
+编辑器内置浏览器
+
+
+ask-stack
+
+在atom快速提问stackoverflow
+
+
+regex-railroad-diagram
+
+正则表达式图形化
+
+advanced-open-file
+
+快速的打开文件或新建文件，同时支持路径补全
+
+quick-highlight
+
+代码高亮
+
+platformio-ide-terminal
+
+终端工具
+
+
+open-in-browsers
+
+在安装过的任意浏览器打开代码
+
+merge-conflicts
+
+在 Atom 里面处理合并产生冲突的文件
+
+
+linter
+
+代码校验工具
+
+autocomplete-paths
+
+填写路径的时候有提示
+
+
+linter
+
+代码校验工具(必备)
+
+前端插件推荐
+
+emmet
+
+加快web开发速度，提供snippet(代码片段)、abbreviation expand(简写展开)功能。
+
+color-picker
+
+在编辑器里面挑选颜色
+
+language-JavaScript-jsx
+
+支持JSX语法
+
+atom-html-preview
+
+实时预览HTML页面
+
+React
+
+react—语法支持
+
+atom-react-native-autocomplete—React Native代码补全
+
+nuclide—facebook基于atom开发的进行react开发的IDE
+
+language-babel
+
+支持JSX语法
+
+atom-minify
+
+css、js代码压缩
+
+atom-ternjs
+
+js,nodejs,es6补全，高度定制化
+
+jshint
+
+验证js和jsx语法是否正确
+
+csslint
+
+验证css语法是否正确
+
+autoprefixer
+
+自动为 CSS 属性添加特定的前缀
+
+
+autoclose-html
+
+闭合html标签
+
+pigments
+
+颜色显示插件
+
+14.less-autocompile
+
+less文件编译为css文件
+
+php插件推荐
+
+php-class-tree
+
+php类文件下函数展示
+
+php-cs-fixer
+
+php语法检查
+
+php跳转插件(类似其他编辑器的ctrl+click)
+
+需要同时安装以下两个插件：
+
+goto
+
+goto-definition
+
+鼠标光标放置在要跳转的类下，按下快捷键ctrl-alt-enter即可使用
+
+php-debug
+
+php debug
+
+autocomplete-php
+
+php代码自动补全
+
+python插件推荐
+
+python-tools
+
+Python跳转插件
+
+python-debugger
+
+python debug
+
+autocomplete-python
+
+python代码自动补全
+
+linter-pep8
+
+python编码规范检查
+
+
+
+
+
+前端必备插件篇
+1.Emmet — 用过都说好,神器;有个别快捷键会和 Markdown preview 快捷键冲突，改下就好了
+
+2.autoprefixer — 用来补充 css 前缀的，会自动生成多个浏览器的前缀
+
+3.color-picker — 取色器,太赞了有木有，比 sublime 那个好用，不卡，启动超快
+
+4.linter — 这货默认可以识别多门语言的错误,但是不细致，属于主插件，可以针对性的安装更细致的检查插件(太多，不一一列出，下面是前端可能用到的)
+
+linter-jshint, for JavaScript and JSON, using jshint
+linter-coffeelint, for CoffeeScript, using coffeelint
+linter-tslint, for Typescript, using tslint
+linter-php, for PHP using php -l
+linter-pylint, for Python, using pylint
+linter-scss-lint, for SASS/SCSS, using scss-lint
+linter-less, for LESS, using less
+linter-csslint, for CSS, using csslint
+linter-stylint, for Stylus, using stylint
+linter-stylus, for Stylus, using stylus
+5.autocomplete-plus — 完善自带 autocomplete,有二度设置，接下来列出的一些有二度设置
+
+autocomplete-python — 你懂得，更加细致
+autocomplete-paths — 实用派，路径补全
+autocomplete-html — 你懂得，更加细致
+autocomplete-bibtex — Github 的 markdown 语法
+autocomplete-snippets — 如名字
+autocomplete-css — 你懂得，更加细致
+
+less-autocompile — 实时编译
+docblockr — 注释插件，非常的实用
+插件–美化篇
+file-icons — 增加许多图标,在侧边蓝文件名前面的 icon。
+filetype-color — amazing,,在标签栏不同格式文件显示不同的颜色的标题，支持二度设置
+插件–协作篇
+git-plus — 与Sublime Text 的 sublimegit 功能基本一致
+插件–键盘侠
+vim-mode — 用过 vim 的都知道好,基本实现了大部分的功能，不过造成许多快捷键冲突，慢慢排除吧
+插件–加强
+minimap — 用过 Sublime Text 的友友们都知道有一个很实用的功能，就是内部编辑那里有一个小小的代码图,这货就是补全 Atom 这个功能的,支持高亮代码,还可控，具体看内部设置。

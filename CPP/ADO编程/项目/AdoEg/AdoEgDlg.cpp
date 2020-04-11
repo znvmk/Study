@@ -115,6 +115,28 @@ BOOL CAdoEgDlg::OnInitDialog()
 	SetIcon(m_hIcon, TRUE);			// 设置大图标
 	SetIcon(m_hIcon, FALSE);		// 设置小图标
 
+
+
+	/*
+	****************表结构设计****************
+	表名：StudentInfo
+	nId： int NOT NULL,主键，递增
+	Name： nchar(10) NULL,
+	Score： int NULL,
+
+	****************创建表SQL*****************
+	CREATE TABLE [dbo].[StudentInfo](
+	[nId] [int] NOT NULL,
+	[Name] [nchar](10) NULL,
+	[Score] [int] NULL,
+	 CONSTRAINT [PK_StudentInfo] PRIMARY KEY CLUSTERED
+	(
+		[nId] ASC
+	)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+	) ON [PRIMARY]
+	
+	//*/
+
 	// TODO: 在此添加额外的初始化代码
 	m_StuList.SetExtendedStyle(m_StuList.GetExtendedStyle() | LVS_EX_FULLROWSELECT | LVS_EX_GRIDLINES);
 	m_StuList.InsertColumn(0, _T("学生学号"), LVCFMT_LEFT, 200);

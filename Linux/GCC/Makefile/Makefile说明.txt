@@ -1,0 +1,56 @@
+生成最终目标:递归思想
+
+1.目标格式：
+目标1：目标文件
+	命令
+目标2..
+目标3..
+目标1的实现依赖于目标2,目标2的实现依赖目标3,目标3的实现依赖...如此逐层递归
+2.函数格式
+TAR=text.out#目标文件
+OBJ=circle.o cube.o main.o#
+CC:=gcc#编译器
+RMRF:=rm -rf#清除
+
+
+2.#伪目标：.PHONY:
+Makefile在编译的时候产生了许多中间目标，而这些目标是不需要的，所以被称为伪目标。而伪目标最终需要被清除
+.PHONY:clean
+clean:
+	rm all main.o kbd.o command .o \ (换行连接符)
+		insert.o search.o
+
+多个伪目标
+定义函数所有的伪目标
+all: ph1 ph2 ph3
+.PHONY:all
+ph1:ph1.o func.o
+	CC -o ph1 ph1.o func.o
+ph2:ph2.o func.o
+	CC -o ph2 ph2.o func.o
+ph3:ph3.o func.o
+	CC -o ph2 ph2.o func.o
+
+3.变量
+变量名称不能含有：":","#","=",或者是空字符（空格、回车等）
+变量大小写敏感
+变量在声明时要赋初值，在使用时要在变量名前面加上"$"符号，最好用小括号或大括号包括起来，如要用“$”符号，则应转义“$$”
+object=program.o foo.o utils.o
+program:$(objects)
+	CC -o program $(objects)
+	$(objects):defs.h
+	变量会被展开为
+	object=program.o foo.o utils.o
+program:program.o foo.o utils.o
+	gcc -o program program.o foo.o utils.o
+	program.o foo.o utils.o:defs.h
+
+make:执行编译命令
+mkke clean :执行清除命令
+**注意，Makefile里的清除命令写什么就执行什么，例如："cleans:"，则执行：make cleans
+4.通配符
+$@：所有目标的文件
+$^：所有依赖文件
+$<：第一个依赖文件
+$?：所有更新过的依赖文件
+%.c %.o *.c *.o

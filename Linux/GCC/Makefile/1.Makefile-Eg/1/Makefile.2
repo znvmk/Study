@@ -1,0 +1,16 @@
+CC=gcc
+CFLAGS=-Isub -Iadd -O2 #头文件搜索路径sub,add ,O2为优化
+OBJS =add/add_int.o add/add_float.o sub/sub_int.o \
+	  sub/sub_float.o main.o
+TARGET=cacu
+RM=rm -rf
+
+#生成cacu
+$(TARGET):$(OBJS)
+	$(CC) -o $(TARGET) $(OBJS) $(CFLAGS)
+#将OBJS中所有扩展名为.o的文件替换为.c的文件
+$(OBJS):%.o:%.c
+	$(CC) -c $(CFLAGS) $< -o $@   #编译生成目标文件
+
+clean: 
+	-$(RM) $(TARGET) $(OBJS)

@@ -1,2 +1,0 @@
-git clone --depth 1 git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
-克隆的是主线（mainline）源码，深度为一，只克隆最近一次提交。

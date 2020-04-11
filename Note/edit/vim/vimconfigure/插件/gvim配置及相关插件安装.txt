@@ -1,0 +1,96 @@
+gvim配置及相关插件安装（过程详细，附图
+0.准备软件及插件。
+(a)gvim72.exe 地址ftp://ftp.vim.org/pub/vim/pc/gvim72.exe。
+(b)vimcdoc-1.7.0-setup.exe 地址http://prdownloads.sourceforge.net/vimcdoc/vimcdoc-1.7.0-setup.exe?download
+(c)ec57w32.zip 地址http://prdownloads.sourceforge.net/ctags/ec57w32.zip
+(d)taglist_45.zip 地址http://www.vim.org/scripts/download_script.php?src_id=7701
+(e)winmanager.zip 地址http://www.vim.org/scripts/download_script.php?src_id=754
+(f)minibufexpl.vim 地址http://www.vim.org/scripts/download_script.php?src_id=3640
+(g)a.vim 地址http://www.vim.org/scripts/download_script.php?src_id=7218
+(h)grep.vim 地址http://www.vim.org/scripts/download_script.php?src_id=7645
+(i)visualmark.vim 地址http://www.vim.org/scripts/download_script.php?src_id=4700
+1.安装gvim7.2。
+运行gvim72.exe，选择完全安装(Full)，我的安装目录是默认的C:\Program Files\Vim。
+安装完成后，包括了文件夹vim72和文件夹vimfiles，以及脚本_vimrc。
+
+2.安装中文帮助手册。
+运行vimcdoc-1.7.0-setup.exe，它会自动找到gvim的安装位置。
+安装完毕后重新打开gvim，:help 时帮助手册已经是中文的了。
+进行到这一步时，我的gvim菜单处的中文出现了乱码。
+在网上寻找解决方案，将C:\Program Files\Vim\vim72下名为 lang 的文件夹删去，使菜单语言变为英语。
+
+3.语法高亮。
+首先，编辑_vimrc文件加入以下内容：
+set nu!
+colorscheme desert
+syntax enable
+syntax on
+这些设置使得gvim可以显示行号，并使用了desert配色方案，而且打开了语法高亮功能（用不同颜色显示注释、关键字、字符串等）。
+我们还可以让函数名也高亮起来，在C:\Program Files\Vim\vim72\syntax下找到 c.vim 和 cpp.vim，分别添加以下内容：
+syn match cFunction "\<[a-zA-Z_][a-zA-Z_0-9]*\>[^()]*)("me=e-2
+syn match cFunction "\<[a-zA-Z_][a-zA-Z_0-9]*\>\s*("me=e-1
+hi cFunction gui=NONE guifg=#B5A1FF
+重新打开gvim，效果如下：
+
+用Gvim建立IDE编程环境 （Windows篇） - guo034 - guo034的博客
+4.程序中跳转。
+将ec57w32.zip解压，在解压后文件夹中找到ctags.exe，将其复制到C:\ProgramFiles\Vim\vim72下，并编辑_vimrc文件，添加以下内容：
+set tags=tags;
+set autochdir
+打开cmd命令行，切换到你要查看的源代码的根目录处，运行
+ctags -R
+将会在此目录处生成一个tags文件。
+用gvim打开一个代码文件，将光标放到某一函数名上，如下图的UpdateViewByPosNo()，按下"ctrl+]"，光标会自动跳转到定义处。
+
+用Gvim建立IDE编程环境 （Windows篇） - guo034 - guo034的博客
+按下"ctrl+T"会跳回到原来的位置。
+变量、结构体、宏等等，都可以这样做。
+当你的源文件有更新时，只能重新运行ctags -R命令，来更新tags文件。
+
+5.窗口管理。
+将taglist_45.zip解压，解压后包含一个doc文件夹和一个plugin文件夹，将其中内容分别复制到C:\Program Files\Vim\vim72下的doc及plugin中。
+在_vimrc文件中加入以下内容：
+let Tlist_Show_One_File=1
+let Tlist_Exit_OnlyWindow=1
+用gvim打开代码文件（已生成过tags文件），:Tlist，TagList窗口即出现在左侧。
+用相同的方法将winmanager.zip解压和拷贝，在_vimrc文件中加入以下内容：
+let g:winManagerWindowLayout='FileExplorer|TagList'
+nmap wm :WMToggle<cr>
+用gvim打开代码文件，normal状态下输入命令"wm"，窗口如下
+
+用Gvim建立IDE编程环境 （Windows篇） - guo034 - guo034的博客
+其中左上是netrw窗口（浏览文件），左下是TagList窗口，再次输入"wm"时这两个窗口会关闭。
+
+6.多文件编辑。
+将minibufexpl.vim复制到C:\Program Files\Vim\vim72\plugin，在_vimrc中添加：
+let g:miniBufExplMapCTabSwitchBufs=1
+let g:miniBufExplMapWindowsNavVim=1
+let g:miniBufExplMapWindowNavArrows=1
+当用gvim打开两个或两个以上的文件时，会自动弹出MiniBufExplorer窗口，如下图
+
+用Gvim建立IDE编程环境 （Windows篇） - guo034 - guo034的博客
+ctrl+Tab，切换到前一个buffer，并在当前窗口打开文件；
+ctrl+shift+Tab，切换到后一个buffer，并在当前窗口打开文件；
+ctrl+箭头键，可以切换到上下左右窗口中；
+ctrl+h,j,k,l，切换到上下左右的窗口中。
+
+
+7.快速切换头文件/源文件。
+将a.vim复制到C:\Program Files\Vim\vim72\plugin，在_vimrc中添加：
+nnoremap <silent> <F12> :A<CR>
+用gvim打开源码文件后，按F12即可以在c/h文件中切换，也可以通过输入:A实现。
+
+8.在工程中快速查找。
+将grep.vim复制到C:\Program Files\Vim\vim72\plugin，在_vimrc中添加：
+nnoremap <silent> <F3> :Grep<CR>
+用gvim打开源码文件，并将光标定位到要查找的内容上，按下F3，确定要查找的内容和搜索范围，gvim会在弹出的QuickFix窗口中列出所有符合条件的搜索结果。如下图
+
+用Gvim建立IDE编程环境 （Windows篇） - guo034 - guo034的博客
+确定查找内容时，支持正则表达式。
+
+9.高亮的书签。
+将visualmark.vim复制到C:\Program Files\Vim\vim72\plugin。
+用gvim打开源码文件，将光标定位在需要添加书签的地方，按下ctrl+F2，即添加了书签。
+
+用Gvim建立IDE编程环境 （Windows篇） - guo034 - guo034的博客
+使用F2在书签之间正向切换，shift+F2反向切换。

@@ -1,0 +1,27 @@
+deepin 安装ssh
+sudo apt-get install openssh-server
+开启服务
+sudo /etc/init.d/ssh start
+
+查看Linux IP
+ifconfig 
+en33:...
+	inet 此处IP
+Shell连接->主机：IP
+用户名：系统名称，密码：
+
+切换root用户
+ubuntu@VM-0-5-ubuntu:/etc/docker$ su
+Password: 
+root@VM-0-5-ubuntu:/etc/docker# exit
+exit
+ubuntu@VM-0-5-ubuntu:/etc/docker$ 
+1.用xShell6将boost压缩包上传到Linux，注意要用boot权限，不然会失败
+（1）安装：yum install  lrzsz -y(ubuntu用：apt-get install lrzsz)；检查是否安装成功：#rpm -qa|grep lrzsz
+（2）上传文件的执行命令：
+rz  
+就会打开本地选择文件对话框，选择文件，确定就可以上传到当前所在目录。
+如果覆盖原文件，执行：
+rz   -y
+下载文件，执行：
+sz {文件}

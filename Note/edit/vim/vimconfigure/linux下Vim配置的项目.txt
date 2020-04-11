@@ -1,0 +1,16 @@
+https://github.com/chxuan/vimplus
+安装vimplus
+git clone https://github.com/chxuan/vimplus.git ~/.vimplus
+cd ~/.vimplus
+./install.sh //不加sudo
+设置Nerd Font
+为防止vimplus显示乱码，需设置linux终端字体为Droid Sans Mono Nerd Font。
+
+多用户支持
+将vimplus在某个用户下安装好后，若需要在其他用户也能够使用vimplus，则执行
+
+sudo ./install_to_user.sh username1 username2 //替换为真实用户名
+更新vimplus
+紧跟vimplus的步伐，尝鲜新特性
+
+./update.sh
