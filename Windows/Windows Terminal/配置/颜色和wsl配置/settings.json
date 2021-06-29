@@ -1,0 +1,151 @@
+{
+    "$schema": "https://aka.ms/terminal-profiles-schema",
+	"defaultProfile":"{03128716-73ee-4c5d-b737-51b420e56e32}",  //设置默认打开的命令窗口
+	"initialRows":33,//宽
+	"initialCols":80,//高
+	"alwaysShowTabs":true,
+	"showTerminalTitleInTitlebar":true,
+	"experimental_showTabsInTitlebar":true,
+	"profiles":[
+		{
+			"guid":"{ba6aabfe-4732-449a-843c-15c8249643ed}",//目标id
+			"name":"cmd",  //窗口名称
+			"colorscheme":"Campbell",  //颜色主题
+			"historySize":9001,
+			"snapOnInput":true,
+			"cursorColor":"#FFFFFF",
+			"cursorShape":"bar",
+			"commandline":"cmd.exe",
+			"fontFace":"Consolas",
+			"fontSize":12,
+			"acrylicOpacity":0.75,  //透明度
+			"useAcrylic":true,  //开启透明度设置
+			"closeOnExit":true,
+			"padding":"0,0,0,0"
+		},
+		{
+			"guid":"{03128716-73ee-4c5d-b737-51b420e56e32}",
+			"name":"PowerShell",
+			"background":"#000000",
+			"colorscheme":"Campbell",
+			"historySize":9001,
+			"snapOnInput":true,
+			"cursorColor":"#FFFFFF",
+			"cursorShape":"bar",
+			"commandline":"powershell.exe",
+			"fontFace":"Courier New",
+			"fontSize":12,
+			"acrylicOpacity":0.5,
+			"useAcrylic":true,
+			"closeOnExit":true,
+			"padding":"0,0,0,0"
+		},
+		{
+			"startingDirectory":"C:\\Users\\Administrator\\AppData\\Local\\Packages\\CanonicalGroupLimited.UbuntuonWindows_79rhkp1fndgsc\\LocalState\\rootfs\\",
+			"guid": "{8323e74d-0b72-4c97-858f-a94c4ee6dbc1}",
+			"name": "Ubuntu",
+			"backgroundImageOpacity" : 0.4, 
+			"closeOnExit" : true,
+			"colorScheme" : "Campbell",
+			"commandline" : "wsl.exe -d Ubuntu",
+			"historySize": 9001,
+			"snapOnInput": true,
+			"cursorColor": "#FFFFFF",
+			"cursorHeight": 25,
+			"cursorShape": "vintage",
+			"commandline": "wsl.exe",
+			"fontFace": "Consolas",
+			"fontSize": 12,
+			"acrylicOpacity": 0.75,
+			"useAcrylic": true,
+			"closeOnExit": false,
+			"tabTitle" : "Ubuntu (WSL)",
+            			"useAcrylic" : true,
+			"padding": "0, 0, 0, 0",
+			"icon": "ms-appdata:///roaming/ubuntu.png"
+		},
+        {
+            "guid": "{c6eaf9f4-32a7-5fdc-b5cf-066e8a4b1e40}",
+            "hidden": false,
+            "name": "Ubuntu-18.04",
+            "source": "Windows.Terminal.Wsl"
+        },
+        {
+            "guid": "{b453ae62-4e3d-5e58-b989-0a998ec441b8}",
+            "hidden": false,
+            "name": "Azure Cloud Shell",
+            "source": "Windows.Terminal.Azure"
+        }
+	],
+	"schemes":[
+		{
+			"name":"Campbell",
+			"foreground":"#F2F2F2",
+			"background":"#0C0C0C",
+			"colors":[
+				"#0C0C0C",
+				"#C50F1F",
+				"#13A10E",
+				"#C19C00",
+				"#0037DA",
+				"#881798",
+				"#3A96DD",
+				"#CCCCCC",
+				"#767676",
+				"#E74856",
+				"#16C60C",
+				"#F9F1A5",
+				"#3B78FF",
+				"#B4009E",
+				"#61D6D6",
+				"#F2F2F2"
+			]
+		},
+		{
+			"name":"Solarized Dark",
+			"foreground":"#FDF6E3",
+			"background":"#073642",
+			"colors":[
+				"#073642",
+				"#D30102",
+				"#859900",
+				"#B58900",
+				"#268BD2",
+				"#D33682",
+				"#2AA198",
+				"#EEE8D5",
+				"#002B36",
+				"#CB4B16",
+				"#586E75",
+				"#657B83",
+				"#839496",
+				"#6C71C4",
+				"#93A1A1",
+				"#FDF6E3"
+			]
+		},
+		{
+			"name":"Solarized Light",
+			"foreground":"#073642",
+			"background":"#FDF6E3",
+			"colors":[
+				"#073642",
+				"#D30102",
+				"#859900",
+				"#B58900",
+				"#268BD2",
+				"#D33682",
+				"#2AA198",
+				"#EEE8D5",
+				"#002B36",
+				"#CB4B16",
+				"#586E75",
+				"#657B83",
+				"#839496",
+				"#6C71C4",
+				"#93A1A1",
+				"#FDF6E3"
+			]
+		}
+	]
+}

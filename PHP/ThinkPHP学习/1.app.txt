@@ -1,0 +1,40 @@
+1.开启调试模式
+将TP6目录下的 .example.env文件重命名为：.env即可。
+刷新项目网址，会出现运行时间，根目录下网址输入错误，会在网页上提示错误，并显示代码。
+点击右下角时间，会弹出所有运行信息。
+.env文件里面，设置开启\关闭调试模式
+.env只用于开发配置，部署后失效，线上只读取config目录下的配置 
+2. 在网页上显示访问地址端口
+在tp6\app\controller\Index.php中添加函数
+public function envconf()
+    {
+        return env::get('database.hostname');
+    }
+包含命名空间：
+use think\facade\Env;
+
+在网页上输入网址：http://localhost:8000/tp6/public/index/envconf
+显示env文件中的主机地址“127.0.0.1”
+本地测试，.env里面的优先高于config
+
+网址参数访问：
+在tp6\app\controller\Index.php中添加函数
+public function hv($value = '')
+    {
+        return 'hello '. $value;
+    }
+在网页上输入网址：http://localhost:8000/tp6/public/index/hv/value/world!
+显示“hello world!”
+
+网址访问为：http://localhost:8080/tp6/public/index/hv/value/world!
+wamp->Apache->httpd.conf中，将“AllowWverride None”改为“AllowWverride All”
+此时路径变更为：
+http://localhost:8080/tp6/public/hv/value/world!
+如果不支持，则加"?s":
+http://localhost:8080/tp6/public/?s=hv/value/world!
+APMS\wamp64-3.2.3\www\tp6> php think run
+ThinkPHP Development server is started On <http://127.0.0.1:8000/>
+You can exit with `CTRL-C`
+可以用
+http://127.0.0.1:8000/index/hw
+打开tp6\app\controller\Index.php中的hw()函数

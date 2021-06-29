@@ -14,16 +14,16 @@ Linux编译和安装boost库
 下载完成后进行解压缩：
 
 tar zxvf boost_1_58_0.tar.gz
-1
+
 2.设置编译器和所选库
 先进入解压缩后的目录：
 
 cd boost_1_58_0
-1
+
 然后运行bootstrap.sh脚本并设置相关参数：
 
 ./bootstrap.sh --with-libraries=all --with-toolset=gcc
-1
+
 --with-libraries指定编译哪些boost库，all的话就是全部编译，只想编译部分库的话就把库的名称写上，之间用 , 号分隔即可，可指定的库有以下几种：
 
 库名	说明
@@ -82,15 +82,13 @@ Further information:
 执行以下命令开始进行boost的编译：
 
 ./b2 toolset=gcc
-1
+
 编译的时间大概要10多分钟，耐心等待，结束后会有以下提示：
 
 ...failed updating 60 targets...
 ...skipped 21 targets...
 ...updated 663 targets...
-1
-2
-3
+
 4.安装boost
 最后执行以下命令开始安装boost：
 

@@ -1,0 +1,51 @@
+1.按照OpenGL的方法配置好glfw,glm,glad等
+2.添加包含目录（vulkan）：
+    项目->属性->VC++目录->包含目录->编辑->新建:D:\ls\VulkanSDK\1.2.162.0\Include
+2.添加库目录(glfw,glew,glad)：
+    项目->属性->VC++目录->库目录->编辑->新建:D:\ls\VulkanSDK\1.2.162.0\lib
+注：vulkan安装目录下有lib和lib32两个文件夹，选lib
+    
+3.之后包含的库文件VS还认不出来，我们需要指定一下。配置链接器：
+    项目->属性->链接器->输入->附加依赖项->编辑：
+    vulkan-1.lib
+注：此库在D:\ls\VulkanSDK\1.2.162.0\lib目录下
+
+代码测试：
+#define GLFW_INCLUDE_VULKAN
+#include <GLFW/glfw3.h>
+
+#define GLM_FORCE_RADIANS
+#define GLM_FORCE_DEPTH_ZERO_TO_ONE
+#include <glm/vec4.hpp>
+#include <glm/mat4x4.hpp>
+//#include <vulkan.h>
+
+#include <iostream>
+
+int main() {
+    glfwInit();
+
+    glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
+    GLFWwindow* window = glfwCreateWindow(800, 600, "Vulkan window", nullptr, nullptr);
+
+    uint32_t extensionCount = 0;
+    vkEnumerateInstanceExtensionProperties(nullptr, &extensionCount, nullptr);
+
+    std::cout << extensionCount << " extensions supported" << std::endl;
+
+    glm::mat4 matrix;
+    glm::vec4 vec;
+    auto test = matrix * vec;
+
+    while (!glfwWindowShouldClose(window)) {
+        glfwPollEvents();
+    }
+
+    glfwDestroyWindow(window);
+
+    glfwTerminate();
+
+    return 0;
+}
+
+创建了一个空窗口

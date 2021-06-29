@@ -1,0 +1,13 @@
+1.打开Quartus安装，注意路径不要有汉字
+2.打开破解程序，放在 ******\quartus\bin64 下面运行
+这个时候 提示未找到 sys_cpt.dll 文件，查找到 sys_cpt.dll 文件，然后双击此文件
+此时会在安装目录下方生成一个“license”文件，点击“保存”就行了。
+4.运行桌面自动生成的“Quartus II 13.0(64-bit)”快捷方式，选择第二个，点击“ok”
+(Start the 30-day evaluation period with no license file...)
+5.选择“tools”下方的“license setup”后，会弹出窗口，在“Network Interface Card(NIC)ID:"中，将ID复制,复制第一个即可
+6.在“ *************\quartus\bin64\”中找到“license”文件，并以记事本打开，如下图，：Host ID XXXXXXXXXX，将上一步所复制的 NIC ID替换掉 所有的“XXXXXXXXX”（两个） 就完成了破解。
+7.接下来就可以自己查看一下了，打开 Quartus II ，打开Tool --> License Setup ->License File: 选择刚刚修改过的license文件，查看可以使用到 2035.12
+接下载安装器件库到现在的安装目录即可
+8.插上下载器，打开设备管理器，打开硬件设备，找到USB-Blaster->更新驱动->浏览计算机以查找驱动文件（包括子文件夹）：QuartusII13.0/quartus/drivers/usb-blaster文件夹,不再往下选64位或32位，更新。
+9.打开quartus，点下载，弹出对话框,如果没有USB-Blaster，点击hardware Setup ,在下面列表中选择已经存在的USB-Blaster，不能选择新增。
+10.安装modelsim，

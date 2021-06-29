@@ -1,0 +1,16 @@
+Arch/Manjaro安装deb安装包
+
+
+使用debtap工具进行解包
+首先查看电脑上是否安装过
+sudo pacman -Q debtap
+安装yay工具，记得配置arch
+sudo pacman -S yay
+安装解包打包工具debtap
+yay -S debtap
+升级debtap
+sudo debtap -u
+解包
+sudo debtap  xxxx.deb
+安装
+sudo pacman -U x.tar.xz

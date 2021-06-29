@@ -1,7 +1,6 @@
 https://blog.csdn.net/feinifi/article/details/79841256
 error: no default toolchain configured
-2018年04月07日 14:47:29
-阅读数：166
+
 当我们在windows上通过msi方式安装过rust之后，运行rustc或者cargo命令行命令时，出现如题所示的错误。stackoverflow上有一个issue,说过这个问题。最后的解决办法是通过rustup命令再次安装一次rust，并且指定stable为默认的rust工具链。
 
 我认为不用重新安装一次，如果系统中已经安装过rust，那么可以通过rustup相关命令link指定安装目录即可。

@@ -1,0 +1,12 @@
+https://blog.csdn.net/Grand910616/article/details/50197859
+登录
+mysql -u root -p进入mysql控制台，输入密码登录
+
+查看当前登录用户下的所有数据库
+show databases;
+
+使用某一数据库
+use udb;
+
+查看当前数据库下所有表
+show tables;

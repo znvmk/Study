@@ -3,3 +3,12 @@ pip下载：https://pypi.org/project/pip/
 Python 标准库：https://docs.python.org/zh-cn/3.7/library/index.html
 python37x64安装
 环境变量-用户变量-path:D:\ls\Python\Python37\Scripts\，D:\ls\Python\Python37
+
+python安装时，官方目录web-based与executable区别
+
+1.X86和X86-64的区别：系統是32 bit 的版本还是 64bit 的
+2.web-based ,executable , embeddable zipfile区别
+web-based: 透过网络安装的，就是执行安装后才透过网络下载python
+executable: 可執行文件的，既把要安装的python全部下载好在本机安装
+embeddable zipfile: zip 压缩档，就是python打包成zip压缩包
+附带官网网址：https://www.python.org/

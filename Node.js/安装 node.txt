@@ -102,52 +102,237 @@ cnpm可能比较大，第一次安装需要等一会，安装好之后，就可�
 
 
 
-一行命令搞定node.js 版本升级
-from:http://www.16boke.com/article/detail/26
 
- 
 
-今天，又发现一个超级简单的升级node.js的方法。一行命令搞定，省去了重新编译安装的过程。
-node有一个模块叫n（这名字可够短的。。。），是专门用来管理node.js的版本的。
 
-首先安装n模块：
 
-npm install -g n
+*******针对windows的node版本管理工具
+以下是其对应的readme.md文件
+‘
+This is a simple Node Version Manager for Windows
 
-第二步：
+Installation
 
-升级node.js到最新稳定版
+npm install -g nvmw
+1
+Usage
 
-n stable
+nvmw -h
 
-是不是很简单？！
+  Usage: nvmw [options] [command]
 
-n后面也可以跟随版本号比如：
+  Commands:
 
-n v0.10.26
+    install <version>      install the given version of Node
+    uninstall <version>    uninstall the given version of Node
+    use <version>          use the given version of Node in current shell
+    deactivate             undo effects of nvmw in current shell
+    switch <version>       permanently use the given version of Node as default
+    switch-deactivate      permanently undo effects of nvmw
+    ls                     list the installed all Nodes
+    ls-remote              list remote versions available for install
+    cleanup                remove stale local caches
 
-或
+  Options:
 
-n 0.10.26
+    -h, --help     output usage information
+    -V, --version  output the version number
 
-就这么简单。
+  Examples:
 
-另外分享几个npm的常用命令
+    nvmw install v0.10.20
+    nvmw uninstall v0.10.20
+    nvmw use v0.10.20
 
- npm -v          #显示版本，检查npm 是否正确安装。  
 
- npm install express   #安装express模块  
 
- npm install -g express  #全局安装express模块  
 
- npm list         #列出已安装模块  
 
- npm show express     #显示模块详情  
 
- npm update        #升级当前目录下的项目的所有模块  
 
- npm update express    #升级当前目录下的项目的指定模块  
 
- npm update -g express  #升级全局安装的express模块  
 
- npm uninstall express  #删除指定的模块
+
+
+
+
+
+
+
+    小悟：node版本管理工具nvm、n、nvmw和nodist
+
+
+Node最近几年可谓风光无限，让前端工程师们逆袭成为「全栈工程师」，也使JavaScript这门动态语言一雪前耻，当年对其的重视相当不够，很多人甚至觉得它是个美丽的错误。大量开发者的贡献使Node版本的迭代速度很快，版本很多，所以升级Node版本就成为了一个问题。目前有n、nvm和nvmw这两个工具可以对Node进行无痛升级
+
+                                          **n**
+1
+mac和Linux可用的node版本管理工具
+n是Node的一个模块，作者是TJ Holowaychuk（鼎鼎大名的Express框架作者），就像它的名字一样，它的理念就是简单：
+
+“no subshells, no profile setup, no convoluted api, just simple”
+安装很简单：
+
+$ sudo npm install -g n
+安装完成之后，直接输入n后输出当前已经安装的node版本以及正在使用的版本（前面有一个o），你可以通过移动上下方向键来选择要使用的版本，最后按回车生效。
+
+$ n
+0.10.1
+0.10.15
+o 0.10.21
+0.11.8
+如果你要安装其他的版本（比如0.11.12），那么如下：
+
+$ n 0.11.12
+install : 0.11.12
+mkdir : /usr/local/n/versions/0.11.12
+fetch : http://nodejs.org/dist/v0.11.12/node-v0.11.12-darwin-x64.tar.gz
+
+5.9%
+安装最新的版本
+
+$ n latest
+安装稳定版本
+
+$ n stable
+删除某个版本
+
+$ n rm 0.10.1
+以指定的版本来执行脚本
+
+$ n use 0.10.21 some.js
+
+                                 **nvm**
+
+针对mac的node版本管理工具
+nvm全称Node Version Manager，它与n的实现方式不同，其是通过shell脚本实现的。
+
+安装方式有两种：
+
+$ curl https://raw.github.com/creationix/nvm/v0.4.0/install.sh | sh
+或者
+
+$ wget -qO- https://raw.github.com/creationix/nvm/v0.4.0/install.sh | sh
+以上脚本会把nvm库clone到~/.nvm，然后会在~/.bash_profile, ~/.zshrc或`~/.profile末尾添加source，安装完成之后，你可以用以下命令来安装node
+
+$ nvm install 0.10
+使用指定的版本
+
+$ nvm use 0.10
+查看当前已经安装的版本
+
+$ nvm ls
+.nvm
+-> v0.10.24
+查看正在使用的版本
+
+$ nvm current
+v0.10.24
+以指定版本执行脚本
+
+$ nvm run 0.10.24 myApp.js
+卸载nvm
+
+$ rm -rf ~/.nvm
+
+                                          **nvmw**
+
+针对windows的node版本管理工具
+以下是其对应的readme.md文件
+‘
+This is a simple Node Version Manager for Windows
+
+Installation
+
+npm install -g nvmw
+
+Usage
+
+nvmw -h
+
+  Usage: nvmw [options] [command]
+
+  Commands:
+
+    install <version>      install the given version of Node
+    uninstall <version>    uninstall the given version of Node
+    use <version>          use the given version of Node in current shell
+    deactivate             undo effects of nvmw in current shell
+    switch <version>       permanently use the given version of Node as default
+    switch-deactivate      permanently undo effects of nvmw
+    ls                     list the installed all Nodes
+    ls-remote              list remote versions available for install
+    cleanup                remove stale local caches
+
+  Options:
+
+    -h, --help     output usage information
+    -V, --version  output the version number
+
+  Examples:
+
+    nvmw install v0.10.20
+    nvmw uninstall v0.10.20
+    nvmw use v0.10.20
+
+Notes
+* It doesn’t work in Windows Powershell
+* The latest version for npm is 1.4.12
+* You should install a system version Node with Windows installer
+* Node versions will be installed on the path X:\Users\\AppData\Roaming\nvm\
+
+License
+MIT
+
+’
+
+                                     **nodist**
+1
+A node.js and npm version manager for the windows folks out there.
+以下是nodist的readme.md文件
+
+Join the chat at https://gitter.im/marcelklehr/nodist
+
+A node.js and npm version manager for the windows folks out there. Inspired by n. And nodenv.
+
+Heads up! Nodist v0.8 is here! Nodist supports cmd, Powershell, Git bash and Cygwin!
+
+C:\> nodist + 5
+5.11.0
+
+C:\> nodist global 5
+5
+
+C:\> node -v
+v5.11.0
+
+C:\> nodist
+  0.10.26
+  4.4.3
+> 5.11.0 (global: 5)
+
+总结
+以上就是两种Node版本管理工具的安装和基本使用方法，选择适合你的那一种口味。
+
+
+升级npm
+首先检查您的NPM版本
+npm -v
+1）将NPM更新为当前版本：
+查看当前的NPM版本：
+
+npm view npm version
+将npm更新为当前版本：
+
+npm i -g npm
+
+
+2）列出所有可用的NPM版本并进行自定义安装/更新/回滚
+查看所有版本，包括“alpha”，“beta”和“rc”（发布候选版）
+
+npm view npm versions --json
+将NPM重新安装到从版本列表中选择的特定版本 - 例如5.0.3
+
+npm i -g npm@5.0.3
+安装一个版本将自动删除当前安装的版本。
+
+对于Linux和iOS，使用sudo前置命令

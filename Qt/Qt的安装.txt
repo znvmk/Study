@@ -1,17 +1,18 @@
 1.下载
 下载地址：http://download.qt.io/archive/qt/
-
+qt-opensource-windows-x86_64.exe
+qt-creator-opensource-windows-x86_64.exe
 
 各目录说明如下： 
- ①gdb是针对Android开发的调试器。 
-②jom可以百度一下，http://qt-project.org/wiki/jom ，是nmake克隆版，支持多条独立命令并行构建软件，加快软件构建速度。
-③online_installers是在线安装器。 
-④Pyside是用于支持Python语言编写Qt程序的。 
-⑤qbs是Qt Build Suite (QBS) ，http://qt-project.org/wiki/qbs，QBS是新创的Qt程序生成工具，因为Qt一般使用qmake来生成项目进行编译，qmake必须根据qt版本变化而变化，不便于管理，qt开发者对qmake又爱又恨，因此创建了不依赖Qt版本的生成工具QBS。
-⑥qt，当然是qt库本身了。
-⑦qt-installer-framework，是专门用于发布开发好的程序用的，生成程序安装器，可以为Linux、Windows、MacOS生成安装器。Qt自己的QtCreator、QtSDK等安装程序就是使用qt-installer-framework打包的。
-⑧qtcreator是集成开发环境。 
-⑨vsaddin，是针对VisualStudio的Qt开发插件。
+ gdb是针对Android开发的调试器。 
+jom可以百度一下，http://qt-project.org/wiki/jom ，是nmake克隆版，支持多条独立命令并行构建软件，加快软件构建速度。
+online_installers是在线安装器。 
+Pyside是用于支持Python语言编写Qt程序的。 
+qbs是Qt Build Suite (QBS) ，http://qt-project.org/wiki/qbs，QBS是新创的Qt程序生成工具，因为Qt一般使用qmake来生成项目进行编译，qmake必须根据qt版本变化而变化，不便于管理，qt开发者对qmake又爱又恨，因此创建了不依赖Qt版本的生成工具QBS。
+qt，当然是qt库本身了。
+qt-installer-framework，是专门用于发布开发好的程序用的，生成程序安装器，可以为Linux、Windows、MacOS生成安装器。Qt自己的QtCreator、QtSDK等安装程序就是使用qt-installer-framework打包的。
+qtcreator是集成开发环境。 
+vsaddin，是针对VisualStudio的Qt开发插件。
 
 qt-creator-opensource-windows-x86_64-4.9.1.exe，qt-opensource-windows-x86-5.9.8.exe，qt-vsaddin-msvc2019-2.3.4.vsix四个文件
 

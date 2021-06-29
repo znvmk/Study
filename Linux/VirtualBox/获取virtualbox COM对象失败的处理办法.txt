@@ -1,0 +1,28 @@
+获取virtualbox COM对象失败的处理办法
+
+我们在安装Genymotion时必须先安装获取virtualbox，但是virtualbox安装后会出现virtualbox COM对象失败而运行不了的情况。
+下面就对这个状况的处理办法简单介绍下。
+
+工具/原料
+WIN7 64位
+virtualbox最新版
+方法/步骤
+virtualbox安装后不能正常运行，会弹出如下错误。
+
+
+在开始菜单，运行里输入regedit,运行系统的注册表。
+
+
+找到选项HKEY_CLASSES_ROOT\CLSID\{00020420-0000-0000-C000-000000000046}InprocServer32  的值，如下图。
+
+
+将默认的oleaut32.dll改成C:\Windows\system32\oleaut32.dll，如图：
+
+
+再找到HKEY_CLASSES_ROOT\CLSID\{00020424-0000-0000-C000-000000000046}InprocServer32 的值如图：
+
+
+将默认的oleaut32.dll也改成C:\Windows\system32\oleaut32.dll，如图：
+
+
+重启电脑，然后在重新运行virtualbox，可以正常进入。

@@ -9,4 +9,7 @@ cake build
 在Custom key mappings中添加：
 map h previousTab
 map l nextTab
+点击下方的 Show Advanced Options
+Default Search Engine:
+https://wwww.baidu.com/s?wd=
 在最下方点击：Save Changes

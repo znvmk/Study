@@ -1,0 +1,35 @@
+1.创建表
+CREATE TABLE `udb`.`acg` ( `id` INT(10) NOT NULL , `user_name` VARCHAR(10) NULL , `password` INT(10) NULL , `gender` VARCHAR(10) NULL , `email` VARCHAR(20) NULL , `price` FLOAT(4) NULL , `details` INT(4) NULL , `uid` INT(10) NULL , `status` INT(4) NULL , `list` INT(4) NULL , `delete_time` DATETIME NULL , `create_time` DATETIME NULL , `update_time` DATETIME NULL , PRIMARY KEY (`id`)) ENGINE = MyISAM default charset=utf8;
+
+INSERT INTO `acg` (`id`, `user_name`, `password`, `gender`, `email`, `price`, `details`, `uid`, `status`, `list`, `delete_time`, `create_time`, `update_time`) VALUES ('1', 'test', '123', 'famel', 'test@163.com', '90.00', '123', '1001', '-1', NULL, '2020-09-21 01:37:33', '2020-07-21 01:37:33', '2020-08-21 01:37:33')
+2.数据查询
+（1）想要获取多条数据，select()
+Db::table('tp_user')->select();
+相当于:select * from 'tp_user'
+(2)多列数据在查询不到时返回空数组，使用selectOrFail()抛出异常：
+Db::table('tp_user')->selct()->selectOrFail();
+(3在select()方法后再使用toArray()方法，可以将数据集对象转化为数组;
+$user = Db::table('tp_user')->select()->toArray();
+dump($user);
+(4)当前数据库配置文件设置了前缀，那么我们可以使用name()方法忽略前缀;
+Db::name('user')->select();
+3.其他查询
+（1）通过value()方法，可以查询指定字段的值（单个），没有数据返回null;
+Db::name('user')->where('id',27)->value('username');
+(2).通过colunm()方法，可以查询指定列的值（多个），没有数据返回空数组;
+Db::name('user')->column('username');
+(3)可以指定id作为列值的索引;
+Db::name('user')->column('username','id');
+(4)如果处理数据量巨大，一次性读取可能会导致内存开销过大，为避免出错，可以使用chunk()方法分批处理数据;
+Db::table('tp_user')->chunk(3,function($user) {
+    foreach($user as $user){
+        dump($user);
+    }
+    echo 1;
+});
+(5)可以利用游标查询功能，可以大幅度减少海量数据的内存开销，它利用了PHP生成器特性。
+每次查询只读一行，再次读取时可以自动定位到狭义行;
+$cursor = Db::table('tb_user')->cursor();
+forezch($cursor as $user){
+    dump(user);
+}

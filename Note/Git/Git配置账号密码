@@ -141,3 +141,36 @@ $ sudo apt-get install openssh-server
 $ sudo /etc/init.d/ssh start 
 
 然后进行git clone 就可以了
+
+
+
+
+
+
+SSH 出现 The authenticity of host xxx can't be established.
+
+1、使用ssh连接远程主机时加上“-o StrictHostKeyChecking=no”的选项，去掉对主机的验证检查。
+
+ssh -o StrictHostKeyChecking=no 192.168.xxx.xxx
+注：192.168.xxx.xxx 为本地ip地址：windows ipconfig查看，linux ifconfig查看
+
+2、当然你也可以直接改配置文件信息，这样彻底去掉验证。
+
+修改/etc/ssh/ssh_config文件（或$HOME/.ssh/config）中的配置，添加如下两行配置：
+
+StrictHostKeyChecking no
+UserKnownHostsFile /dev/null
+修改好配置后，重新启动sshd服务即可。
+
+centos7重启ssh服务命令为systemctl restart sshd.service
+注：不过采用第二种方法，容易造成潜在的危险。可以参考Stackoverflow上的题:
+ssh: The authenticity of host ‘hostname’ can’t be established
+
+
+ping github.com
+ping通
+获取到github.com的ip为192.30.252.128
+在/etc/hosts中添加一行：
+192.30.252.128 github.com 
+再次ping 192.30.252.128
+正常

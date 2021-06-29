@@ -1,0 +1,46 @@
+https://gitee.com/liu21st/thinkphp
+1.安装wamps,php7.3以上
+2.下载安装composer
+目录定位到APMS\wamp64-3.2.3\bin\php\php7.3.21\php.exe
+安装选项选择，添加到环境
+打开powershell,运行：composer
+配置composer下载地址为阿里云：
+ composer config -g repo.packagist composer https://mirrors.aliyun.com/composer/
+ 3.powershell进入到wamps网站根目录，创建安装tp6项目
+ APMS\wamp64-3.2.3\www> composer create-project topthink/think tp6
+ 4.如果要更新项目版本，直接进入项目根目录
+ 执行命令：APMS\wamp64-3.2.3\www\tp6> composer update topthink/framework
+看到“success"即成功升级到最新版本
+5.运行php
+执行命令：APMS\wamp64-3.2.3\www\tp6> php think run
+ThinkPHP Development server is started On <http://127.0.0.1:8000/>
+You can exit with `CTRL-C`
+Document root is: D:\ls\APMS\wamp64-3.2.3\www\tp6\public
+[Wed Aug 19 13:20:03 2020] 127.0.0.1:65055 [200]: /
+[Wed Aug 19 13:20:04 2020] 127.0.0.1:65066 [200]: /favicon.ico
+
+网页打开提示的地址：http://127.0.0.1:8000/，即可看到运行效果
+或者打开网址：http://localhost:8080/tp6/，点击public也可以打开
+
+用CTRL-C命令退出，再刷新网址就打不开了。重新运行命令：php think run
+
+如果80端口没有被占用，运行命令：php think run -p 80
+如此，ThinkPHP6.0已经帮我们将域名自动部署到public里了
+
+
+
+
+wamp的php项目放在www下面打不开
+文件放在www下面却没有变成蓝色的生成链接
+    
+    www 下index.php 文件,只修改一行 
+    $projectContents .= '<li><a href="./'.$file.'">'.$file.'</a></li>';
+    
+    $projectContents = '';
+    while (($file = readdir($handle))!==false)
+    {
+        if (is_dir($file) && !in_array($file,$projectsListIgnore))
+        {
+            $projectContents .= '<li><a href="./'.$file.'">'.$file.'</a></li>';
+        }
+    }

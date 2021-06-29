@@ -1,7 +1,5 @@
 https://blog.csdn.net/songfadan/article/details/80827446
 【PowerShell】Windows 7 如何升级 PowerShell
-2018年06月27日 12:39:08
-阅读数：490
 操作环境：
 Windows 7 旗舰版 Service Pack 1 x64
 PowerShell 2.0 –> PowerShell 4.0

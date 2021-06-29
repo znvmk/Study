@@ -8,7 +8,59 @@
 改为 listen 8080
 重启服务，等图标变为绿色
 打开默认浏览器，输入：http://127.0.0.1:8080/
+mysql默认账户：root，默认密码为空
 可以看到wamp主页
 
 
 wapm,当有本地MySQL进程时wapm也无法正常启动，关掉本地MySQL进程和服务，重启wapm
+WampServer修改端口及菜单Localhost
+
+一、修改Apache端口
+1、在界面中选Apache，弹出隐藏菜单选项，打开配置文件httpd.conf；
+
+2、找到 Listen 80；
+
+3、将 80 改成 8080（当然自己也可以设定别的不使用的端口）;
+
+4、保存，待重启Wamp服务后即可。
+
+二、修改Wamp打开默认页 Localhost 和 phpMyadmin 的端口
+1、打开wamp目录下wampmanager.tpl文件
+
+2、找到
+
+Parameters: "http://localhost/"; Glyph: 5
+
+Parameters: "http://localhost/phpmyadmin/"; Glyph: 5
+
+大概在120多行
+
+3、改成
+
+Parameters: http://localhost:8080/; Glyph: 5
+
+Parameters: "http://localhost:8080/phpmyadmin/"; Glyph: 5
+
+**改好之后要退出Wamp，重新打开启动配置才会生效，我开始直接重启服务就没用。
+如果是更高版本，将Parameters: "${c_edge}http://localhost${UrlPort}/"; Glyph: 27
+替换为Parameters: "${c_edge}http://localhost:8080${UrlPort}/"; Glyph: 27
+直接在文件中搜索全部替换：“${UrlPort}”替换为：“：8080${UrlPort}”
+
+三、修改phpmyadmin的默认密码
+1、进入安装盘符下Wamp/apps下的phpmyadmin文件夹
+
+2、打开config.inc文件
+
+3、找到
+
+$cfg['Servers'][$i]['user'] = 'root';
+
+$cfg['Servers'][$i]['password'] = '这里填写你的密码';
+
+4、修改好你的密码，保存即可。
+
+四、如何配置改变Apache首页文件名
+当你输入例如 http://localhost 时，Apache会默认打开index.html文件，
+如果你想修改首页文件或者增加首页文件时，打开httpd.conf，找到DirectoryIndex index.html，修改index.html为你想要文件名即可，比如test.php。
+如果你想添加多个首页文件，可以用空格隔开，文件的前后顺序就是首页文件读取的优先度。
+修改后重启Apache服务！

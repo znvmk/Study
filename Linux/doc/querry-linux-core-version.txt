@@ -1,0 +1,303 @@
+1、uname －a   （Linux查看版本当前操作系统内核信息）
+
+2、cat /proc/version （Linux查看当前操作系统版本信息）　　
+
+3、cat /etc/issue  或cat /etc/redhat-release（Linux查看版本当前操作系统发行版信息）
+
+4、cat /proc/cpuinfo （Linux查看cpu相关信息，包括型号、主频、内核信息等）
+
+5、lsb_release -a（Linux查看当前操作系统发行版信息）
+
+6、php -v （Linux查看php版本信息）
+
+7、mysql -V（Linux查看mysql版本信息，注意是大V）
+
+8、httpd -v（Linux查看apache版本信息）
+
+
+
+
+
+
+
+Linux下查看系统信息方法总结
+
+Linux下如何查看系统启动时间和运行时间
+1.查看/proc/uptime文件计算系统启动时间：
+cat /proc/uptime
+输出: 5113396.94 575949.85
+第一数字即是系统已运行的时间5113396.94秒，运用系统工具date即可算出系统启动时间
+
+date -d "$(awk -F. '{print $1}' /proc/uptime) second ago" +"%Y-%m-%d %H:%M:%S"
+输出: 2018-01-02 06:50:52
+
+2.查看/proc/uptime文件计算系统运行时间
+cat /proc/uptime| awk -F. '{run_days=$1 / 86400;run_hour=($1 % 86400)/3600;run_minute=($1 % 3600)/60;run_second=$1 % 60;printf("系统已运行：%d天%d时%d分%d秒",run_days,run_hour,run_minute,run_second)}'
+输出:系统已运行：1天1时36分13秒
+
+Linux查看物理CPU个数、核数、逻辑CPU个数
+# 总核数 = 物理CPU个数 X 每颗物理CPU的核数 
+# 总逻辑CPU数 = 物理CPU个数 X 每颗物理CPU的核数 X 超线程数
+
+# 查看物理CPU个数
+cat /proc/cpuinfo| grep "physical id"| sort| uniq| wc -l
+2
+
+# 查看每个物理CPU中core的个数(即核数)
+cat /proc/cpuinfo| grep "cpu cores"| uniq
+cpu cores       : 2
+
+# 查看逻辑CPU的个数
+cat /proc/cpuinfo| grep "processor"| wc -l
+4
+
+# 查看CPU信息（型号）
+cat /proc/cpuinfo | grep name | cut -f2 -d: | uniq -c
+      4  Intel(R) Core(TM) i5-6500 CPU @ 3.20GHz
+
+输入命令cat /proc/cpuinfo 查看physical id有几个就有几个物理cpu；查看processor有几个就有几个逻辑cpu。
+(一)概念
+① 物理CPU
+实际Server中插槽上的CPU个数
+物理cpu数量，可以数不重复的physical id有几个
+② 逻辑CPU 
+/proc/cpuinfo用来存储cpu硬件信息的
+信息内容分别列出了processor 0 –processor n 的规格。这里需要注意，n+1是逻辑cpu数
+一般情况，我们认为一颗cpu可以有多核，加上intel的超线程技术(HT), 可以在逻辑上再分一倍数量的cpu core出来
+逻辑CPU数量=物理cpu数量 x cpu cores 这个规格值 x 2(如果支持并开启ht)    
+备注一下：Linux下top查看的CPU也是逻辑CPU个数
+ ③ CPU核数
+一块CPU上面能处理数据的芯片组的数量、比如现在的i5 760,是双核心四线程的CPU、而 i5 2250 是四核心四线程的CPU
+一般来说，物理CPU个数×每颗核数就应该等于逻辑CPU的个数，如果不相等的话，则表示服务器的CPU支持超线程技术
+
+
+查看系统信息的实用命令
+lscpu命令，查看的是cpu的统计信息
+
+blue@blue-pc:~$ lscpu
+Architecture:          i686            #cpu架构
+CPU op-mode(s):        32-bit, 64-bit
+Byte Order:            Little Endian   #小端字节序
+CPU(s):                4               #总共有4核
+On-line CPU(s) list:   0-3
+Thread(s) per core:    1               #每个cpu核，只能支持一个线程，即不支持超线程
+Core(s) per socket:    4               #每个cpu，有4个核
+Socket(s):             1               #总共有1一个cpu
+Vendor ID:             GenuineIntel    #cpu产商 intel
+CPU family:            6
+Model:                 42
+Stepping:              7
+CPU MHz:               1600.000
+BogoMIPS:              5986.12
+Virtualization:        VT-x            #支持cpu虚拟化技术
+L1d cache:             32K
+L1i cache:             32K
+L2 cache:              256K
+L3 cache:              6144K
+查看/proc/cpuinfo,可以知道每个cpu信息，如每个CPU的型号，主频等。
+
+
+内存
+概要查看内存情况
+
+free -m
+             total       used       free     shared    buffers     cached
+Mem:          3926       3651        274          0         12        404
+-/+ buffers/cache:       3235        691
+Swap:         9536         31       9505
+这里的单位是MB，总共的内存是3926MB。
+查看内存详细使用：cat /proc/meminfo
+
+磁盘
+查看硬盘和分区分布
+
+# lsblk
+NAME   MAJ:MIN RM   SIZE RO TYPE MOUNTPOINT
+sda      8:0    0 465.8G  0 disk 
+├─sda1   8:1    0     1G  0 part /boot
+├─sda2   8:2    0   9.3G  0 part [SWAP]
+├─sda3   8:3    0  74.5G  0 part /
+├─sda4   8:4    0     1K  0 part 
+├─sda5   8:5    0 111.8G  0 part /home
+└─sda6   8:6    0 269.2G  0 part
+如果要看硬盘和分区的详细信息
+# fdisk -l
+
+Disk /dev/sda: 500.1 GB, 500107862016 bytes
+heads, 63 sectors/track, 60801 cylinders, total 976773168 sectors
+Units = sectors of 1 * 512 = 512 bytes
+Sector size (logical/physical): 512 bytes / 4096 bytes
+I/O size (minimum/optimal): 4096 bytes / 4096 bytes
+Disk identifier: 0x00023728
+
+   Device Boot      Start         End      Blocks   Id  System
+/dev/sda1   *        2048     2148351     1073152   83  Linux
+/dev/sda2         2148352    21680127     9765888   82  Linux swap / Solaris
+/dev/sda3        21680128   177930239    78125056   83  Linux
+/dev/sda4       177932286   976771071   399419393    5  Extended/dev/sda5       177932288   412305407   117186560   83  Linux
+/dev/sda6       412307456   976771071   282231808   83  Linux
+使用“df -k”命令，以KB为单位显示磁盘使用量和占用率，-m则是以M为单位显示磁盘使用量和占用率
+root@debian:~# df -k
+Filesystem     1K-blocks    Used Available Use% Mounted on
+/dev/sda1        8518920 1484432   6578708  19% /
+udev               10240       0     10240   0% /dev
+tmpfs              98488   12908     85580  14% /run
+tmpfs             246216       0    246216   0% /dev/shm
+tmpfs               5120       0      5120   0% /run/lock
+tmpfs             246216       0    246216   0% /sys/fs/cgroup
+/dev/sda7         368615    2055    343008   1% /tmp
+/dev/sda8       28202140 9678620  17067856  37% /home
+/dev/sda5        2817056  803380   1850860  31% /var
+使用“du -k /home”命令，列出home目录下所有文件或目录占用的大小，以KB作为计量单位。
+以下命令可以查看/home目录的大小：
+root@debian:~# du -sh /home
+9.2G    /home
+
+
+网卡
+查看网卡硬件信息
+# lspci | grep -i 'eth'
+02:00.0 Ethernet controller: Realtek Semiconductor Co., Ltd. RTL8111/8168B PCI Express Gigabit Ethernet controller (rev 06)
+
+查看系统的所有网络接口
+
+# ifconfig -a
+eth0      Link encap:以太网  硬件地址 b8:97:5a:17:b3:8f  
+          .....
+
+lo        Link encap:本地环回  
+          .....
+或者是
+ip link show
+1: lo: <LOOPBACK> mtu 16436 qdisc noqueue state DOWN 
+link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+2: eth0: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc pfifo_fast state UP qlen 1000
+link/ether b8:97:5a:17:b3:8f brd ff:ff:ff:ff:ff:ff
+如果要查看某个网络接口的详细信息，例如eth0的详细参数和指标
+# ethtool eth0
+Settings for eth0:
+    Supported ports: [ TP MII ]
+    Supported link modes:   10baseT/Half 10baseT/Full 
+                            100baseT/Half 100baseT/Full 
+                            1000baseT/Half 1000baseT/Full #支持千兆半双工，全双工模式
+    Supported pause frame use: No 
+    Supports auto-negotiation: Yes #支持自适应模式，一般都支持
+    Advertised link modes:  10baseT/Half 10baseT/Full 
+                            100baseT/Half 100baseT/Full 
+                            1000baseT/Half 1000baseT/Full
+    Advertised pause frame use: Symmetric Receive-only
+    Advertised auto-negotiation: Yes #默认使用自适应模式
+    Link partner advertised link modes:  10baseT/Half 10baseT/Full 
+                                         100baseT/Half 100baseT/Full 
+    .....
+    Speed: 100Mb/s #现在网卡的速度是100Mb,网卡使用自适应模式，所以推测路由是100Mb，导致网卡从支持千兆，变成要支持百兆
+    Duplex: Full   #全双工
+    .....
+    Link detected: yes    #表示有网线连接，和路由是通的
+其他
+查看pci信息，即主板所有硬件槽信息。
+lspci
+00:00.0 Host bridge: Intel Corporation 2nd Generation Core Processor Family DRAM Controller (rev 09) #主板芯片
+00:02.0 VGA compatible controller: Intel Corporation 2nd Generation Core Processor Family Integrated Graphics Controller (rev 09) #显卡
+00:14.0 USB controller: Intel Corporation Panther Point USB xHCI Host Controller (rev 04) #usb控制器
+00:16.0 Communication controller: Intel Corporation Panther Point MEI Controller #1 (rev 04)
+00:1a.0 USB controller: Intel Corporation Panther Point USB Enhanced Host Controller #2 (rev 04)
+00:1b.0 Audio device: Intel Corporation Panther Point High Definition Audio Controller (rev 04) #声卡
+00:1c.0 PCI bridge: Intel Corporation Panther Point PCI Express Root Port 1 (rev c4) #pci 插槽
+00:1c.2 PCI bridge: Intel Corporation Panther Point PCI Express Root Port 3 (rev c4)
+00:1c.3 PCI bridge: Intel Corporation Panther Point PCI Express Root Port 4 (rev c4)
+00:1d.0 USB controller: Intel Corporation Panther Point USB Enhanced Host Controller #1 (rev 04)
+00:1f.0 ISA bridge: Intel Corporation Panther Point LPC Controller (rev 04)
+00:1f.2 IDE interface: Intel Corporation Panther Point 4 port SATA Controller [IDE mode] (rev 04) #硬盘接口
+00:1f.3 SMBus: Intel Corporation Panther Point SMBus Controller (rev 04)
+00:1f.5 IDE interface: Intel Corporation Panther Point 2 port SATA Controller [IDE mode] (rev 04) #硬盘接口
+02:00.0 Ethernet controller: Realtek Semiconductor Co., Ltd. RTL8111/8168B PCI Express Gigabit Ethernet controller (rev 06) #网卡
+03:00.0 PCI bridge: Integrated Technology Express, Inc. Device 8893 (rev 41)
+如果要更详细的信息:lspci -v 或者 lspci -vv
+如果要看设备树:lspci -t
+
+查看bios信息
+# dmidecode -t bios
+......
+BIOS Information
+    Vendor: American Megatrends Inc.
+    Version: 4.6.5
+    Release Date: 04/25/2012
+    .......
+    BIOS Revision: 4.6
+......
+dmidecode以一种可读的方式dump出机器的DMI(Desktop Management Interface)信息。这些信息包括了硬件以及BIOS，既可以得到当前的配置，也可以得到系统支持的最大配置，比如说支持的最大内存数等。
+如果要查看所有有用信息
+dmidecode -q
+里面包含了很多硬件信息。
+注：以上的命令都是Ubuntu。Ubuntu支持的命令比较多，相对redhat会很齐全。毕竟redhat要求稳定，所以更新会很慢。（有的命令RedHat和Centos可能没有，我测试Debian也是可以）
+
+
+Linux /proc目录详解
+1. /proc目录
+Linux 内核提供了一种通过 /proc 文件系统，在运行时访问内核内部数据结构、改变内核设置的机制。proc文件系统是一个伪文件系统，它只存在内存当中，而不占用外存空间。它以文件系统的方式为访问系统内核数据的操作提供接口。
+用户和应用程序可以通过proc得到系统的信息，并可以改变内核的某些参数。由于系统的信息，如进程，是动态改变的，所以用户或应用程序读取proc文件时，proc文件系统是动态从系统内核读出所需信息并提交的。下面列出的这些文件或子文件夹，并不是都是在你的系统中存在，这取决于你的内核配置和装载的模块。另外，在/proc下还有三个很重要的目录：net，scsi和sys。 Sys目录是可写的，可以通过它来访问或修改内核的参数，而net和scsi则依赖于内核配置。例如，如果系统不支持scsi，则scsi 目录不存在。
+除了以上介绍的这些，还有的是一些以数字命名的目录，它们是进程目录。系统中当前运行的每一个进程都有对应的一个目录在/proc下，以进程的 PID号为目录名，它们是读取进程信息的接口。而self目录则是读取进程本身的信息接口，是一个link。
+
+
+
+2. 子文件或子文件夹
+/proc/buddyinfo 每个内存区中的每个order有多少块可用，和内存碎片问题有关
+/proc/cmdline 启动时传递给kernel的参数信息
+/proc/cpuinfo cpu的信息
+/proc/crypto 内核使用的所有已安装的加密密码及细节
+/proc/devices 已经加载的设备并分类
+/proc/dma 已注册使用的ISA DMA频道列表
+/proc/execdomains Linux内核当前支持的execution domains
+/proc/fb 帧缓冲设备列表，包括数量和控制它的驱动
+/proc/filesystems 内核当前支持的文件系统类型
+/proc/interrupts x86架构中的每个IRQ中断数
+/proc/iomem 每个物理设备当前在系统内存中的映射
+/proc/ioports 一个设备的输入输出所使用的注册端口范围
+/proc/kcore 代表系统的物理内存，存储为核心文件格式，里边显示的是字节数，等于RAM大小加上4kb
+/proc/kmsg 记录内核生成的信息，可以通过/sbin/klogd或/bin/dmesg来处理
+/proc/loadavg 根据过去一段时间内CPU和IO的状态得出的负载状态，与uptime命令有关
+/proc/locks 内核锁住的文件列表
+/proc/mdstat 多硬盘，RAID配置信息(md=multiple disks)
+/proc/meminfo RAM使用的相关信息
+/proc/misc 其他的主要设备(设备号为10)上注册的驱动
+/proc/modules 所有加载到内核的模块列表
+/proc/mounts 系统中使用的所有挂载
+/proc/mtrr 系统使用的Memory Type Range Registers (MTRRs)
+/proc/partitions 分区中的块分配信息
+/proc/pci 系统中的PCI设备列表
+/proc/slabinfo 系统中所有活动的 slab 缓存信息
+/proc/stat 所有的CPU活动信息
+/proc/sysrq-trigger 使用echo命令来写这个文件的时候，远程root用户可以执行大多数的系统请求关键命令，就好像在本地终端执行一样。要写入这个文件，需要把/proc/sys/kernel/sysrq不能设置为0。这个文件对root也是不可读的
+/proc/uptime 系统已经运行了多久
+/proc/swaps 交换空间的使用情况
+/proc/version Linux内核版本和gcc版本
+/proc/bus 系统总线(Bus)信息，例如pci/usb等
+/proc/driver 驱动信息
+/proc/fs 文件系统信息
+/proc/ide ide设备信息
+/proc/irq 中断请求设备信息
+/proc/net 网卡设备信息
+/proc/scsi scsi设备信息
+/proc/tty tty设备信息
+/proc/net/dev 显示网络适配器及统计信息
+/proc/vmstat 虚拟内存统计信息
+/proc/vmcore 内核panic时的内存映像
+/proc/diskstats 取得磁盘信息
+/proc/schedstat kernel调度器的统计信息
+/proc/zoneinfo 显示内存空间的统计信息，对分析虚拟内存行为很有用
+
+以下是/proc目录中进程N的信息
+/proc/N pid为N的进程信息
+/proc/N/cmdline 进程启动命令
+/proc/N/cwd 链接到进程当前工作目录
+/proc/N/environ 进程环境变量列表
+/proc/N/exe 链接到进程的执行命令文件
+/proc/N/fd 包含进程相关的所有的文件描述符
+/proc/N/maps 与进程相关的内存映射信息
+/proc/N/mem 指代进程持有的内存，不可读
+/proc/N/root 链接到进程的根目录
+/proc/N/stat 进程的状态
+/proc/N/statm 进程使用的内存的状态
+/proc/N/status 进程状态信息，比stat/statm更具可读性
+/proc/self 链接到当前正在运行的进程

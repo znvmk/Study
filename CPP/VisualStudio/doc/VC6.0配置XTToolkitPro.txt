@@ -1,0 +1,34 @@
+XTToolkitPro\lib\vc6.0
+XTToolkitPro\Source
+将XTToolkitPro文件夹放在F:\Program Files\Microsoft Visual Studio\VC98\MFC\
+vc6.0路径配置
+include "F:\Program Files\Microsoft Visual Studio\VC98\MFC\XTToolkitPro\Source"
+lib "F:\Program Files\Microsoft Visual Studio\VC98\MFC\XTToolkitPro\lib\vc60"
+Source "F:\Program Files\Microsoft Visual Studio\VC98\MFC\XTToolkitPro\Source"
+
+CAdoRecord.cpp:
+BOOL CAdoRecord::ConnectDb(CString strIP, int nPort, CString strDbName, CString severSA)
+{
+	CString strSql = "";	
+
+	try
+	{	
+		if ( m_pConnection->State )
+			m_pConnection->Close();
+		
+		
+		switch(nPort)
+		{
+            case 4:
+			strSql.Format("DRIVER={SQL Server};SERVER=%s;UID=sa;PWD=***%s;DATABASE=***",strIP,severSA.Left(14).Right(8));//1433.com
+			break;	
+        }
+
+.ini
+[sever]
+severName=.
+ftpIP = NULL
+database=SqlServer
+severSA2=66m.con
+beginFtp=0
+severSA1=6667771433.commmon.ivf.com.con

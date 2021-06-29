@@ -27,3 +27,4 @@ openFile
 D:\ls\Java\jdk\jdk-12.0.1\bin
 
 即可
+

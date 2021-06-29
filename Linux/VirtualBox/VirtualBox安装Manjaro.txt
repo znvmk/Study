@@ -1,0 +1,340 @@
+Manjaro kde版本
+manjaro安装问题 a start job is running
+关闭虚拟机，重新安装
+语言选择，
+地区，asia,shanhai
+manjaro 切换国内源及软件安装
+
+
+1.配置镜像源:
+sudo pacman-mirrors -i -c China -m rank
+刷新源：
+sudo pacman-mirrors -g
+2.设置 archlinuxcn 源,antergos源,arch4edu源:
+vi sudo vi /etc/pacman.conf
+
+[archlinuxcn]
+SigLevel = Optional TrustedOnly
+#中科大源
+Server = https://mirrors.ustc.edu.cn/archlinuxcn/$arch
+#清华源
+Server = https://mirrors.tuna.tsinghua.edu.cn/archlinuxcn/$arch
+
+[antergos]
+SigLevel = TrustAll
+Server = https://mirrors.tuna.tsinghua.edu.cn/antergos/$repo/$arch
+
+[arch4edu]
+SigLevel = TrustAll
+Server = https://mirrors.tuna.tsinghua.edu.cn/arch4edu/$arch
+3.更新源列表
+
+sudo pacman-mirrors -g
+4.更新pacman数据库并全面更新系统
+sudo pacman -Syyu
+5.防止PGP签名错误
+sudo pacman -S archlinuxcn-keyring
+sudo pacman -S antergos-keyring
+安装软件
+安装搜狗拼音输入法
+安装中文输入法之前先将系统语言调整为中文，英文环境下安装会有问题。
+sudo pacman -S fcitx-im 
+# 安装fcitx-qt4可能与之前安装的有冲突，但必须安装，不然搜狗安装后无法正常使用。
+sudo pacman -S fcitx-qt4
+sudo pacman -S fcitx-configtool
+sudo pacman -S fcitx-sogoupinyin
+添加输入法配置文件
+注意配置文件的用户及组，修改为为当前用户和组
+sudo vi ~/.xprofile
+
+export GTK_IM_MODULE=fcitx
+export QT_IM_MODULE=fcitx
+export XMODIFIERS="@im=fcitx"
+安装ARU包管理工具
+sudo pacman -S yay
+安装chrome浏览器
+sudo yay -S google-chrome
+安装git
+yay -S git
+# 一个好用的git客户端
+yay -S gitkraken
+安装zsh
+majaro默认已经安装了zsh
+查看已经安装的shell
+
+cat /etc/shells
+# 如果没有安装，执行下面命令安装
+sudo pacman -S zsh
+切换到zsh，输入密码，连续回车确认
+
+chsh -s /bin/zsh
+安装oh-my-zsh配置文件
+执行下面的任意一个安装命令
+
+sh -c "$(wget https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh -O -)"
+# 或者
+sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+使用zsh模板更新zsh环境变量
+
+cp ~/.oh-my-zsh/templates/zshrc.zsh-template ~/.zshrc
+安装下载工具
+
+ yay -S aria2
+ yay -S uget
+安装深度截图工具
+
+yay -S deepin-screenshot
+安装压缩解压工具
+
+yay -S p7zip file-roller unrar
+安装wps-office
+
+yay -S wps-office
+yay -S ttf-wps-fonts
+安装vscode
+
+yay -S visual-studio-code-bin
+安装markdown编辑器
+
+yay -S typora
+安装pdf阅读器
+
+yay -S foxitreader
+安装终端复用工具tmux
+
+yay -S tmux
+安装onedrive for linux
+具体配置可参考：https://github.com/skilion/onedrive
+
+yay -S curl sqlite dlang # 安装依赖
+git clone https://github.com/skilion/onedrive.git
+cd onedrive
+make
+sudo make install
+安装完成之后在终端中输入onedrive会要求输入一个uri，这个uri上面是需要进行登录验证的地址，将上面的地址拷贝到浏览器中打开进行登录验证，将最后登录验证后的地址复制下来，粘贴到终端中要求的URI的地址处。
+开机自动运行onedrive
+
+systemctl --user enable onedrive
+systemctl --user start onedrive
+安装docker
+
+# 安装docker
+yay -S docker
+# 启动docker服务
+sudo systemctl start docker 
+# 查看docker服务的状态
+sudo systemctl status docker
+# 设置docker开机启动服务
+sudo systemctl enable docker
+```
+使用普通用户执行docker命令
+```
+groupadd docker
+sudo usermod -a -G docker $(whoami)
+newgrp docker
+systemctl restart docker
+```
+安装npm，nodejs
+```
+yay -S npm nodejs
+# 安装cnpm
+sudo npm install -g cnpm --registry=https://registry.npm.taobao.org 
+# 在当前用户目录下创建~/.npm-global目录用于存放下载的包，避免使用默认的包路径时提示没有权限
+mkdir ~/.npm-global
+# 更改链接
+npm config set prefix '~/.npm-global'
+# 在用户的profile下增加path，为的是系统能够找到可执行文件的目录
+export PATH=~/.npm-global/bin:$PATH
+# update profile。使其生效
+source ~/.profile
+```
+
+
+
+
+使用VirtualBox安装manjaro后，如何安装增强功能（详细介绍）
+
+
+捣鼓arch时，突然遇到一个难题，就是如何安装好manjaro后，将增强功能安装好（可以共享文件夹，剪切板，全屏等）
+
+点击安装增强功能选项。
+在manjaro中打开文件管理，左侧往下拉，会有个磁盘管理，这里面会多一个已经挂载的磁盘
+点击磁盘进入该磁盘所在目录，在目录下右击root，打开命令窗口，输入./xxxxxxxx.run,,,,这里的xxxxx是指文件夹下面的run文件名
+直译过来：请安装与当前内核匹配的Linux内核“header”文件，原因是Linux4.19内核的RedHat内核版本的头文件的位置发生了变化，导致安装失败。解决办法：使用 sudo pacman -S linux-headers 命令 选择对应的内核版本 安装完毕后，重启系统，再次安装即可
+
+
+LINUX MANJARO安装KERNEL及KERNEL HEADERS
+ Posted on:2017-09-29 Categories:Linux Tags:Linux
+查找可用内核
+pacman -Ss linux-headers
+
+
+安装
+pacman -S linuxXY linuxXY-headers
+
+注意:XY为你要安装的版本号,如:
+
+pacman -S linux49 linux49-headers
+
+***安装virtual tool 找不到位置：linux-headers 
+选择安装linux-headers
+pacman -S linux-headers 
+选择与当前系统内核版本最接近的选项，数字
+查看内核：uname -a 
+安装完成后，重启系统，再次 安装virtual tool
+
+
+
+
+掌握pacman包管理工具，玩转Arch Linux
+
+在Arch/Manjaro系统中，包管理是使用pacman进行管理的。
+
+常用命令
+
+列出已经安装的软件包
+
+pacman -Q
+
+
+查看virtualbox包是否已经安装
+
+
+pacman -Q virtualbox
+
+
+查看已安装的包virtualbox的详细信息
+
+
+pacman -Qi virtualbox
+
+
+列出已安装包virtualbox的所有文件
+
+
+pacman -Ql virtualbox
+
+
+查找某个文件属于哪个包
+
+
+pacman -Qo /etc/passwd
+
+
+查询包组
+
+
+pacman -Sg
+
+
+查询包组所包含的软件包
+
+
+pacman -Sg gnome
+
+
+搜索virtualbox相关的包
+
+
+pacman -Ss virtualbox
+
+
+从数据库中搜索virtualbox的信息
+
+
+pacman -Si virtualbox
+
+
+仅同步源
+
+
+sudo pacman -Sy
+
+
+更新系统
+
+
+sudo pacman -Su
+
+
+同步源并更新系统
+
+
+sudo pacman -Syu
+
+
+同步源后安装包
+
+
+sudo pacman -Sy virtualbox
+
+
+从本地数据库中获取virtualbox的信息，并下载安装
+
+
+sudo pacman -S virtualbox
+
+
+强制安装virtualbox包
+
+
+sudo pacman -Sf virtualbox
+
+
+删除virtualbox
+
+
+sudo pacman -R virtualbox
+
+
+强制删除被依赖的包（慎用）
+
+
+sudo pacman -Rd virtualbox
+
+
+删除virtualbox包及依赖其的包
+
+
+sudo pacman -Rc virtualbox
+
+
+删除virtualbox包及其依赖的包
+
+
+sudo pacman -Rsc virtualbox
+
+
+清理/var/cache/pacman/pkg目录下的旧包
+
+
+sudo pacman -Sc
+
+
+清除所有下载的包和数据库
+
+
+sudo pacman -Scc
+
+
+安装下载的virtualbox包（有时候需要降级包的时候就用这个）
+
+
+cd /var/cache/pacman/pkg
+
+
+sudo pacman -U virtualbox-5.2.12-1-x86_64.pkg.tar.xz
+
+
+升级时不升级virtualbox包
+
+
+sudo pacman -Su --ignore virtualbox
+
+
+
+
+总结
+
+
+Manjaro也提供了GUI的包管理工具，可以直接在界面点一点就可以安装软件了。

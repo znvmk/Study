@@ -1,0 +1,5 @@
+解决mysql varchar类型插入中文出错
+
+创建表的时候添加默认的字符集，如下：
+CREATE TABLE `udb`.`test` ( `id` INT NOT NULL , `name` VARCHAR(10) NULL ) ENGINE = MyISAM DEFAULT CHARSET=UTF8;
+在末尾添加“default charset=utf8".

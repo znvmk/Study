@@ -1,0 +1,275 @@
+自己写操作系统 1
+
+0、操作系统启动过程  https://blog.csdn.net/judyge/article/details/52278384
+
+　　第一步：读取BIOS
+
+　　按下电源按钮后，计算机首先读取一块ROM芯片，这块芯片里的程序是"基本输入输出系統"（Basic Input/Output System），即BIOS.
+
+　　第二步：硬件自检 
+
+　　BIOS会检查计算机硬件是否满足运行条件，如果硬件出现问题，主板会发出不同含义的蜂鸣，启动中止。
+
+　　第三步：启动顺序
+
+　　硬件检查完成后，BIOS会将控制权交给下一阶段的启动程序，注意，“下一阶段的启动程序”可能存放在硬盘中，也可能存放在CD/DVD中，或者软盘中等等，可以设置BIOS选择从哪个设备启动。
+
+　　第四步：主引导记录
+
+　　BIOS找到了“下一阶段的启动程序”所在设备，会读取该设备的第一个扇区，即读取最前面的512字节，称为主引导记录。主引导记录会告诉计算机下一步到哪里去找操作系统。
+
+　　第五步：bootloader
+
+　　计算机读取"主引导记录"前面446字节的机器码之后，运行事先安装的“启动管理器”bootloader，由用户选择启动哪个操作系统。如果你安装了多个操作系统，那么就要从这步做出选择了。
+
+　　第六步：加载内核
+
+　　好了，选择操作系统（内核）后，会加载内核，下面就交给内核去处理了。
+
+ 
+
+我们制作的操作系统将从第三步之后开始，通过vitrualbox 加载软盘img镜像的方式启动
+
+BIOS读img文件的前512字节，主引导记录，主引导记录的前446字节（boot.bin的前446字节，也是boot.img的前446字节）为bootloader，确定启动哪个操作系统
+
+ 
+
+1、制作boot.bin (需要下载安装 nasm   https://www.nasm.us/)
+
+编辑文件boot.asm
+	
+org 07c00h ; 告诉编译器程序加载到7c00处
+ 
+mov ax, cs
+ 
+mov ds, ax
+ 
+mov es, ax
+ 
+call DispStr ; 调用显示字符串例程
+ 
+jmp $ ; 无限循环
+ 
+DispStr:
+ 
+mov ax, BootMessage
+ 
+mov bp, ax ; ES:BP = 串地址
+ 
+mov cx, 16 ; CX = 串长度
+ 
+mov ax, 01301h ; AH = 13,  AL = 01h
+ 
+mov bx, 000ch ; 页号为0(BH = 0) 黑底红字(BL = 0Ch,高亮)
+ 
+mov dl, 0
+ 
+int 10h ; 10h 号中断
+ 
+ret
+ 
+BootMessage: db "Hello, One OS!" ; 想要开机后在屏幕上显示的字符串
+ 
+times  510-($-$$) db 0 ; 填充剩下的空间，使生成的二进制代码恰好为512字节
+ 
+dw  0xaa55 ; 结束标志
+
+　　nasm boot.asm -o boot.bin
+
+ 
+
+2、制作img镜像 https://blog.csdn.net/sunjing_/article/details/78781411
+
+制作img镜像方法一：Linux下的dd命令（亲测可用）
+1. 制作软盘镜像文件diska.img
+命令： dd if=/dev/zero of=diska.img bs=512 count=2880
+2. 复制boot.bin到boot.img中
+命令： dd if=boot.bin of=boot.img bs=512 count=1
+3. 复制diska.img中从第512字节往后的内容添加到boot.img中
+命令： dd if=diska.img of=boot.img skip=1 seek=1 bs=512 count=2879
+ 
+尝试过，如果把这里的第2，3步换成用FloppyWriter在windows上写boot.bin到diska.img镜像中，会出现virtualbox能识别diska.img镜像，但运行过程报“FATAL: No bootable medium found! System halted.”的错误，也就是说boot.bin其实没有生效。
+ 
+制作img镜像方法二：使用bximage工作和dd命令（亲测可用）
+使用linux下bximage命令，以ubuntu为例
+sudo apt-get install bximage
+bximage
+fd
+[Enter]
+[Enter]
+默认生成a.img的软盘镜像文件
+ 
+然后把boot.bin写入a.img文件前512字节内
+dd if=boot.bin of=a.img bs=512 count=1 conv=notrunc
+
+这里也尝试过，把方法一中第一步生成的img文件，代替bximage工具生成的img文件，然后继续使用方法二中的dd命令，生成的a.img，在vitrualbox上无法启动，此处不知道原因，希望有高手解答。
+ 
+ 3、使用vitrualbox启动boot.img  http://www.cnblogs.com/777777-716/p/5003964.html
+
+然后，启动运行就可以
+1)打开virtualbox，新建虚拟电脑，类型选Other，硬盘1G大小即可
+2） 设置，储存，控制器：Floppy，选择之前编写好的boot.img在软驱0下面
+3）启动
+
+
+附：
+
+https://www.csdn.net/gather_26/MtTacg0sODU2My1ibG9n.html
+
+https://github.com/lucasysfeng/lucasOS.git
+
+
+
+
+ 自己写操作系统 2 - 安装bochs虚拟机
+
+ 以ubuntu操作系统为例
+
+一、命令行安装
+
+sudo apt-get install vgabios bochs bochs-x bximage
+
+此方法方便，不过都说这个方法安装的bochs没有调试功能，所以我没有尝试，有时间再补充验证吧
+
+ 
+
+二、源码安装
+
+1. 源码下载
+
+https://sourceforge.net/projects/bochs/files/bochs/
+
+直接下载当前最新的源码，准备在linux上安装，所以下载的 bochs-2.6.9.tar.gz
+
+2. 安装前准备
+
+sudo apt-get install build-essential xorg-dev libgtk2.0-dev bison
+
+省掉config过程很多依赖编译报错
+
+3. 编译安装
+
+sudo tar xvzf bochs-2.6.9.tar.gz
+
+cd bochs-2.6.9
+
+./configure  --enable-debugger --enable-disasm --enable-readline -LIBS='lx11'
+
+make
+
+sudo make install
+
+make install 会把bochs可执行文件拷贝到/usr/local/bin/目录下
+
+重启linux或者让环境变量重新生效，可以直接在当前目录下调用bochs
+
+4. 修改bochsrc配置文件
+
+在bochs-2.6.9目录下，有一个配置文件 .bochsrc，我们需要修改，让他运行我们的a.img
+	
+#cpu: model=core2_penryn_t9600, count=1, ips=50000000, reset_on_triple_fault=1, ignore_bad_msrs=1, msrs="msrs.def"
+cpu: model=amd_k6_2_chomper, count=1, ips=50000000, reset_on_triple_fault=1, ignore_bad_msrs=1, msrs="msrs.def"
+cpu: cpuid_limit_winnt=0
+ 
+memory: guest=512, host=256
+ 
+romimage: file=$BXSHARE/BIOS-bochs-latest, options=fastboot
+ 
+vgaromimage: file=$BXSHARE/VGABIOS-lgpl-latest
+ 
+mouse: enabled=0
+ 
+pci: enabled=1, chipset=i440fx
+ 
+private_colormap: enabled=0
+ 
+#floppya: 1_44=/dev/fd0, status=inserted
+#floppya: image=../1.44, status=inserted
+#floppya: 1_44=/dev/fd0H1440, status=inserted
+#floppya: 1_2=../1_2, status=inserted
+#floppya: 1_44=a:, status=inserted
+floppya: 1_44=a.img, status=inserted, write_protected=1
+#floppya: 1_44=/dev/rfd0a, status=inserted
+ 
+ata0: enabled=1, ioaddr1=0x1f0, ioaddr2=0x3f0, irq=14
+ata1: enabled=1, ioaddr1=0x170, ioaddr2=0x370, irq=15
+ata2: enabled=0, ioaddr1=0x1e8, ioaddr2=0x3e0, irq=11
+ata3: enabled=0, ioaddr1=0x168, ioaddr2=0x360, irq=9
+ 
+#ata0-master: type=disk, mode=flat, path="30M.sample"
+#ata0-master: type=disk, mode=flat, path="30M.sample", cylinders=615, heads=6, spt=17
+#ata0-master: type=disk, mode=flat, path="c.img", cylinders=0 # autodetect
+#ata0-slave: type=disk, mode=vvfat, path=/bochs/images/vvfat, journal=vvfat.redolog
+#ata0-slave: type=cdrom, path=D:, status=inserted
+#ata0-slave: type=cdrom, path=/dev/cdrom, status=inserted
+#ata0-slave: type=cdrom, path="drive", status=inserted
+#ata0-slave: type=cdrom, path=/dev/rcd0d, status=inserted
+ 
+boot: floppy
+#boot: disk
+ 
+floppy_bootsig_check: disabled=0
+ 
+log: bochsout.txt
+ 
+panic: action=ask
+error: action=report
+info: action=report
+debug: action=ignore, pci=report # report BX_DEBUG from module 'pci'
+ 
+debugger_log: -
+ 
+parport1: enabled=1, file="parport.out"
+ 
+#sound: driver=default, waveout=/dev/dsp. wavein=, midiout=
+#speaker: enabled=1, mode=sound
+
+　　有注释的地方基本都是改动过的，解决了下一步启动运行过程中，几个问题
+
+5. 启动运行bochs虚拟机
+
+bochs -f .bochsrc
+
+ 
+能到这一步，如果有问题，大部分都是bochsrc配置的问题，可以查看报错点，尝试注释掉，确保最基本的几个配置基本就可以正常运行了
+
+例如：
+
+memory: guest=512, host=256
+romimage: file=$BXSHARE/BIOS-bochs-latest, options=fastboot
+vgaromimage: file=$BXSHARE/VGABIOS-lgpl-latest
+floppya: 1_44=a.img, status=inserted, write_protected=1
+boot: floppy
+
+
+启动过程可能遇到的问题：
+
+问题1：.bochsrc:187: cpu directive malformed
+
+解决方法：
+
+linux终端下：bochs -help cpu
+
+我的电脑是AMD处理器，我就选amd_k6_2_chomper
+
+修改配置文件即可
+
+	
+#cpu: model=core2_penryn_t9600, count=1, ips=50000000, reset_on_triple_fault=1, ignore_bad_msrs=1, msrs="msrs.def"
+cpu: model=amd_k6_2_chomper, count=1, ips=50000000, reset_on_triple_fault=1, ignore_bad_msrs=1, msrs="msrs.def"
+
+问题2：.bochsrc:915: Bochs is not compiled with lowlevel sound support
+
+解决方法：修改配置文件，注释掉以下两行
+
+#sound: driver=default, waveout=/dev/dsp. wavein=, midiout=
+#speaker: enabled=1, mode=sound
+
+ 问题3：syntax error at 'dump_cpu'
+
+解决方法：none
+
+bochs 2.3.5 以上的版本没有dump_cpu了,可以用r，fp，mmx，sse，dreg，sreg，creg命令代替
+
+
+参考：https://blog.csdn.net/time4/article/details/25079417

@@ -1,0 +1,27 @@
+vs自带的SQL server怎么用
+
+1.使用SSEL新建一个数据库
+视图——打开SQL Server对象资源管理器
+2.SQL Server->(localdb)\ProjectsV13->数据库->右键添加新数据库:Database1(默认用Windows系统用户验证)
+3.Database1->表->右键添加新表：Users，设置表。建好表后点击左上角更新，在弹出对话框中点击更新数据库。
+4.给新建的Users表添加内容
+表->Users->右键点击查看数据：
+手动添加数据，添加完数据后虽然会提示未保存，但是不用管。编辑完成后，关闭窗口，所有数据会自动保存。
+5.怎么用SQL Server Management Studio连接管理当前数据库
+打开cmd,运行命令：SqlLocalDB info ProjectsV13
+ProjectsV13是你在VS2019中刚刚建立数据库所在的服务，一般默认为:(localdb)\ProjectsV13，具体看版本。
+运行结果如下：
+ $ SqlLocalDB info ProjectsV13                       
+名称:               ProjectsV13                        
+版本:            13.1.4001.0                           
+共享名称:                                                
+所有者:              ZNCOMPUTER\zn                      
+自动创建:        否                                       
+状态:              正在运行                                
+上次启动时间:    2019/7/1 7:16:08                          
+实例管道名称: np:\\.\pipe\LOCALDB#47979D6E\tsql\query      
+
+把最下面的一行实例管道名称； 复制粘贴到SQL Server Management Studio的连接对话框的服务器名称中：
+具体操作：SQL Server Management Studio->连接对象资源管理器：服务器名称，粘贴刚才查到的管道名称。身份验证，默认用windos身份验证。
+即可连接成功
+C:\Windows\SysWOW64\SQLServerManager14.msc

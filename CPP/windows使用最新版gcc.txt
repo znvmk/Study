@@ -1,0 +1,181 @@
+cygwin
+https://cygwin.com/
+
+cygwin是最贴近Linux版本gcc的，Linux下编译的c/c++文件可以直接在cygwin中运行
+1.下载，1.17Mb大小
+2.运行，
+Install form Internet
+选择安装目录：D:\cygwin64 ，Install For :All Users(默认安装即可)
+Direct Connection
+下载服务器选择第一个即可
+选择包：全选，版本选：best
+
+gcc, gcc core, gcc lib, 
+vim,gvim
+boost,boost-devel,boostlib,
+
+安装
+4.安装完成后，会在桌面上创建一个Terminal快捷方式
+运行发现没有vim编辑器，因为刚刚被默认跳过了。
+重新打开Cygwin安装包，全部按照刚才的步骤，默认点击。
+在选择安装项目是，搜索vim将vim和gvim安装。
+
+注意，如果要安装最新版的gcc9.2.0，
+重新运行cygwin安装包，搜索gcc,选择g++/gcc，右边下拉版本选择最新版。
+找到gcc core 选择最新版，版本和gcc的版本一定要一致，否则会gcc会报错。
+安装gcc lib,版本和gcc的一致。
+所以，gcc，gcc core ,gcc lib 三者的版本一定要一致，否则gcc编译程序会报错。
+
+设置包含目录，库目录：
+export C_INCLUDE_PATH="C:\\include;D:\\a\\include"    (一个或多个目录，和写法windows7的环境配置中的“PATH”相同)
+export CPLUS_INCLUDE_PATH=/home/zhaogang/code_my/PUBLIC:$CPLUS_INCLUDE_PATH
+export CPLUS_INCLUDE_PATH="D:\\ls\\DSA\\STL\\STLport-5.1.5;D:\ls\\DSA\\Boost\\boost_1_72_0\\boost" 
+设置库目录
+export LD_LIBRARY_PATH=.:$LD_LIBRARY_PATH
+在C:\cygwin64\home\user:目录下在.bashrc或.bash_profile配置文件中添加自己的包含目录
+export include="C:\\include"
+在两个文件的任意一个中添加都可以，因为运行的时候程序会在.bash_profile中调用.bashrc。
+配置完成后重新运行Cygwin64 Terminal,输入命令：
+export 
+在最后面即可看到刚才配置好的包含路径。
+
+安装类似apt-get命令的软件包管理：apt-cyg
+https://codeload.github.com/transcode-open/apt-cyg/zip/v1
+下载apt-cyg,解压
+用cyg命令行进入apt-cyg目录
+install apt-cyg /bin
+将apt-cyg安装到bin目录
+
+例子
+test.cpp
+#include"te.h"
+#include<iostream>
+
+using namespace std;
+
+int main()
+{
+    cout<<te.get()<<endl;
+    system("pause");
+    return 0;
+}
+
+te.h
+class te
+{
+public:
+    te();
+    ~te();
+public:
+    int a=10;
+public:
+    int get();
+};
+te.cpp
+#include"te.h"
+te::te()
+{
+
+}
+te::~te()
+{
+
+}
+int te::get()
+{
+    return a;
+}
+
+gcc编译运行：
+gcc -c test.cpp te.h te.cpp
+gcc test.o te.o -o test.exe
+./test.exe
+结果 10
+
+
+
+2.MinGW
+http://www.mingw.org/
+
+运行
+D:\
+选择mingw32-gcc-g++即可
+开发另选。
+安装
+
+
+
+一：MingW有三个主要版本：
+1- mingw32-gcc.exe 编译器将在32位系统上构建32位应用程序。
+2- i686-w64-mingw32-gcc.exe 编译器将在64位系统上构建32位应用程序。
+3- x86_64-w64-mingw32-gcc.exe 编译器将在64位系统上构建64位应用程序。
+
+x86和i686架构不同，一般64位是指x86_64
+
+i686架构很早就有，兼容性不错。
+可能代码的x86特性在arm上就提现不了了
+i686的通用性比较好，其实在VS下编译源文件也可以，用32程序主要是减轻大家系统的负担
+
+
+x86_64-w64-mingw32-gcc.exe是MinGW-w64项目的一部分。 这与MinGW项目不同。
+
+二：i686前缀的版本肯定可以编译32位程序，但是否能编译64位程序则取决于编译器版本的所用的异常实现模型–dwarf,seh,sjlj。
+
+    sjlj适合32/64位程序(但是它会带来轻微的性能损失,在异常重的代码中有15%),
+    dwarf则只能用于32位程序,
+    seh只能用于64位程序
+
+所以根据这个就可以知道前面列出的三个mingw-w6版本是否能编译32/64位程序了
+
+三:什么是 MinGW-w64 ？
+MinGW 的全称是：Minimalist GNU on Windows 。它实际上是将经典的开源 C语言 编译器 GCC 移植到了 Windows 平台下，并且包含了 Win32API ，因此可以将源代码编译为可在 Windows 中运行的可执行程序。而且还可以使用一些 Windows 不具备的，Linux平台下的开发工具。一句话来概括：MinGW 就是 GCC 的 Windows 版本 。
+以上是 MinGW 的介绍，MinGW-w64 与 MinGW 的区别在于 MinGW 只能编译生成32位可执行程序，而 MinGW-w64 则可以编译生成 64位 或 32位 可执行程序。
+
+四：MinGW(即MinGW32)，MinGW-w64和MinGW-builds有什么区别？
+
+MinGW是Windows的GCC端口。 并非所有Windows API都受支持（但是对于许多程序而言，受支持的东西就足够了），并且仅适用于32位程序（通常也可以在64位Windows上运行，但是有些不能，您不能将其编译为64位）。
+
+MinGW-w64是一个改进的版本，同时支持32位和64位，以及更多的WinAPI（仍然不是全部，因为那需要很多工作，但是比MinGW还多）。
+
+MinGW-w64仅提供其源代码，而没有二进制文件“仅使用”编译器。
+
+MinGW-builds是一个稍微独立的项目，以最有用的配置提供二进制文件。 要获得MinGW-w64的专业版本，仍然可以进行手动编译。
+
+五：MinGW和MinGW-W64简介和历史
+MinGW（Minimalist GNU for Windows），又称mingw32，是将GCC编译器和GNU Binutils移植到Win32平台下的产物，包括一系列头文件（Win32API）、库和可执行文件。
+
+另有可用于产生32位及64位Windows可执行文件的MinGW-w64项目，是从原本MinGW产生的分支。如今已经独立发展。
+
+历史：	MinGW是从Cygwin（1.3.3版）基础上发展而来。
+
+    1
+
+六、MinGW-w64 适合做什么？
+对于熟悉 MinGW-w64 的高手而言，它可以编译任何 C语言 程序。
+编译复杂的程序时，需要编写 Makefile ，否则只能一个文件一个文件的编译，会很辛苦。
+但对于初学 C语言 的人来说，MinGW-w64 是正合适的编译器，至少黑色的命令提示符界面很有编程的气氛，感觉很酷。
+在刚开始学 C语言 时，所有代码通常都写在一个文件中，只要输入几个简单的命令，就能用 MinGW-w64 编译成可执行文件。虽然 VS2015 等编译器，只要点击下鼠标就可以完成编译，但它会自动生成一大堆工程文件，让初学者摸不着头脑。而 MinGW-w64 则只会生成一个可执行文件。
+如果对 MinGW-w64 和 VS2015 等编译器进行一下形容，那么 MinGW-w64 是手动的，而 VS2015 等编译器则是自动的。因此 MinGW-w64 的编译过程更加直观容易理解，也比较适合C语言学习。
+总而言之，对于一般人来说，MinGW-w64 适合学习 C语言 时使用，真正工作还是用 VS2015 更好。当然如果您是在 Linux 下工作，那么Code::Blocks可能是一个选择，不过最大的可能是您必须习惯使用 GCC 来编译程序。
+
+七：gcc和g++区别
+
+我们在编译c/c++代码的时候，有人用gcc，有人用g++，于是各种说法都来了，譬如c代码用gcc，而c++代码用g++，或者说编译用 gcc，链接用g++，一时也不知哪个说法正确，如果再遇上个extern “C”，分歧就更多了，这里我想作个了结，毕竟知识的目的是令人更清醒，而不是更糊涂。
+误区一:gcc只能编译c代码,g++只能编译c++代码
+两者都可以，但是请注意：
+1.后缀为.c的，gcc把它当作是C程序，而g++当作是c++程序；后缀为.cpp的，两者都会认为是c++程序，注意，虽然c++是c的超集，但是两者对语法的要求是有区别的
+2.编译阶段，g++会调用gcc，对于c++代码，两者是等价的，但是因为gcc命令不能自动和C＋＋程序使用的库联接，所以通常用g++来完成链接，为了统一起见，干脆编译/链接统统用g++了，这就给人一种错觉，好像cpp程序只能用g++似的。
+误区二:gcc不会定义__cplusplus宏，而g++会
+实际上，这个宏只是标志着编译器将会把代码按C还是C++语法来解释，如上所述，如果后缀为.c，并且采用gcc编译器，则该宏就是未定义的，否则，就是已定义。
+误区三:编译只能用gcc，链接只能用g++
+严格来说，这句话不算错误，但是它混淆了概念，应该这样说：编译可以用gcc/g++，而链接可以用g++或者gcc -lstdc++。因为gcc命令不能自动和C＋＋程序使用的库联接，所以通常使用g++来完成联接。但在编译阶段，g++会自动调用gcc，二者等价。
+误区四:extern "C"与gcc/g++有关系
+实际上并无关系，无论是gcc还是g++，用extern "c"时，都是以C的命名方式来为symbol命名，否则，都以c++方式命名。
+extern "C"与采用gcc/g++并无关系，在编译阶段，g++是调用gcc的。
+总结：
+编译阶段是相同的，链接阶段g++默认链接c++库，gcc没有。道
+所以一般情况下用gcc编译c文件，用g++编译cpp文件。
+但是也专可以用gcc编译cpp文件，但后面需要加一个选项-lstdc++，作用是链接c++库
+还可属以用g++编译c文件
+
+

@@ -1,0 +1,7 @@
+安装或打开eclipse报错：
+Version 1.7.0_80 of the JVM is not suitable for this product.
+Version: 1.8 or greater is r
+虽然已经安装了最新版jdk，并且已经配置好了最新版jdk的环境。但eclipse安装仍识别为旧版jdk(旧版jdk有用，不可删除)，报以上错误
+找到低版本jkd安装目录，如c:/Java,暂时修改文件夹名称，如：c:/Java1
+运行eclipse安装报，提示报错无法找到jdk-1.7(低版本jdk)，确认。
+之后安装程序会继续，然后在安装选项中选择最新版jdk即可。

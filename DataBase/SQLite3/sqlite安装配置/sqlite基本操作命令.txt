@@ -1,0 +1,31 @@
+1.Powershell进入到sqlite3目录，创建操作目录下的testdb.db数据库：
+.\sqlite3 testdb
+SQLite version 3.26.0 2018-12-01 12:34:55
+Enter ".help" for usage hints.
+sqlite>
+**如果testdb.db存在才打开，不存在则创建
+2.查看当前数据库及关联数据库
+sqlite> .databases
+main: F:\SQLlite\sqlite-tools-win32-x86-3260000\FlyCodeTable.db
+3.查看当前数据库中存在的表
+sqlite> .tables
+创建表
+sqlite> create table TableFlyCode(
+   ...> nId int primary key not null,
+   ...> encode char(10) not null,
+   ...> entry char(100) not null,
+   ...> classify char(10) not null,
+   ...> sort int not null,
+   ...> settop int
+   ...> );
+sqlite> .tables
+TableFlyCode
+4.插入数据
+sqlite> insert into TableFlyCode values('0','kugi','库','系统词库','10','5');
+查看表中所有数据
+sqlite> select * from TableFlyCode;
+0|kugi|库|系统词库|10|5
+sqlite>
+退出
+sqlite> .quit
+PS F:\SQLlite\sqlite-tools-win32-x86-3260000>

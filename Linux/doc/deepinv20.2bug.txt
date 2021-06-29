@@ -1,0 +1,64 @@
+
+在深度Deepin 20.2系统中无法打开控制中心的解决方法
+
+不管是升级还是全新安装的深度Deepin 20.2操作系统，都无法正常的打开控制中心，如果你也有此问题，可按以下解决方法处理。
+
+在深度Deepin 20.2系统中无法打开控制中心的解决方法
+
+ 
+
+原因
+
+因为分析，造成控制中心崩溃，产生BUG是由/usr/lib/dde-control-center/modules/libdeepin-recovery-plugin.so引起的。
+
+ 
+
+尝试的方案，但不见效
+
+1、sudo apt reinstall dde-control-center
+
+2、由升级不完全引起，需要运行以下命令，安装剩余的软件包：
+
+sudo apt update
+
+sudo dpkg --configure -a
+
+sudo apt dist-upgrade
+
+3、重装dde
+
+ 
+
+解决方法（亲测成功）
+
+打开Deepin 20.2系统的终端，在里面运行以下命令：
+
+sudo rm -rf /usr/lib/dde-control-center/modules/libdeepin-recovery-plugin.so
+
+或者：
+
+****:sudo apt remove deepin-recovery-plugin
+
+通过以上命令就可以解决打不开控制中心的问题，能正常的使用控制中心了。
+
+ 
+
+如果是由升级问题引起的，可在终端中依次运行以下命令
+
+ps -ef | grep "deepin-anything" | grep -v grep | awk '{print $2}' | sudo  xargs -I {} kill -9 {} | sudo rmmod vfs_monitor
+
+sudo dpkg --configure -a
+
+sudo apt --fix-broken install
+
+sudo apt update && sudo apt dist-upgrade
+
+参考：成功将Deepin 20.1(5.10.5内核)升级到了Deepin 20.2(5.11.1)。
+
+在深度Deepin 20.2系统中无法打开控制中心的解决方法
+
+ 
+
+关于删除后任务栏等的半透明效果没有的说明
+
+做以上处理与透明度无关，亲测是正常的。只会影响控制中心的备份功能，后期如果修复了直接安装回这个包就行了。

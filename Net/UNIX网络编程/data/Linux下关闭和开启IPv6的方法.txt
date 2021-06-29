@@ -1,0 +1,75 @@
+Linux下关闭和开启IPv6的方法
+确认IPV6是否开启
+
+在Linux下确认IPv6是否已经被启用，可以从三个方面确定。
+
+1.使用ifconfig查看自己的IP地址是否含有IPv6地址。
+
+eth0 Link encap:Ethernet HWaddr 00:13:D4:05:B2:ED 
+inet addr:119.119.xxx.xx Bcast:119.119.115.255 Mask:255.255.255.0
+inet6 addr: fe80::213:d4ff:fe05:b2ed/64 Scope:Link
+UP BROADCAST RUNNING MULTICAST MTU:1500 Metric:1
+RX packets:1054562 errors:0 dropped:0 overruns:0 frame:0
+TX packets:538136 errors:0 dropped:0 overruns:0 carrier:0
+collisions:0 txqueuelen:1000 
+RX bytes:346189738 (330.1 MiB) TX bytes:246935731 (235.4 MiB)
+Interrupt:209 Base address:0xd800
+2.查看服务监听的IP中是否有IPv6格式的地址。（netstat -tuln）
+
+tcp 0 0 0.0.0.0:8100 0.0.0.0:* LISTEN 
+tcp 0 0 0.0.0.0:3306 0.0.0.0:* LISTEN 
+tcp 0 0 0.0.0.0:843 0.0.0.0:* LISTEN 
+tcp 0 0 0.0.0.0:111 0.0.0.0:* LISTEN 
+tcp 0 0 0.0.0.0:80 0.0.0.0:* LISTEN 
+tcp 0 0 :::8080 :::* LISTEN //
+tcp 0 0 :::22 :::* LISTEN //
+tcp 0 0 :::443 :::* LISTEN //
+udp 0 0 0.0.0.0:68 0.0.0.0:* 
+udp 0 0 0.0.0.0:111 0.0.0.0:* 
+udp 0 0 0.0.0.0:631 0.0.0.0:*
+3.使用lsmod查看ipv6的模块是否被加载。
+
+[root@linux ~]# lsmod |grep ip
+ipt_MASQUERADE          7617  3 
+iptable_nat            11077  1 
+ip_nat                 21101  2 ipt_MASQUERADE,iptable_nat
+ip_conntrack_netbios_ns     6977  0 
+ipt_REJECT              9665  3 
+ip_conntrack           53281  5 ipt_MASQUERADE,iptable_nat,ip_nat,ip_conntrack_netbios_ns,xt_state
+nfnetlink              10713  2 ip_nat,ip_conntrack
+iptable_filter          7105  1 
+ip_tables              17029  2 iptable_nat,iptable_filter
+ip6t_REJECT             9409  1 //
+ip6table_filter         6849  1 //
+ip6_tables             18053  1 ip6table_filter
+x_tables               17349  8 ipt_MASQUERADE,iptable_nat,ipt_REJECT,xt_state,ip_tables,ip6t_REJECT,xt_tcpudp,ip6_tables
+ipv6                  270433  18 ip6t_REJECT,cnic
+如果出现以上粗体显示的部分，代表您的机器上IPV6已经开启。
+
+关闭IPV6
+
+使用vi编辑器，打开/etc/modprobe.conf，在文档中加入如下的两条：
+
+alias net-pf-10 off
+alias ipv6 off
+保存退出，并且重新启动系统。
+
+重启之后可以使用上面的三种方法去验证IPv6支持是否已经被关闭。
+
+开启IPV6
+
+IPv6是默认支持的，所以当你要重新开起IPv6支持时，将/etc/modprobe.conf中的两条指令注释掉就可以了。
+
+
+[已解决]求助，deepin 15.3拨号无法使用ipv6
+
+fengdingwen / 2016-10-2 10:36
+浏览: 3829 / 回复: 17
+本帖最后由 fengdingwen 于 2016-10-9 21:12 编辑
+
+
+如题，在学校如果能用ipv6能省好多流量，但深度15.3没办法使用拨号连接的ipv6？我是天津大学的，我们学校说是用的原生ipv6。
+
+补充：
+在论坛里面看到别人介绍的在/etc/ppp/options 里面加入+ipv6这句话，我试了一下，重启以后可以用ipv6了，但是再重启就无法使用了，所以我觉得这是deepin15.3存在bug吧。
+PS: 刚重启了几次，发现有时候可以正常使用ipv6有时候又不可以，然后不管怎么样执行ifconfig都可以查到本机获取到了ipv6的global地址的。

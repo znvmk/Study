@@ -1,0 +1,63 @@
+一、路由简介
+1.路由的作用就是让URL更加规范简洁
+2.路由是默认开启的，在config/app.php中配置
+//是否启用路由
+'with_route'    =>false,
+3.路由的配置文件再config/route.php中，定义在文件route/app.php 
+4.route目录下定义的文件名称随机，多个均有效
+5.创建一个Address控制器类，创建两个方法：
+class Address{
+    public function index()
+    {
+        return 'index';
+    }
+    public function details($id)
+    {
+        return 'details 目前调用的id:'.$id;
+    }
+}
+6.用内置服务器方式来演示：
+php think run 
+
+二、路由定义
+1.没有定义路由规则：
+访问：http://127.0.0.1:8000/address/details/id/5
+注：必须没有设置当前位置的路由，才能正确访问
+2.将URL定义路由规则：
+打开网址：http://127.0.0.1:8000/think
+即可看到route\app.php中默认的方法:
+Route::get('hello/:name', 'index/hello');
+//即访问了app\controller\index.php中的"hello()"方法
+
+修改定义为:Route::rule('details/:id','Address/details)
+访问网址和参数为：http://127.0.0.1:8000/details/5
+这样访问隐藏了隐私的具体文件目录，和参数名称信息。规范简洁
+3.路由配置好后会出现非法请求错误，需要用路由设置的规则才能访问
+4.rule()方法默认请求是any，即任何请求均可，第三参数可以限制：
+Route::rule('details/:id', 'Address/xxx', 'GET');
+Route::rule('details/:id', 'Address/xxx', 'POST');
+Route::rule('details/:id', 'Address/xxx', 'GET|POST');
+GET,POST,DELETE,PUT,PATCHH,*（any,xxx)
+Rout::get(...),Route(...),Route::delete(...)...
+5.当设置了强制路由，访问首页就会报错，必须强制设置首页路由，在route.php中配置：
+'url_route_must'    =>true;
+Route::rule('/','Index/index');//反斜杠就是首页默认访问的地址
+6.在路由规则表达式中有多种地址配置规则：
+//静态路由
+Route::rule('ad, 'Address/index');
+//静态动态结合路由
+Route::rule('details/:id', 'Address/');
+//多参数静态动态结合路由地址
+Route::rule('details/:id', 'Address/details');
+//全动态地址，不限制是否search固定
+Route::rule('search/:id/:uid', 'Address/search');
+//包含可选参数地址
+Route::rule('find/:id/[:content]', 'Address/find');
+//规则完全匹配的地址
+Route::rule('search/:id/:uid', 'Address/search');
+7.定义路由后，可以通过url()方法创建控制器路由地址
+//不定义标识的做法
+Route::rule('Address/:id', ['id'=>10]);
+//定义标识的做法
+Route::rule('details/:id', 'Address/details')->name('det');
+return url('det',['id'=>10]);

@@ -1,13 +1,12 @@
 #include "../unp/unp.h"
-#include "../unp/apueerror.h"
 #include <string.h>
 
 int main(int argc,char* argv[])
 {
     //创建套接字
     int sockfd,n;
+    unsigned long long counter = 0;
     char recvline[MAXLINE + 1];
-    
 
     if(argc !=2)
         err_quit("usage:client.out <IP address>");
@@ -20,11 +19,8 @@ int main(int argc,char* argv[])
     
     //向服务器（特定的IP和端口）发起请求
     struct sockaddr_in serv_addr;
-    //void *memset(void *s, int ch, size_t n);
-    //函数解释：将s中当前位置后面的n个字节 （typedef unsigned int size_t ）用 ch 替换并返回 s 
-    memset(&serv_addr, 0, sizeof(serv_addr));  //每个字节都用0填充
     //bzero:设置字符串的前n个元素为0
-    //bzero(&serv_addr,sizeof(serv_addr));
+    bzero(&serv_addr,sizeof(serv_addr));
     serv_addr.sin_family = AF_INET;  //使用IPv4地址
     serv_addr.sin_port = htons(1234);  //端口
 
@@ -56,16 +52,45 @@ int main(int argc,char* argv[])
     if(connect(sockfd,(SA *)&serv_addr,sizeof(serv_addr)) <0)
         err_sys("connect error");
 
+    //测试循环次数
+    int cou,c0,c1,c2,c3;
+    cou=c0=c1=c2=c3;
+
+
     //读取服务器传回的数据
     //char buffer[40];
     //read(sockfd, buffer, sizeof(buffer)-1);
     while((n=read(sockfd,recvline,MAXLINE)) >0)
     {
+        counter++;
+        if(counter>10000)
+        {
+            c0++;
+            counter=0;
+        }
+        if(c0>10)
+        {
+            c1++;
+            c0=0;
+        }
+        if(c1>10)
+        {
+            c2++;
+            c1=0;
+        }
+        if(c2>10)
+        {
+            c3++;
+            c2=0;
+        }
         recvline[n]=0;
         //fputs:将字符串写入到指定的stream流中
         if(fputs(recvline,stdout)==EOF)
             err_sys("fputs error");
     }
+    
+    printf("%d%d%d万\ncounter:%d",c3,c2,c1,counter);
+
     if(n<0)
         err_sys("read error");
     

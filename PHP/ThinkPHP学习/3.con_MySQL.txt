@@ -1,0 +1,131 @@
+1.config\databases.php中配置
+ // 数据库连接配置信息
+    'connections'     => [
+        'mysql' => [
+            // 数据库类型
+            'type'              => env('database.type', 'mysql'),
+            // 服务器地址
+            'hostname'          => env('database.hostname', '127.0.0.1'),
+            // 数据库名
+            'database'          => env('database.database', 'udb'),
+            // 用户名
+            'username'          => env('database.username', 'root'),
+            // 密码
+            'password'          => env('database.password', 'pw123'),
+2.env中配置
+APP_DEBUG = true
+
+[APP]
+DEFAULT_TIMEZONE = Asia/Shanghai
+
+[DATABASE]
+TYPE = mysql
+HOSTNAME = 127.0.0.1
+DATABASE = udb
+USERNAME = root
+PASSWORD = pw123
+HOSTPORT = 3306
+CHARSET = utf8
+DEBUG = true
+
+[LANG]
+default_lang = zh-cn
+
+3.创建表
+CREATE TABLE `udb`.`company` 
+( 
+    `uId` INT(4) NOT NULL , 
+    `uName` VARCHAR(4) NOT NULL ,
+    `uAge` INT(4) NULL , PRIMARY KEY (`uId`)
+) ENGINE = MyISAM;
+4.在app\controller目录下创建DbTest.php
+<?php
+namespace app\controller;
+
+//使用Db
+use think\facade\Db;
+
+class DbTest
+{
+    public function index()
+    {
+        $empl = Db::table('company')->select();
+        return json($empl);
+    }
+}
+网址：http://127.0.0.1:8000/dbtest
+=>
+0：	
+uId	1
+uName	"aa"
+uAge	22
+1：	
+uId	2
+uName	"bb"
+uAge	25
+2：	
+uId	3
+uName	"cc"
+uAge	26
+5.多个数据库
+在config\databases.php中添加另一个数据库元组
+'connections'     => [
+        'mysql2' => [
+             // 数据库名
+            'database'          => env('database.database', 'udb2'),
+            ...
+        ]
+在.env中配置
+DATABASE = udb
+DATABASE2 = udb2
+//使用Db
+use think\facade\Db;
+
+class DbTest
+{
+    public function index()
+    {
+        //$empl = Db::table('company')->select();
+        $empl = Db::connect('udb')->table('company')->select();
+        return json($empl);
+    }
+}
+6.模型初探
+app目录下创建model文件夹，model创建company.php，即
+app\mode\company.php
+<?php
+namespace app\model;
+
+use think\Model;
+
+class company extends Model
+{
+
+}
+
+在app\controller\DbTest.php中使用模型
+<?php
+namespace app\controller;
+
+use think\facade\Db;
+use app\model\company;
+
+class DbTest
+{
+    public function index()
+    {
+        $empl = Db::table('company')->select();
+        return json($empl);
+    }
+
+    //使用模型
+    public function getCompany()
+    {
+        $empl =company::select();
+        return json($empl);
+    }
+}
+
+网址：http://127.0.0.1:8000/dbtest/getcompany
+同样显示出了comapny表的数据 
+

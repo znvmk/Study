@@ -1,0 +1,3 @@
+C:\Users\Administrator\AppData\Local\Microsoft\WindowsApps\wt.exe
+将快捷方式添加到运行环境目录，win+R运行
+如果直接添加C:\Program Files\WindowsApps\Microsoft.WindowsTerminal_1.0.1401.0_x64__8wekyb3d8bbwe\WindowsTerminal.exe则无法加载配置文件

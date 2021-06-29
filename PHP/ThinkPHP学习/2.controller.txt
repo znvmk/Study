@@ -1,0 +1,118 @@
+1.如果要用新的控制器，要修改config/route.php文件中的
+// 访问控制器层名称
+    'controller_layer'      => 'controller',
+现在，继续用默认的控制器“controller”
+
+2.在app目录下新建Test.php
+<?php
+namespace app\controller;
+
+class Test
+{
+    public function index()
+    {
+        return 'index';
+    }
+
+    public function hv($value = '')
+    {
+        return 'hello ' . $value;
+    }
+}
+访问Test类的index()方法：
+http://localhost:8080/tp6/public/Test/或http://localhost:8080/tp6/public/Test/index
+显示：index
+访问Test类的hv()方法：
+http://localhost:8080/tp6/public/Test/hv/value/we
+显示：hello we
+如果类的名称是"HelloWorld"，可以用http://localhost:8080/tp6/public/helloworld或http://localhost:8080/tp6/public/hello_world来访问默认index()函数 
+
+3.输出数组
+public function outArr()
+{
+    $data = array('a'=>1,'b'=>2,'c'=>3,'d'=>4);
+    return json($data);
+}
+
+4.中断测试
+不推荐使用die,exit等PHP方法中断代码执行，推荐助手函数halt()
+halt('中断测试');
+网页上打印出
+=>“中断测试”
+在app目录下新建Test.php
+<?php
+namespace app\controller;
+
+class Test
+{
+    public function index()
+    {
+        return 'index';
+    }
+
+    public function hv($value = '')
+    {
+        return 'hello ' . $value;
+    }
+}
+
+5.基础控制器
+<?php
+namespace app\controller;
+
+//使用命名空间
+use app\BaseController;
+
+class Test extends BaseController
+{
+    public function index()
+    {
+        //使用基础控制器方法
+        return 'index '.'实际路径：'.$this->app->getBasePath().' 当前方法：'.$this->request->action();
+    }
+
+    public function hv($value = '')
+    {
+        return 'hello ' . $value;
+    }
+    public function outArr()
+    {
+        $data = array('a'=>1,'b'=>2,'c'=>3,'d'=>4);
+        halt('中断测试');
+        return json($data);
+    }
+}
+
+6.空控制器
+在app\controller目录下添加Error.php
+<?php
+namespace app\controller;
+
+class Error
+{
+    public function index()
+    {
+        return '当前控制器不存在！';
+    }
+}
+
+随便输入一个不存在的控制器名称，网页不再报错，而是显示控制器中Error类的信息
+http://localhost:8080/tp6/public/test1
+=> 当前控制器不存在！
+
+6.多级控制器
+在app\controller目录下再新建一个文件夹（分组），添加blog.php控制器类，即：
+D:\ls\APMS\wamp64-3.2.3\www\tp6\app\controller\group\blog.php
+<?php
+//注意命名空间和目录一致
+namespace app\controller\group;
+
+class blog
+{
+    public function index()
+    {
+        return 'group.blog.index()';
+    }
+}
+打开网址访问：http://127.0.0.1:8000/group.blog
+=>group.blog.index()

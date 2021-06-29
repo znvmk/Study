@@ -22,28 +22,28 @@ $ move main.rs src/main.rs （powershell:mv main.rs src）
 $ del main.exe
 
 
-创建配置文件
-下一步，在hello_world目录创建一个文件，叫做Cargo.toml。
-命令：ni Cargo.toml(cmd:cd .>Cargo.toml)
-确保Cargo.toml的C是大写的，否则 Cargo 不知道如何处理配置文件。
-这个文件使用TOML（Tom's Obvious, Minimal Language）格式。 TOML 类似于 INI，不过有一些额外的改进之处，并且被用作 Cargo 的配置文件。
-在这个文件中，输入如下信息：
+创建项目
+Cargo hello_world
+cd hello_world
+gvim Cargo.toml,编辑自己的信息：
 [package]
-
-name = "hello_world"
-version = "0.0.1"
-authors = [ "Your name <you@example.com>" ]
+name = "test-1"
+version = "0.1.0"
+authors = ["name <name@users.noreply.github.com>"]
+edition = "2018"
 
 第一行的[package]表明下面的语句用来配置一个包。随着我们在这个文件增加更多的信息，我们会增加其他部分，不过现在，我们只有包配置。
 另外三行设置了 Cargo 编译你的程序所需要知道的三个配置：包的名字，版本，和作者。
 当你在Cargo.toml中添加完这些信息后，保存它以完成配置文件的创建。
-构建并运行 Cargo 项目
+编辑src文件夹中的源文件
+完成后构建并运行 Cargo 项目
 当Cargo.toml文件位于项目的根目录时，我们就准备好可以构建并运行 Hello World 程序了！为此，我们输入如下命令：
 $ cargo build
    Compiling hello_world v0.0.1 (file:///home/yourname/projects/hello_world)
 $ ./target/debug/hello_world
 Hello, world!
 如果一切顺利，你应该再次看到Hello, world!出现在终端里。
+也可以进入到生成目录target\debug，用命令：.\test-1.exe运行
 你刚刚用cargo build构建了一个程序并用./target/debug/hello_world运行了它，不过你也可以用如下的一步操作cargo run来完成这两步操作：
 $ cargo run
      Running `target/debug/hello_world`

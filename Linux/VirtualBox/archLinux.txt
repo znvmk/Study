@@ -1,0 +1,564 @@
+ArchLinux 安装指南（新手向）
+
+ArchLinux
+
+前言
+既然你已经准备安装 ArchLinux，想必对 ArchLinux 已经有一个大致的了解了，如果你还不了解 ArchLinu，可以前往以下网页简单的了解它。
+
+ArchLinux 简介：https://wiki.archlinux.org/index.php/Arch_Linux
+
+ArchLinux 常问问题：https://wiki.archlinux.org/index.php/Frequently_asked_questions
+
+ArchLinux 与其他发行版的区别：https://wiki.archlinux.org/index.php/Arch_compared_to_other_distributions
+
+可能有一些刚接触（了解） ArchLinux 的小伙伴在困惑它是否适合自己？
+
+如果你符合下面这几点，我觉得就可以使用 ArchLinux。
+
+自己动手解决问题的能力，喜欢折腾钻研的精神
+想要自己定制系统，不喜欢其他发行版的局限性。
+追求一切保持简单，不喜欢多余的东西。
+如果你是一个刚接触 Linux 的小白，我也很推荐使用 ArchLinux 来入门。因为 ArchLinux 的 Wiki 非常详细，你遇到的大部分问题几乎都能在 Wiki 找到答案，同时它也是很好的学习资料。ArchLinux 还有一个用户友好的社区。等你慢慢熟悉之后就会发现，原来本指南安装步骤是如此简单。
+
+如果你只是想找一个拥有 ArchLinux 的特性，同时又省心省力的发行版，那么 Manjaro 可能是你更好的选择，这是最流行的基于 ArchLinux 的发行版，提供预设桌面环境以及图形化安装。
+
+准备工作
+你需要一台支持 UEFI 引导的电脑，最好是有线网络连接和有线键鼠（触摸板）。
+
+如果电脑不支持 UEFI，那么本指南某些步骤可能会不适合你，下面我会说明如何查看电脑是否支持 UEFI。只要不是特别老的电脑都支持。如果不支持 UEFI 还想继续安装，可以加入 QQ 群与我交流。
+
+安装系统前肯定要下载系统，前往 https://mirrors.163.com/archlinux/iso/latest/ 下载 iso 文件，下载完成后建议使用文件校验工具配合 sha1sum.txt 验证文件完整性。
+
+准备一个 U 盘，U 盘大小大于 ISO 文件大小即可，用于制作安装启动盘。
+
+注意：制作启动盘会清空 U 盘数据，请在制作之前做好数据备份工作。
+
+前往 https://etcher.io 下载 Etcher（制作启动盘工具），Etcher 是跨平台软件，Windows、macOS 和 Linux 都可以使用。
+
+如果你无法成功从官网下载 Etcher，可以通过网盘下载：https://share.weiyun.com/5OvrT9N
+
+U 盘插入电脑后打开 Etcher，点击 [Flash form file] 选择 ArchLinux 的 iso 文件，如果你的电脑有多个 U 盘或者移动硬盘，可能需要手动更改目标设备，最后点击「Flash」开始制作。
+
+启动盘制作完成后，重启你的电脑使其引导至启动盘，就像安装 Windows 一样。
+
+ArchLinux 启动选项菜单出现后，选择第一个项目启动。
+
+当显示类似下面的界面时，说明安装环境启动成功，如果你遇到了某些错误，可以加入 QQ 群向我询问。
+
+ArchLinux ISO
+
+执行ls /sys/firmware/efi/efivars检测当前引导模式是否是 UEFI
+
+如果提示无法访问，表示当前不是以 UEFI 模式启动的，检查你的电脑是否支持以及 BIOS 设置 。
+
+稍后的安装操作会使用终端文本编辑器 nano 编辑文件，这里介绍一下基本用法：方向键控制光标，Ctrl + S 是保存，Ctrl + X 是退出。如果你在没有保存的情况下退出，它会询问你是否保存，这时按下Y再按下回车即可。
+
+安装操作的某些命令可能会比较复杂，一定要注意命令参数间的空格以及参数前的连字符数量。
+
+检查网络
+执行ip -brief link查看网卡是否被列出，输出的第一列为网卡名称，名为 lo 的是虚拟网卡，如果还有其他网卡被列出，则表示网卡正常。
+
+有线网卡名称一般以 e 开头，无线网卡名称一般以 w 开头。
+
+有线网卡会自动配置 DHCP，一般不需要手动干预。
+
+无线网卡执行wifi-menu扫描无线网络，然后选择要连接的无线网络，第一个提示是设置网络名称，按回车键默认即可，第二个提示是询问无线网络密码，输入完密码后等待连接完成。
+
+如果你是静态 IP 网络，推荐更换为支持 DHCP 的网络再继续。
+
+最后检查网络是否正常，执行ping -c 5 url.cn测试网络连通性。
+
+如果网络正常，执行timedatectl set-ntp true同步系统时间。
+
+开启 SSH 服务（可选）
+如果你觉得手动输入命令太麻烦或者担心输错，想直接从米V米复制命令的话，可以为安装环境开启 SSH，使用另一台电脑或移动设备连接至安装环境远程执行命令。
+
+执行passwd为安装环境设置密码，输入密码时不会有任何指示。
+
+启动 SSH 服务：systemctl start sshd
+
+执行ip -brief address查看 IP 地址，输出第三列是网卡对应的 IP 地址（如果你的网络支持 IPv6 ，可能有多个 IP 地址。），IP 地址不包含/后面的掩码位。比如输出的是192.168.1.2/24，IP 地址应该是192.168.1.2
+
+然后就可以使用 SSH 客户端连接至安装环境了，下面简单说一下 Windows 10、macOS、Linux、Andorid 和 iOS 的 SSH 客户端如何使用。
+
+记得把下列命令中的${IP}替换为安装环境的 IP 地址
+
+Windows 10 打开 PowerShell，执行ssh root@${IP}，如果提示 ssh 命令不存在，可以参考 https://docs.microsoft.com/windows-server/administration/openssh/openssh_install_firstuse 进行安装。
+
+Linux 和 macOS 在终端执行ssh root@${IP}
+
+如果询问Are you sure you want to continue connecting (yes/no/[fingerprint])?，输入yes再继续。
+
+Android 前往 https://juicessh.com/changelog 下载安装 JuiceSSH，打开后点击右上角的闪电图标，「类型」选择 [SSH]，然后在下方输入root@${IP}，点击 [确定] 连接即可。
+
+iOS 安装 Termius，然后点击右上角的添加，选择 [New Host]，「Hostname」填写安装环境的 IP 地址，勾选「SSH」或「Use SSH」，然后「Username」和「Password」分别填写root和密码，最后保存，点击列表中的项目连接即可。
+
+PS：用 SSH 执行命令的输出在安装环境的电脑上不会显示
+
+硬盘分区
+如果你需要 Linux + Windows 双系统，建议使用两个硬盘分别安装。如果你想使用单硬盘安装双系统，可以加入 QQ 群与我交流。
+
+下面的分区操作会清空目标硬盘数据，请在安装前做好数据备份工作。
+
+执行fdisk -l查看硬盘以及分区，确定要用于安装系统的硬盘路径，比如我这里是/dev/sda。
+
+如果你有多块硬盘，第一块硬盘一般为/dev/sda 或/dev/nvme0n1 (NVME)，第二块硬盘一般为/dev/sdb 或/dev/nvme0n2 (NVME)，以此类推，U 盘或移动硬盘也会被列出，注意不要选错。
+
+如果你的硬盘没有被列出，可能是在 BIOS 开启了 RAID 模式（部分笔记本会默认开启），前往 BIOS 将硬盘模式改为 AHCI 模式即可。注意：更改后可能会导致现有的 Windows 无法启动。
+
+检查硬盘
+
+确定了硬盘路径后，开始为硬盘分区，执行fdisk ${diskPath}进入 fdisk 交互界面，把${diskPath}替换为硬盘路径。示例：fdisk /dev/sda
+
+Fdisk
+
+如果显示类似上面的界面，就可以进行下面的操作了。
+
+如果创建分区时提示Do you want to remove the signature?，输入Y即可。
+
+接下来的每一步都至关重要，不要搞错了。
+
+执行g创建新的 GPT 分区表
+
+执行n创建第一个分区，第一个分区是 UEFI 引导必备的 ESP 分区。
+
+提示Partition number按回车，提示First sector按回车，提示Last sector输入+260M 并按回车，第一个分区创建完毕。
+
+执行t更改第一个分区类型，改为EFI System 类型分区。如果不更改分区类型，UEFI 将无法引导系统。
+
+提示Partition type输入 1 并按回车，提示Changed type of partition 'Linux filesystem' to 'EFI System'.即为更改成功，注意后面一定要是EFI System。
+
+PS：给 ESP 分区分配 260M 空间是为了兼容不同硬盘，不同的 UEFI 固件，以及存放系统内核和 initramfs。对于某些早期或者有缺陷的 UEFI 实现，可能至少需要分配 512M。
+
+执行n新建分区，第二个分区是系统分区，把所有剩余空间都分配给它。
+
+提示Partition number按回车，提示First sector按回车，提示Last sector按回车，第二个分区创建完毕。
+
+执行p打印分区表，如果跟下面的图片类似，则代表分区无误。
+
+分区
+
+最后执行w保存分区表并退出。
+
+PS：某些教程的分区步骤会创建一个额外的 SWAP（交换空间）分区，关于交换分区和交换文件的选择参考下方的【设置交换空间】章节
+
+PPS：如果你用来装系统的硬盘空间比较大，或者是想把系统和数据存放在不同的分区，想多几个分区也可以，具体操作可以加入 QQ 群与我交流。
+
+格式化并挂载分区
+格式化 ESP 分区为 FAT32：mkfs.fat -F 32 ${part1Path}，把${part1Path}替换为第一个分区的路径，示例：mkfs.fat -F 32 /dev/sda1
+
+注意：如果你在格式化 ESP 分区的时候提示：WARNING: Not enough clusters for a 32 bit FAT!，请尝试使用mkfs.fat -s 2 -F 32 ${part1Path}或mkfs.fat -s 1 -F 32 ${part1Path}命令来格式化 ESP 分区，否则 UEFI 固件可能会无法读取 ESP 分区。
+
+格式化系统分区为 ext4：mkfs.ext4 -m 5 ${part2Path}，把${part2Path}替换为第二个分区路径，示例：mkfs.ext4 -m 5 /dev/sda2
+
+PS：-m是指定保留块所占百分比，默认值为 5，用作保留快的空间不能被使用。你可以减小这个值增加分区的可用空间，或者增大这个值提升固态硬盘的性能。
+
+如果你使用的是固态硬盘，想要发挥出极限性能，可以在系统分区尝试 XFS 文件系统：mkfs.xfs ${part2Path}，不过它可能需要手动维护。参考：https://wiki.archlinux.org/index.php/XFS
+
+PS：XFS 分区的调整大小目前只支持扩容，不支持减少。
+
+挂载系统分区：mount ${part2Path} /mnt，把${part2Path}替换为第二个分区路径，示例：mount /dev/sda2 /mnt
+
+创建 ESP 分区挂载路径：mkdir /mnt/boot
+
+为 ESP 分区挂载路径设置正确的权限：chmod 700 /mnt/boot
+
+挂载 ESP 分区：mount -o umask=0077 ${part1Path} /mnt/boot，把${part1Path}替换为第一个分区路径，示例：mount -o umask=0077 /dev/sda1 /mnt/boot
+
+检查分区是否挂载成功：df，如果输出包含类似以下行，则代表挂载成功。
+
+/dev/sda2       20248140  45084  19151464   1% /mnt
+/dev/sda1         262128      1    262128   1% /mnt/efi
+设置镜像源（推荐）
+安装环境默认启用了所有的软件源镜像，为了让安装速度快一些，可以只使用中国的镜像，如果你不在中国可以省略这个操作。
+
+执行curl -L -o /etc/pacman.d/mirrorlist "https://www.archlinux.org/mirrorlist/?country=CN"下载中国镜像源文件
+
+执行nano /etc/pacman.d/mirrorlist使用 nano 文本编辑器编辑镜像源文件，删除前几行#Server = 前面的#，然后保存并退出。
+
+PS：某些镜像源同时提供 HTTP 和 HTTPS 协议，这些镜像只需要删除 HTTPS 行前面的#。
+
+PPS：由于这个文件是按照字母排序的，推荐安装完系统后选择一个速度较快的镜像源，并把它放在其他镜像源前面，阿里云、华为云、腾讯云这些云服务商也有 ArchLinux 的镜像，但是还没有加入到官方镜像列表，大家也可以手动添加他们的镜像源使用。
+
+安装系统
+设置本地化环境：export LANG=C
+
+安装所需软件包到系统分区：pacstrap /mnt base linux linux-firmware amd-ucode intel-ucode bash-completion nano networkmanager pacman-contrib sudo
+
+虚拟机用户不需要安装amd-ucode intel-ucode
+
+如果你使用了 XFS 文件系统，还需要安装xfsprogs
+
+静静的等待安装完成
+
+安装完成后执行genfstab -U /mnt >> /mnt/etc/fstab生成 fstab 文件
+
+最后执行arch-chroot /mnt进入新安装的系统环境
+
+系统初始化设置
+设置中国时区：ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
+
+同步硬件时钟：hwclock -w
+
+注意把下列命令的${hostname}替换为你的主机名，主机名建议使用小写字母组成，最多 64 个字符，你可以使用下面的输入框验证主机名是否正确。
+
+请输入主机名
+设置系统主机名：echo ${hostname} > /etc/hostname
+
+执行nano /etc/hosts编辑 Hosts 文件并添加以下行：
+
+127.0.0.1 localhost 
+127.0.0.1 ${hostname}
+::1 localhost ip6-localhost ip6-loopback
+::1 ${hostname}
+执行nano /etc/locale.gen编辑本地化配置文件，删除以下行前面的#，可以使用Page Up和Page Down健来快速翻页上下滚动。
+
+#en_US.UTF-8 UTF-8
+#zh_CN.UTF-8 UTF-8
+#zh_HK.UTF-8 UTF-8
+#zh_SG.UTF-8 UTF-8
+#zh_TW.UTF-8 UTF-8
+你如果需要其他本地化，也可以删除其他行前的#，不过行末尾一定要是 UTF-8。
+
+然后保存退出，执行locale-gen生成本地化环境。
+
+设置默认本地化环境：echo LANG=en_US.UTF-8 > /etc/locale.conf
+
+执行SUDO_EDITOR=nano visudo编辑 sudo 配置文件，删除# %wheel ALL=(ALL) ALL行前面的#以便让 wheel 用户组可以使用sudo命令获取 root 权限。
+
+PS：输入密码时不会有任何指示
+
+设置 root 用户密码（可选，如果不设置，默认锁定 root 用户）：passwd
+
+注意把下列命令的${username}替换为你的用户名，用户名建议使用小写字母组成（不能包含大写字母、不能以数字开头），最多 32 个字符，你可以使用下面的输入框验证用户名是否正确。
+
+请输入用户名
+创建一个具有管理员权限的普通用户：useradd -m -G wheel -s /bin/bash ${username}
+
+设置新用户密码：passwd ${username}
+
+安装引导管理程序（重要）：
+如果你不喜欢 GRUB，或者喜欢简单的的引导管理程序，可以尝试下 systemd-boot。
+
+安装 GRUB 软件包：pacman -S grub
+
+安装 GRUB 至 ESP 分区：grub-install --removable --target=x86_64-efi --efi-directory=/boot，出现Installation finished. No error reported.字样表示安装成功。
+
+生成 GRUB 配置文件：grub-mkconfig -o /boot/grub/grub.cfg
+
+退出 chroot 环境：exit
+
+执行umount -R /mnt卸载分区，如果没有显示错误，就可以重启系统了。
+
+执行reboot重启系统，如果没有意外，应该成功启动至安装好的系统并看到以下界面，login前面显示的是主机名。输入刚才创建的新用户名和密码登陆系统。
+
+成功启动
+
+PS：如果你安装了多个系统，可能重启后并不会进入 ArchLinux，解决方法请参考文章最后。
+
+进阶设置
+root 权限小贴士
+sudo 是用来临时获取 root 权限的命令，如果你执行的命令需要 root 权限，就在命令前面加上sudo，sudo 询问密码的时候请输入当前用户密码，而不是 root 密码。
+
+虽然su也可以用于获取 root 权限，但是它不安全，如果你在执行上面的步骤时，没有设置 root 用户密码，这个命令将会无法工作。
+
+你可以使用sudo -i临时进入 root 用户环境。
+
+root 权限虽好，但不能滥用，使用之前确保你执行的命令的确需要 root 权限才能正常工作，滥用 root 权限轻则会导致一些程序无法正常工作，重则会危及系统的安全。
+
+启用网络管理器（注意大小写）：sudo systemctl enable --now NetworkManager
+
+如果是无线网络，执行nmtui使用图形界面进行配置，选择「Activate a connection」连接无线网络。
+
+禁用网络管理器的连接等待（注意大小写），可以加快系统启动速度，禁用后不会有什么异常，除非系统启动时的服务需要网络：sudo systemctl disable NetworkManager-wait-online
+
+如果你还想继续使用 SSH 远程操作，执行sudo pacman -S openssh安装 SSH，然后执行sudo systemctl start sshd启动 SSH。
+
+启用 NTP 同步时间服务：sudo timedatectl set-ntp true
+
+每周自动清理不需要的 Pacman 软件包缓存：sudo systemctl enable paccache.timer
+
+如果你使用的硬盘支持 TRIM 特性（大多数固态硬盘都支持），建议启用定时执行 TRIM：sudo systemctl enable fstrim.timer
+
+执行sudo nano /etc/pacman.conf编辑 Pacman 配置文件，删除以下行前面的#以启用 32 位系统库支持。
+
+#[multilib] 
+#Include = /etc/pacman.d/mirrorlist
+保存后执行sudo pacman -Sy更新软件数据库
+
+添加 ArchLinuxCN 存储库（推荐）：
+Arch Linux 中文社区仓库是由 Arch Linux 中文社区驱动的非官方软件仓库，包含许多官方仓库未提供的额外的软件包，以及已有软件的 git 版本等变种。一部分软件包的打包脚本来源于 AUR，但也有许多包与 AUR 不一样。（关于 AUR 的介绍请见下面的章节）
+
+ArchLinuxCN 依靠镜像加速可以提供比 AUR 更好的体验，而且还省去了部分软件的编译。如果你的网络环境导致无法从 AUR 顺利安装某些软件包，推荐添加。
+
+执行sudo nano /etc/pacman.conf编辑 Pacman 配置文件，在底部添加以下行。
+
+[archlinuxcn]
+Server = https://mirrors.163.com/archlinux-cn/$arch
+保存后执行sudo pacman -Sy更新软件数据库
+
+上面的配置使用了网易的 ArchLinuxCN 镜像，你也可以选择其他镜像：https://github.com/archlinuxcn/mirrorlist-repo
+
+安装 CPU 调频守护程序（可选）：
+CPU 调频守护程序可以帮助我们更好的控制 CPU 的频率和功耗
+
+安装：sudo pacman -S cpupower
+
+启用：sudo systemctl enable cpupower
+
+PS：虚拟机不需要安装
+
+安装显卡驱动、Vulkan 和硬件加速支持：
+如果不知道自己该装那个，可以加入 QQ 群与我交流。
+
+小山只实际测试过 AMD 和 Intel 的显卡驱动安装，Nvidia 显卡驱动安装尚未测试。
+
+Vulkan 是跨平台图形接口，目前主要用途是在 Linux 下运行 Windows 游戏以及部分 Linux 游戏（详见：Linux 运行 Windows 游戏指南），但并不是所有显卡都支持它，你可以前往 http://vulkan.gpuinfo.org/listreports.php?platform=linux 查询你的显卡是否支持 Vulkan。
+
+AMD
+显卡驱动（GCN 1 及以上架构）：sudo pacman -S mesa lib32-mesa xf86-video-amdgpu libva-mesa-driver lib32-libva-mesa-driver mesa-vdpau lib32-mesa-vdpau opencl-mesa lib32-opencl-mesa ocl-icd
+
+显卡驱动（TeraScale 1 2 3 架构）：sudo pacman -S mesa lib32-mesa xf86-video-ati libva-mesa-driver lib32-libva-mesa-driver mesa-vdpau lib32-mesa-vdpau opencl-mesa lib32-opencl-mesa ocl-icd
+
+Vulkan：sudo pacman -S vulkan-icd-loader lib32-vulkan-icd-loader vulkan-radeon lib32-vulkan-radeon
+
+andvlk 是由 AMD 开源的 AMD GPU Vulkan 实现，这个实现比 Mesa 的 RADV 在某些场景下性能和兼容性要好一些，并且系统允许安装多个 Vulkan 实现并让软件自行选择，推荐游戏玩家安装。
+
+Intel
+显卡驱动：sudo pacman -S mesa lib32-mesa xf86-video-intel
+
+硬件视频加速：如果你的 Intel CPU 架构是 Broadwell (6代) 或以上的安装intel-media-driver，反之则安装libva-intel-driver lib32-libva-intel-driver。
+
+OpenCL：如果你的 Intel CPU 架构是 Broadwell (6代) 或以上的安装intel-compute-runtime ocl-icd，反之则安装beignet ocl-icd，也可以选择不安装。
+
+Vulkan：sudo pacman -S vulkan-icd-loader lib32-vulkan-icd-loader vulkan-intel lib32-vulkan-intel
+
+Nvidia
+GeForce 630 及以上型号：sudo pacman -S nvidia nvidia-settings xorg-server-devel lib32-nvidia-utils opencl-nvidia lib32-opencl-nvidia ocl-icd cuda
+
+GeForce 620 及以下型号（开源驱动）：sudo pacman -S mesa lib32-mesa xf86-video-nouveau libva-mesa-driver lib32-libva-mesa-driver mesa-vdpau lib32-mesa-vdpau
+
+由于 GT620 及以下型号不被 Nvidia 最新官方驱动支持，推荐使用开源驱动。
+
+PS：如果是双显卡的笔记本，运行软件时可以选择使用的显卡（默认是集成显卡）。参见：https://wiki.archlinux.org/index.php/PRIME
+
+PPS：虚拟机需要根据虚拟化软件不同而安装不同的显卡驱动
+
+如果你不需要桌面环境和图形界面，那么你的安装到这里就可以结束了，也可以看看下面的 AUR 介绍和推荐阅读。
+安装桌面环境、字体和实用工具：
+我选择了 KDE Plasma 桌面环境，Plasma 是功能全面而且对新手友好的桌面环境，而且有很高的可定制性，并且它在最近的更新中，性能提升了很多。
+
+安装：sudo pacman -S --noconfirm sddm plasma phonon-qt5-gstreamer noto-fonts noto-fonts-cjk noto-fonts-emoji kdialog konsole gtk2 gtk3 xdg-user-dirs xsettingsd packagekit-qt5 pulseaudio-alsa
+
+如果是笔记本用户，推荐安装fwupd以便通过 LVFS 接受来自厂商的固件更新。
+
+卸载 Plasma 附带的无用软件包：sudo pacman -Rns bluedevil kgamma5 plasma-browser-integration plasma-sdk plasma-thunderbolt plasma-vault plasma-workspace-wallpapers
+
+软件包介绍
+以下软件包根据自己的需求决定是否卸载
+
+bluedevil: 用于管理蓝牙的系统设置界面
+
+kgamma5: 用于调整显示器的伽玛设置
+
+plasma-browser-integration: 用于 Plasma 的浏览器集成，支持 Chrome 和 Firefox，推荐保留。
+
+plasma-sdk: 对 Plasma 开发者有用的应用程序
+
+plasma-thunderbolt: 用于管理 Thunderbolt（雷电）设备的设置界面
+
+plasma-vault: 用于创建加密的保险库（需要额外的可选依赖）
+
+plasma-workspace-wallpapers: Plasma 额外附带的壁纸
+
+安装蓝牙支持（可选）：
+安装：sudo pacman -S bluedevil bluez bluez-utils pulseaudio-bluetooth
+
+启用：sudo systemctl enable bluetooth
+
+设置交换空间（可选）
+交换空间（Swap）是硬盘上的一块区域，通俗的讲就是虚拟内存，跟 Windows 下的虚拟内存（分页文件）是一样的，当内存不够用的时候内核会把部分内存数据转移到交换空间，从而使需要更多内存的程序可以运行。
+
+交换空间是可选的，如果你运行的程序需要 12G 的内存，而你只有 8G 的内存，那么你可以创建 4G 的交换空间使程序正常运行，如果你的物理内存足够程序使用，可以不需要交换空间。
+
+由于交换空间是使用硬盘作为存储介质，所以它无法达到像物理内存的速度，特别是在机械硬盘上，硬盘速度太慢，会使交换空间弊大于利。
+
+可能有些人会告诉你虚拟内存的大小需要是物理内存的两倍，无论是 Windows 还是 Linux，这种说法是完全错误的，虚拟内存的大小完全根据需求来确定（Windows 可以自动管理虚拟内存大小）。
+
+我的建议：如果你拥有 12G 或更多的物理内存，可以先不着急创建交换空间，等物理内存不够用的时候，再创建交换空间也不迟。
+
+你或许也可以尝试一下 Zswap 和 ZRAM，两者皆在提供在内存中提供压缩的交换空间，从而使物理内存可以容纳更多的数据，减少硬盘上的交换空间的 I/O 操作，有效延长固态硬盘寿命，代价是使用更多的 CPU。
+
+注意：当你启用了交换空间，Plasma 的电源菜单会出现「休眠」选项，但是它并不会工作，因为休眠需要配置内核参数以及 initramfs hook。参见：https://wiki.archlinux.org/index.php/Power_management/Suspend_and_hibernate#Hibernation
+
+交换分区 VS 交换文件：
+交换空间用硬盘上的一块区域作为虚拟内存，这块区域既可以是一个文件，也可以是一个完整的分区。
+
+以前的 Linux 安装会建议为交换空间创建一个单独的分区，以确保交换空间的最佳性能。这种说法是因为在机械硬盘上，硬盘扇区的开头速度会更快，完整的分区还可以避免碎片等问题。但是缺点也很明显，一旦建立分区，调整大小会非常麻烦，自由度较低。
+
+现在的电脑大多数都使用固态硬盘，没有了机械硬盘的一些限制，所以更推荐使用交换文件，这样可以使交换空间更加灵活。
+
+推荐使用 systemd-swap 来启用交换空间、Zswap 或 ZRAM，它可以根据当前内存和交换空间的使用情况自动创建新的交换空间，同时也可以比较方便的管理 Zswap 和 ZRAM，不过由他创建的交换文件并不能用于系统休眠，如果你有系统休眠需求，建议手动创建。
+
+安装：sudo pacman -S systemd-swap
+
+启用：sudo systemctl enable systemd-swap
+
+默认它只会启用 Zswap，并不会自动创建交换空间。要想让它自动管理交换空间，只需要编辑配置文件/etc/systemd/swap.conf，将swapfc_enabled=0改为swapfc_enabled=1，或者你也可以启用 ZRAM，重新启动systemd-swap使其生效。
+
+优化交换空间：
+执行sudo nano /etc/sysctl.d/99-swap-optimization.conf创建并编辑交换空间优化策略文件
+
+文件内容：
+
+vm.swappiness = 5
+vm.vfs_cache_pressure = 50
+执行sudo systemctl enable sddm启用显示管理器（用于管理桌面环境）
+
+更改 SDDM（显示管理器）本地化环境（可选）：
+如果需要让 SDDM 的本地化环境为非英文，可以执行以下更改。
+
+PS：本地化环境影响的不止是语言，还有时间格式等。
+
+执行sudo SYSTEMD_EDITOR=nano systemctl edit sddm编辑 SDDM 服务单元配置，文件内容：
+
+[Service]
+Environment=LANG=zh_CN.UTF-8
+如果是繁体中文用户，可以把zh_CN.UTF-8改为zh_TW.UTF-8，或者更改为你需要的本地化环境。
+
+执行reboot重启系统，重启后应该会看到如下图所示的界面，输入密码登陆桌面环境。
+
+如果没有看到如下图所示的界面，可能是显卡驱动未安装成功。
+
+SDDM
+
+Plasma 桌面环境配置
+点击屏幕左下角的按钮打开应用启动器，点击「System Settings」打开系统设置。
+
+点击「Regional Setting」，点击系统设置界面右下角的「Add languages...」添加简体中文和繁体中文，并把英文排到最后，简繁排第一和第二，然后点击右下角的「Apply」。点击左侧的「Formats」，选择「Regional」为「中国 - 简体中文 (zh_CN)」，或者选择你所在的区域，然后点击右下角的「Apply」。
+
+PS：简繁的优先级顺序取决于个人，因为有些程序可能没有简体或繁体翻译，简繁同时存在可以在没有其中一种翻译的情况下使用另一种翻译，如果两个都没有再使用英文。
+
+按下Ctrl + Alt + Delete，选择「Log Out」注销会话并重新登录使其生效。
+
+在应用启动器里找到「Konsole」，这个是终端仿真器，以后就用它执行命令，也可以通过快捷键Ctrl + Alt + T打开。
+
+字体配置优化：fd=$HOME/.config/fontconfig/conf.d && mkdir -p $fd && curl -o $fd/70-noto-fonts.conf https://cdn.mivm.cn/www.mivm.cn/archives/archlinux-installation-guide-simple/noto-fonts.conf，这个字体预设来自 openSUSE，可以自动根据语言选择对应的 Noto Fonts CJK 字体。
+
+安装输入法、浏览器和其他实用工具
+安装：sudo pacman -S --noconfirm fcitx-im fcitx-libpinyin kcm-fcitx firefox firefox-i18n-zh-cn firefox-i18n-zh-tw dolphin ark kwrite gwenview
+
+软件包介绍
+fcitx-im: Fcitx 输入法框架（或许你喜欢 IBus？
+
+fcitx-libpinyin = 基于 libpinyin 的拼音/双拼输入法，kcm-fcitx = 集成 Fcitx 输入法设置到 Plasma 的系统设置界面，这两个软件包可以根据自己的偏好进行选择，如果你不使用拼音的话，Fcitx 也内置了很多输入法可供选择。
+
+更多基于 Fcitx 的中文输入法参考：https://wiki.archlinux.org/index.php/Fcitx#Chinese
+
+firefox firefox-i18n-zh-cn firefox-i18n-zh-tw: FireFox 浏览器和简繁中文语言包，如果你更喜欢使用 Chromium / Chrome，可以安装chromium软件包。
+
+PS：Chromium 是开源版的 Google Chrome，它们的区别：https://en.wikipedia.org/wiki/Chromium_(web_browser)#Differences_from_Google_Chrome。Google Chrome 需要使用 AUR 安装，参见下方关于 AUR 的介绍。
+
+dolphin = 文件管理器，ark = 压缩工具，kwrite = 文本编辑器，gwenview = 图片浏览器，这些软件包都属于 KDE 家族，可以根据自己的需要进行安装，或者用别的软件包替代。
+
+更多 KDE 家族应用：https://kde.org/applications/
+
+执行nano ~/.pam_environment配置输入法环境变量，添加以下行：
+
+GTK_IM_MODULE=fcitx
+QT_IM_MODULE=fcitx
+XMODIFIERS=@im=fcitx
+PS：输入法需要重启系统或重新登录才会生效
+
+输入法默认激活快捷键：Ctrl + 空格
+
+输入法的设置可以在 「系统设置」→「区域设置」→「输入法」界面修改（前提是安装了 kcm-fcitx），默认启用了很多个输入法，推荐只保留一个。
+
+Plasma 设置优化
+打开「系统设置」
+
+字体：除了等宽字体，其余字体修改为 [Sans Serif]（无衬线）。如果你觉得字体看起来不正常（对比下图），可以加入 QQ 群与我交流。
+
+工作空间行为：「点击行为」修改为 [双击打开文件和文件夹]。这个看个人习惯，习惯 Windows 的推荐修改。
+
+开机和关机： SDDM 的主题更改为「微风」
+
+如果你不确定其他设置选项更改后是否会产生副作用，可以加入 QQ 群与小山交流。
+
+重启系统开启 Linux 之旅
+
+PS：Discover 可以用于安装/更新/卸载系统软件包和 Plasma 插件/主题，还有来自 LVFS 的电脑厂商提供的固件更新。
+
+KDE on ArchLinux
+
+安装 AUR 软件包管理器（可选）
+什么是 AUR？
+
+AUR 是 Arch 用户软件仓库（Arch User Repository），AUR 软件包由来自社区的用户进行维护，他们上传编写好的软件包构建脚本，其他用户可以使用这些构建脚本自动生成软件包并安装。
+
+AUR 介绍：https://wiki.archlinux.org/index.php/Arch_User_Repository
+
+PS：AUR 的软件包大多数都没有经过测试，使用风险需要自己承担。
+
+AUR 软件包的安装和更新需要手动操作，并不能像使用 pacman 那样一键安装和更新，不过一些优秀的 AUR 包管理工具可以让你像使用 pacman 那样安装 AUR 包。
+
+我推荐使用 yay 作为 AUR 包管理工具，因为它的使用方法和 pacman 一致，可以大幅度降低学习成本。
+
+不过还是推荐大家学习如何手动安装 AUR 软件包，以备不时之需，下面安装 yay 的操作就是安装大多数 AUR 软件包的步骤。
+
+如果你是第一次安装 AUR 软件包，需要安装 AUR 所需依赖：sudo pacman -S --noconfirm --needed base-devel git
+
+安装 yay 步骤：
+
+克隆 yay 的 AUR 存储库：git clone https://aur.archlinux.org/yay.git
+
+转到 yay 存储库目录：cd yay
+
+构建软件包并安装：makepkg -irs
+
+清理工作：cd .. && rm -rf yay
+
+现在可以使用 yay 来管理系统软件包和 AUR 软件包了，如果官方软件仓库不存在对应的包，它会自动从 AUR 仓库中搜索。
+
+比如安装 Google Chrome：yay -S google-chrome
+
+yay 更多用法参考：https://github.com/Jguer/yay/blob/next/README.md
+
+注意：不能使用 root 权限执行yay或其他和 AUR 相关的命令，这些命令会在需要 root 权限时自动请求。
+
+AUR 软件包仓库：https://aur.archlinux.org/
+
+关于多系统启动
+如果你的多个系统分别安装在不同的硬盘，那么只需要在电脑启动的时候引导不同的硬盘就可以了。
+
+也可以加入 QQ 群向小山询问如何用命令重启到指定系统
+
+建议阅读
+建议大家阅读下以下 Wiki 以方便更好的使用和管理 ArchLinux：
+
+应用程序列表：https://wiki.archlinux.org/index.php/List_of_applications，你可以在这里按照用途找到大部分软件。
+
+系统维护：https://wiki.archlinux.org/index.php/System_maintenance
+
+systemctl 基本用法：https://wiki.archlinux.org/index.php/Systemd#Basic_systemctl_usage
+
+pacman 软件包管理器：https://wiki.archlinux.org/index.php/Pacman，安装/卸载/更新软件全靠它。
+
+AUR 存储库：https://wiki.archlinux.org/index.php/Arch_User_Repository
+
+蓝牙：https://wiki.archlinux.org/index.php/Bluetooth
+
+Synaptics 触摸板：https://wiki.archlinux.org/index.php/Touchpad_Synaptics，建议 Synaptics 触摸板的笔记本用户阅读。
+
+Bash：https://wiki.archlinux.org/index.php/Bash，你输入的命令实际上是先传递到 Shell，由 Shell 传递给系统执行，而 Bash 是 Shell 的一种，也是系统安装后的默认 Shell，重点是命令自动补全和技巧。
+
+腾讯 QQ：https://wiki.archlinux.org/index.php/Tencent_QQ，你可以加入 QQ 群向小山询问如何自己折腾安装 QQ。
+
+中国大陆用户的推荐解决方案：https://wiki.archlinux.org/index.php/General_recommendations#中国大陆用户的推荐解决方案
+
+建议阅读 Wiki 时选择英文，看不懂的可以使用浏览器翻译一下。
+
+如果需要中文版本的 Wiki，建议在阅读之前看下页面上提示的最后翻译更新时间，如果时间超过 1 年或者半年，那么翻译可能已经过时，有些操作可能不适用于当前版本。
+
+
+如果你有能力，可以把对你有帮助的 Wiki 翻译成中文，以帮助更多的用户。

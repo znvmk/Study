@@ -1,0 +1,39 @@
+一、定义模型
+1.定义一个和数据库表相匹配的模型：
+class User extends Model
+2.模型会自动对应数据表，并且有一套自己的命规则
+3.模型类需要除去表前缀，采用驼份峰式命名，并且首字母大写
+tp_user(表名)=>User
+tp_user_type(表名)=>UserType 
+4.创建空模型后，我们可以在控制器调用，创建控制器DataModel.php;
+5.可以直接使用模型名称User::*调用查询方法，eg:select()等
+6.如果没有代码提示，把5.1的注释复制过来
+class DataModel 
+{
+    public function index()
+    {
+        return uson(User::select());
+    }
+}
+7.如果担心设置模型的名称类名何PHP类名的关键字冲突，可以开启应用类后缀：
+比如设置：Class UserModel,需更改文件名为：UserModel.php。然后设置一下$name属性为制定user(表名)：
+class UserMode extends Model 
+{
+    protected $name = 'user';
+}
+
+二、设置模型
+1.默认主键为id,你可以设置其他主键，比如uid;
+protected $pk = 'uid';
+2.从控制器端调用模型操作，如果和控制器雷鸣重复，可以设置别名：
+user app\model\User as UserModel;
+3.在模型定义中，可以设置其他的数据表：
+protected $table ='tp_one';
+4.模型和控制器一样，也有初始化，在这里必设置static静态方法：
+//模型初始化
+protected static function init()
+{
+    //第一次实例化的时候执行init
+    echo '初始化User模型';
+}
+

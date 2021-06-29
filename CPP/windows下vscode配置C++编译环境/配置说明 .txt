@@ -1,0 +1,69 @@
+1.下载安装MinGWx64,配置好环境MinGWx64/bin
+2.vscode安装插件ms-vscode.cpptools，Microsoft开发
+3.设置vscode，settings:c standard，C++标准设置为c++20，c标准设置为c17
+4.编写好.cpp文件，按F5运行， 弹出命令框内选择MingGW,g++调试。执行，生成.vscode目录，目录下有：launch.json，和task.json.
+5.设置具体参数，运行。调试。
+
+launch.json：
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "g++.exe - 生成和调试活动文件",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${fileDirname}\\${fileBasenameNoExtension}.exe",
+            "args": [],
+            "stopAtEntry": false,
+            "cwd": "D:\\ls\\MinGW-w64\\i686-8.1.0-posix-dwarf-rt_v6-rev0\\mingw32\\bin",
+            "environment": [],
+            //"console": "externalTerminal",
+            //"externalConsole": true,
+            "internalConsoleOptions": "neverOpen",
+            "MIMode": "gdb",
+            "miDebuggerPath": "D:\\ls\\MinGW-w64\\i686-8.1.0-posix-dwarf-rt_v6-rev0\\mingw32\\bin\\gdb.exe",
+            "setupCommands": [
+                {
+                    "description": "为 gdb 启用整齐打印",
+                    "text": "-enable-pretty-printing",
+                    "ignoreFailures": true
+                }
+            ],
+            "preLaunchTask": "C/C++: g++.exe 生成活动文件"
+        }
+    ]
+}
+
+task.json:
+
+{
+    "tasks": [
+        {
+            "type": "cppbuild",
+            "label": "C/C++: g++.exe 生成活动文件",
+            "command": "D:\\ls\\MinGW-w64\\i686-8.1.0-posix-dwarf-rt_v6-rev0\\mingw32\\bin\\g++.exe",
+            "args": [
+                "-g",
+                "${file}",
+                "-o",
+                "${fileDirname}\\${fileBasenameNoExtension}.exe",
+                "-std=c++2a"//注：设置调试的C++标准为，c++20。注意这里是“2a”
+            ],
+            "options": {
+                "cwd": "D:\\ls\\MinGW-w64\\i686-8.1.0-posix-dwarf-rt_v6-rev0\\mingw32\\bin"
+            },
+            "problemMatcher": [
+                "$gcc"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "detail": "调试器生成的任务。"
+        }
+    ],
+    "version": "2.0.0"
+}

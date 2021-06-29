@@ -1,0 +1,10 @@
+set logging on gdb.log
+
+
+b square if i == 5
+commands
+  bt full
+  i locals
+  p total
+  print "Hit break when i == 5"
+end

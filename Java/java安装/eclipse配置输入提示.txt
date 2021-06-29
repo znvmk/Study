@@ -1,0 +1,5 @@
+1.找到window---Preferences:
+
+2.在搜索里面输入assist,找到java\Editor\Content Assist（意思就是java的内容助手），
+在右边可以看到Auto activation triggers for Java里面的值默认只有一个"."，明白了吧，为什么你输入"."之后会在这里给你提示呢，就是因为这里配置了，
+你只需要在“.”的后边加上"abcdefghijklmnopqrstuvwxyz@"，记得输入完之后点击apply和ok按钮，那么你输入代码的时候，每逢输入到“abcdefghijklmnopqrstuvwxyz@”的时候，eclipse都会给你自动提示。

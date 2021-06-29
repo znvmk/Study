@@ -29,11 +29,14 @@ ls   查看booststrap.sh等文件是否存在
 4.编译安装
 （1）./bootstrap.sh --help
 查看是否可以执行和了解命令
-（2）sudo ./bootstrap.sh
+（2）运行bootstrap.sh脚本并设置相关参数：
+sudo ./bootstrap.sh --with-libraries=all --with-toolset=gcc
 生成了b2等文件，用来编译boost库
-（3）sudo ./b2 install
-编译，注意一定要要用root权限：sudo，否在创建文件夹和文件会失败
+（3）编译，注意一定要要用root权限：sudo，否在创建文件夹和文件会失败
+sudo ./b2 toolset=gcc 
 编译会进行30分钟到1个点
+（4）安装
+sudo ./b2 install
 
 5.检查是否成功
 boost默认安装在/usr/local的lib, include中
@@ -83,3 +86,15 @@ GNU C++ version 5.4.0 20160609
 GNU libstdc++ version 20160609
 
 
+
+
+
+
+查看本机现boost版本
+dpkg -S /usr/include/boost/version.hpp
+卸载
+删除/usr/local/include/boost文件夹，删除/usr/local/lib中和boost有关的文件
+
+sudo rm -rf /usr/local/include/boost
+sudo rm -rf /usr/local/lib/libboost*
+到此boost 1.58.0就已经成功被卸载了

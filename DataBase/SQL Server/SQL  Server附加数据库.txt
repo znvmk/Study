@@ -1,0 +1,47 @@
+1.Micrososft SQL SQL Server Management studio 18.0
+2.找到要附加的数据库Eg:test.mdf，右键属性->安全->组或用户名->编辑->选择Administrator(xxPC\Administrator)：将下面的权限全部勾选
+如果有test.mdf相匹配的日志文件test_log.LDF,同样，将权限修改，并且还要修改当前用户权限为完全控制。如果有只读选项也去掉。
+3.连接数据服务，展开点击“数据库”,右键->附加，选择要附加的数据库，点击添加，选择刚刚修改过用户权限的数据库test.mdf，添加。
+会自动把test_log.LDF文件也加载进来。点击确定。导入完成
+
+如果只有.mdf文件，没有.ldf文件，怎么恢复数据
+无ldf文件附加mdf文件的做法
+**以sa账户登录，
+建立一个一样名称的数据库，如Test；
+停止MSSQL服务，把备份的mdf文件替换为新建数据库对应的mdf文件；
+启动MSSQL服务，注意，不能把新建的同名数据库的ldf文件删除！
+到此，按顺序执行以下脚本：
+--Step.01
+ALTER DATABASE [Test] SET EMERGENCY
+GO
+
+--Step.02
+DBCC CHECKDB ([Test])
+GO
+
+--Step.03
+ALTER DATABASE [Test] SET SINGLE_USER WITH ROLLBACK IMMEDIATE
+GO
+
+--Step.04
+DBCC CHECKDB([Test],REPAIR_ALLOW_DATA_LOSS)
+GO
+
+--Step.05
+ALTER DATABASE [Test] SET MULTI_USER
+GO
+
+此时打开Test.db会出错，并且sa账户重新登录会出错
+退出sa账户，以windowsr身份验证登录，查看Test.db数据库里面的数据是否恢复。然后再切换至sa账户，查看Test.db文件 。
+OK,至此，数据库还原成功，Select * From Table_A 看看吧，切记，后续不管是备份还是什么，ldf文件最好还是别删了，如果觉得日志太大，则可参考我另一个文章SQL2012清除日志
+
+如果还是不行，运行下面脚本
+ALTER DATABASE [Test] SET EMERGENCY
+
+DBCC checkdb([Test])
+
+ALTER DATABASE [Test] SET SINGLE_USER WITH ROLLBACK IMMEDIATE
+
+DBCC CheckDB ([Test], REPAIR_ALLOW_DATA_LOSS)
+
+ALTER DATABASE [Test] SET MULTI_USER

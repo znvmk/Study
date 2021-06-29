@@ -1,0 +1,22 @@
+ VIM: 解决Delete(backspace)按键失效问题
+
+继上一篇 编译vim添加python支持 之后，发现backspace失效了，查找资料发现，是因为backspace变量为空，
+
+打开vim，输入
+
+：set backspace
+
+如果出现的是
+
+backspace=
+
+那么就是backspace为空导致的了，  解决方法很简单，在.vimrc中加入
+
+set backspace=2
+
+附上网上的说法，这里的选项有3个
+
+0 same as “:set backspace=” (Vi compatible)
+1 same as “:set backspace=indent,eol”
+2 same as “:set backspace=indent,eol,start”
+

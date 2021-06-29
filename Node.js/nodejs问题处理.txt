@@ -29,3 +29,29 @@ prefix=C:\Program Files\nodejs\node_global
 cache=C:\Program Files\nodejs\node_cache
 
 重新打开命令行，运行npm命令，不出现错误，问题解决。
+
+
+
+
+
+
+报错：无法加载文件 D:\nodejs\node_global\webpack.ps1，因为在此系统上禁止运行脚本...
+
+自～渡 2019-10-05 20:39:47  12771  收藏 23
+分类专栏： webpack 文章标签： webpack
+版权
+在 Vs Code 终端输入 vue init webpack app， 创建一个名为 app 的 Vue 项目时报错如下：
+无法加载文件 D:\nodejs\node_global\webpack.ps1，因为在此系统上禁止运行脚本，有关详细信息，请参阅 https:/go.microsoft.com/fwlink/?LinkID=135170
+
+解决报错：
+（1）以管理员身份运行vs code
+
+（2）在终端执行：get-ExecutionPolicy，显示Restricted（表示状态是禁止的）
+
+（3）在终端执行：set-ExecutionPolicy RemoteSigned
+选择A：全是
+
+（4）在终端执行：get-ExecutionPolicy，显示RemoteSigned
+
+此时再使用“vue init webpack 项目名称”创建项目，不会报错
+如下：

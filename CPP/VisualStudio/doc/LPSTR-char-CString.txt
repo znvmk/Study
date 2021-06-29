@@ -1,0 +1,245 @@
+LPSTR 与char* ，string之间的类型转换
+
+LPSTR - (long) pointer to string - char *
+
+LPCSTR - (long) pointer to constant string - const char *
+
+LPWSTR - (long) pointer to Unicode (wide) string - wchar_t *
+
+LPCWSTR - (long) pointer to constant Unicode (wide) string - const wchar_t *
+
+LPTSTR - (long) pointer to TCHAR (Unicode if UNICODE is defined, ANSI if not) string - TCHAR *
+
+LPCTSTR - (long) pointer to constant TCHAR string - const TCHAR *
+
+
+1. TCHAR转string
+std::string TCHAR2STRING(TCHAR *STR){
+    int iLen = WideCharToMultiByte(CP_ACP, 0, STR, -1, NULL, 0, NULL, NULL);
+    char* chRtn = new char[iLen * sizeof(char)];
+    WideCharToMultiByte(CP_ACP, 0, STR, -1, chRtn, iLen, NULL, NULL);
+    std::string str(chRtn);
+    return str;
+}
+
+2. char*转LPCTSTR
+char ch[1024] = "wo shi xiaoyu";
+int num = MultiByteToWideChar(0,0,ch,-1,NULL,0);
+wchar_t *wide = new wchar_t[num];
+MultiByteToWideChar(0,0,ch,-1,wide,num);
+
+3. LPCTSTR转char *
+wchar_t widestr[1024] = L"wo shi fish";
+int num = WideCharToMultiByte(CP_OEMCP,NULL,widestr,-1,NULL,0,NULL,FALSE);
+char *pchar = new char[num];
+WideCharToMultiByte (CP_OEMCP,NULL,widestr,-1,pchar,num,NULL,FALSE);
+
+4. LPCTSTR转string
+（1）方法1（适用于没有定义UNICODE）
+配置属性 -> C/C++ -> 预处理器 -> 预处理器定义
+看看有没有 UNICODE/_UNICODE 有的话就去掉。
+
+std::string texts;
+
+LPCTSTR lpTexts = _T("ABC");
+
+texts = (LPSTR)lpTexts;
+
+（2）适用于定义了UNICODE的工程
+    LPCTSTR lpszName = TEXT("Michael");
+
+#ifdef UNICODE
+
+    wstring strName(lpszName);
+
+#else
+
+    string strName(lpszName);
+
+#endif // UNICODE
+
+5. string转LPCWSTR 
+std::wstring s2ws(const std::string& s)
+{
+ int len;
+ int slength = (int)s.length() + 1;
+ len = MultiByteToWideChar(CP_ACP, 0, s.c_str(), slength, 0, 0); 
+ wchar_t* buf = new wchar_t[len];
+ MultiByteToWideChar(CP_ACP, 0, s.c_str(), slength, buf, len);
+ std::wstring r(buf);
+ delete[] buf;
+ return r;
+}
+
+std::string s;
+
+#ifdef UNICODE
+std::wstring stemp = s2ws(s); // Temporary buffer is required
+LPCWSTR result = stemp.c_str();
+#else
+LPCWSTR result = s.c_str();
+#endif
+
+LPCTSTR
+
+6. CString转string
+（1）
+CString str = _T("CSDN");
+
+USES_CONVERSION;
+
+std::string s(W2A(str));
+
+（2）
+CString str = _T("CSDN");
+
+std::string s = (CT2A)str;
+
+7. string转CString
+CString str;
+
+std::string s=“CSDN“;
+
+str=s.c_str();
+
+8. CString转const char*
+（1）（CString转char*转const char*）
+CString str=_T("CSDN");
+
+const char* cstr;
+
+char temp[100];
+
+::wsprintfA(temp, "%ls",(LPCTSTR)str);
+
+cstr = temp;     
+
+（2）(CString转string转const char*)
+CString str = _T("CSDN");
+
+USES_CONVERSION;
+
+std::string s(W2A(str));
+
+const char* cstr = s.c_str();
+
+9. const char*转CString
+const char* cstr = "CSDN";
+
+CString str(cstr);
+
+
+
+
+
+cstring、string、lpwstr、lpstr、char*之间相互转换
+
+/* cstring转string */
+CString cs(_T("cs"));  
+string s;  
+s = (LPCSTR)(CStringA)(cs);  
+
+/* CString转LPCWSTR、LPWSTR、LPCSTR、LPSTR */
+//VS2005中CString已经改为宽字符型
+LPWSTR  lpstr = (LPWSTR)(LPCWSTR)str;
+LPCSTR lpcstr = (LPCSTR)(LPCWSTR)str;
+LPSTR lpcstr = (LPSTR)(LPCWSTR)str;
+
+/* CString转char* 、TCHAR* */
+ char* p = (char*)str.GetBuffer(); //方法1
+ char* p = (LPSTR)(LPCTSTR)str;    //方法2
+ TCHAR* pw = str.GetBuffer();
+
+/* string转cstring */
+//方法1
+string s ="Hello World!中国";  
+CString cs(s.c_str());  
+//方法2，用c_str()确实比data()要好.
+CString.format(”%s”, string.c_str());
+
+/* string转lpcstr */
+std::string a="abc";
+LPCSTR str = a.c_str();
+
+/* string转LPWSTR */
+wstring widstr;   
+std:string s("DanTeng");  
+widstr = std::wstring(s.begin(), s.end());  
+lvItem.pszText=(LPWSTR)widstr.c_str();
+
+ /* string转int、float */
+ //可以使用atoi,atof,atol等函数来完成。
+
+/* LPCWSTR转CString */
+LPCWSTR lpcwStr = L"TestWStr"; 
+CString str(lpcwStr);
+
+/* LPWSTR转LPWSTR  */
+LPWSTR lpwstr = (LPCSTR)lpstr;
+lpwstr = (LPWSTR)lpcstr;
+
+/* LPCSTR转换CString */ 
+LPCSTR lpcStr = (LPCSTR)str;
+/* LPWSTR转LPWSTR  */
+LPWSTR lpwstr = (LPCSTR)lpstr;
+
+/* LPSTR转CString */ 
+LPSTR lpStr = L"TestStr"; 
+CString str(lpStr);
+
+/* LPSTR转LPCSTR、LPWSTR 、LPCWSTR  */ 
+ LPCSTR  lpcstr = lpstr;
+ LPWSTR lpwstr = (LPWSTR)lpstr;
+ LPCWSTR lpcwstr = (LPCWSTR)lpstr;
+
+/* char*转CString */ 
+//方法1
+char* p = "test";
+CString str = ("%s",p);
+//方法2
+CString.format(”%s”, char*);
+
+/* char*转string*/ 
+string s(char *);  //只能初始化，在不是初始化的地方最好还是用assign().
+
+/* char*转LPSTR、LPCSTR */ 
+ char *p;
+ LPSTR lpstr = p;
+ LPCSTR lpcstr = p;
+
+/* char*转WCHAR  */ 
+wchar_t  ws[100];
+swprintf(ws, 100, L"%hs", "ansi string");
+
+/* TCHAR*转char*  */
+p = (char*)sex;
+
+/* WCHAR*转TCHAR*  */
+pw = (WCHAR*)name;
+
+/* WCHAR*转char*  */
+char output[256];
+WCHAR* wc = L"Hellow World" ;
+sprintf(output, "%ws", wc );
+
+
+
+CString转char*,char转CString
+CString tes = _T("asdfasdfas");
+	char* pmsg;
+	pmsg = (LPSTR)(LPCTSTR)tes;
+	tes.Format(_T("%s"), pmsg);
+	CString temp;
+	for (int i = 0; i < tes.GetLength(); i++)
+	{
+		msg.msg[i] = tes[i];
+	}
+	temp.Format(_T("%d"), strlen(msg.msg));
+	temp.Empty();
+	int len = tes.GetLength();
+	tes.Empty();
+	for (int i = 0; i < len; i++)
+	{
+		temp = msg.msg[i];
+		tes += temp;
+	}
