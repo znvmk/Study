@@ -1,0 +1,5 @@
+linux 光盘挂载在哪个文件下面的? 
+ 首先，你把光盘放入光驱里。
+  然后打这条命令 mkdir /mnt/cdrom 
+  然后打 mount /dev/cdrom /mnt/cdrom 
+  这样，你的光盘已经挂在到 mnt目录下的cdrom文件夹里

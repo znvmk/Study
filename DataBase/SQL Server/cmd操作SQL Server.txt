@@ -33,13 +33,24 @@ PS C:\Users\SJRJY> osql -S DESKTOP-L6H201M\SQLEXPRESS -U sa -P 123456
 
 
 
-使用SQL查询所有数据库名和表名
+使用SQL查询所有数据库名
+SELECT Name FROM Master..SysDatabases ORDER BY Name
+查询数据库下所有表名
+select * from sysobject where xtype='U'
+xtype='U':表示所有用户表，='S':表示所有系统表
+
 https://blog.csdn.net/qq_33342287/article/details/78692624
 
 SqlServer 获取表结构
 https://blog.csdn.net/CCCstudyer/article/details/53534925
-2016年12月09日 09:34:17
-阅读数：2385
+获取字段名
+select name from syscolumns where id=object_id('usera')
+
+select syscolumns.name,systypes.name from syscolumns,systypes 
+where syscolumns.xtype=systypes.xtype and syscolumns.id 
+in (select id from sysobjects where xtype='U' and name='usera')
+
+
 http://www.cnblogs.com/eflylab/archive/2008/06/23/1227838.html
 获取SqlServer2005表结构(字段，主键，外键，递增，描述)
 1.获取表的基本字段属性
@@ -51,7 +62,6 @@ WHERE syscolumns.xusertype = systypes.xusertype
 AND syscolumns.id = object_id('你的表名')
 
 2.如果还想要获取字段的描述信息则
-复制代码
 --获取SqlServer中表结构 主键，及描述
 declare @table_name as varchar(max)
 set @table_name = '你的表名' 
@@ -64,12 +74,13 @@ select sys.columns.name, sys.types.name, sys.columns.max_length, sys.columns.is_
 --单独查询表递增字段
 select [name] from syscolumns where 
 id=object_id(N'你的表名') and COLUMNPROPERTY(id,name,'IsIdentity')=1
-运行效果
 
 4.获取表的主外键
 --获取表主外键约束
 exec sp_helpconstraint   '你的表名' ;
 
+
+创建表：
 [SQL Server]创建表-自动增长字段且为主键
 Create Table DS_TCategory                               -- 问题分类信息表
 (
@@ -82,3 +93,6 @@ Create Table DS_TCategory                               -- 问题分类信息表
 
 SQL Server自动递增设置
 将列设置为主键，表设计器中，将该列设置为：标识列
+
+
+

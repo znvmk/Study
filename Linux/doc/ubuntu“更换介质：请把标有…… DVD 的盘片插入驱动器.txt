@@ -1,0 +1,15 @@
+ubuntu“更换介质：请把标有…… DVD 的盘片插入驱动器
+
+在安装的时候出现类似
+“更换介质：请把标有…… DVD 的盘片插入驱动器“/media/cdrom/”再按回车键“ 解决方法
+修改/etc/apt/sources.list文件
+
+cd ~
+vim /etc/apt/sources.list
+
+    
+
+注释掉deb cdrom:开头的一行（第一行）
+更新一下
+
+apt-get update

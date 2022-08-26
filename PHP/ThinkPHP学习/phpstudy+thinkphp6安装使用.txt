@@ -1,0 +1,25 @@
+小皮面板：https://www.xp.cn/    PHPStudy8.1
+安装phpstudy，在配置中修改网站和MySQL得冲突端口，选择所需的网站解释器和数据库，正常启动即可
+选择安装组件，MySQL最新版8.x.x以后版本，Apache或Nginx最新版本，PHPmyadmin数据库管理工具等
+1.同Wamps，进入到phpstudy目录下，进入www文件夹
+创建thinkphp6框架
+APMS\phpstudy_pro\WWW>composer create-project topthink/think tp6
+2.创建站点
+网站->创建网站：
+网站域名：thinkphp6
+http,端口：81
+网站根目录：APMS\phpstudy_pro\WWW>tp6>
+管理->网站首页设置：
+index.html index.php public\index.php
+3.运行php
+执行命令：APMS\phpstudy_pro\WWW>tp6> php think run
+ThinkPHP Development server is started On <http://0.0.0.0:8000/>
+You can exit with `CTRL-C`
+Document root is: APMS\phpstudy_pro\WWW\tp6\public
+[Wed Nov  3 23:48:39 2021] 127.0.0.1:56269 [200]: /
+[Wed Nov  3 23:48:41 2021] 127.0.0.1:56273 [200]: /
+
+
+网页打开提示的地址：http://127.0.0.1:8000/，即可看到运行效果
+或者打开网址：http://localhost:81，点击public也可以打开
+如果phpstudy的80，或者8080端口冲突，修改网站->当前网站->http,端口：80，端口改为81或者其他，重启phpstudy服务

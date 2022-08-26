@@ -1,0 +1,17 @@
+Ubuntu 16.04 /mnt/hgfs/下不显示共享文件夹的处理办法
+
+1. 解决不显示共享文件夹
+1.apt-get install open-vm-tools
+2.su 
+cd /mnt
+mkdir hgfs
+3.vmhgfs-fuse .host:/ /mnt/hgfs
+进入/mnt后，ls命令显示没有权限，进入到root用户权限下执行。
+
+但重启之后会失效，需要重新执行vmhgfs-fuse .host:/ /mnt/hgfs
+二、解决重启后共享文件夹失效
+vi /etc/rc.local
+在最后添加一行：vmhgfs-fuse .host:/ /mnt/hgfs -o allow_other -o uid=1000 -o gid=1000 -o umask=022
+给rc.local加上权限 sudo chmod +x /etc/rc.local
+以后重启都会自动挂载。
+

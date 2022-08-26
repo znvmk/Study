@@ -1,0 +1,13 @@
+ Qt Creator 下启动vim模式后，运行快捷键Ctrl+R失效解决方案
+
+首先开启vim后，Ctrl+R无法用
+
+解决：
+
+工具 -> 选项->FakeVim
+
+转到Ex Command Mapping
+
+搜索Run
+
+底栏Regular expression 输入run  （理论上可以是随意的单词）

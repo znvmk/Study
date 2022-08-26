@@ -1,0 +1,57 @@
+开启多应用模式
+1.首先刪除app目录下所有其他文件
+2.安装多应用模式扩展： composer require topthink/think-multi-app
+composer require topthink/think-view模板引擎安装 (不安装提示:Driver [Think] not supported.)
+3.创建三大应用index(前端)，admin(后台),common(公共应用)
+在tp6\目录下运行命令：
+命令：php think build index
+命令：php think build admin
+命令：php think build common
+注意：如果没有安装think-multi-app， 使用php think build xx会报错：Command "build" is not defined.
+
+默认目录结构
+app--admin---controller\
+        |----model\
+        |----view\
+        |----common.php
+        |----event.php
+        |----middleware.php
+
+完整目录结构
+app--admin---config---view.php
+        |----controller--Index.php
+        |----lang---en-us.php
+                |---zh-cn.php 
+        |----model\
+        |----route---route.php
+        |----validate\
+        |----view\
+        |----common.php
+        |----event.php
+        |----middleware.php
+
+thinkphp6默认创建的目录与完整目录结构是不同的（如果目录不同，需要手动创建文件夹/文件。） 
+
+最后，在config\app.php文件中添加开启多应用配置：
+<?php
+// +
+// |应用设置
+// +
+return[
+    //开启多应用配置
+    'auto_multi_app' => true, //后面的“，”逗号不要忘记
+
+访问：
+
+
+    http://www.tp6.local/public/index.php/demo/index
+
+    http://www.tp6.local/public/index.php/index/index
+
+    http://www.tp6.local/public/index.php/admin/index
+
+
+在多应用模式下，配置分为全局配置和应用配置。
+
+全局配置：config目录下面的文件就是项目的全局配置文件，对所有应用有效。
+应用配置：每个应用可以有独立配置文件，相同的配置参数会覆盖全局配置。

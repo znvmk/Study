@@ -9,6 +9,10 @@ public:
 	void ReadOrderFile();
 	void WriteRandomFile();
 	void ReadRandomFile();
+	void ReadRandomFilePicture();
+	void ifsr();
+	void ofsr();
+
 
 };
 /*

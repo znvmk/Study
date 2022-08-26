@@ -1,0 +1,38 @@
+Ubuntu下改变键盘映射
+一、获取keycode
+
+xev工具：
+
+功能：通过它可以知道键盘上每一个按键的编码，即keycode， 这个键码与键盘硬件有关系，固定不变的。你想想啊，键盘上这么多按键，怎么让计算机去区分啊？就是通过这个keycode值，每当我们按下一个键时，内核中中断系统就会接收到一个keycode， 从而判断你按下了哪个键。具体操作系统怎么处理这个按键，那就需要keycode值到keysym的映射来决定了。
+
+如何安装：在我的debian系统上，已经默认存在了，这个工具在安装系统的时候应该就会安装上的，直接运行命令如何命令即可
+1、运行xev并按下按键查看
+在这里插入图片描述
+2、记录下来（如下是CapsLock的代码keycode=37）
+在这里插入图片描述
+二、修改映射
+
+可以通过xmodmap或者gnome-tweak-tool，再就是修改键位文件：
+
+1、备份evdev文件，随时恢复
+sudo cp /usr/share/X11/xkb/keycodes/evdev /usr/share/X11/xkb/keycodes/evdev.bak
+2、开始修改
+sudo gedit /usr/share/X11/xkb/keycodes/evdev
+我都试过，推荐修改文件
+这是我修改的几个键位：
+TLDE = 49 —（即数字键1前面的那个`键）
+ESC = 9
+CAPS = 66
+LCTL = 37
+BKSP = 22 —（即退格键，或说删除键，backspace）
+BKSL = 51 —（即反斜杠，或说中文顿号、键）
+
+改为：
+TLDE = 9
+ESC = 49
+CAPS = 37
+LCTL = 66
+BKSP = 22
+BKSL = 51
+
+然后需要重启生效！

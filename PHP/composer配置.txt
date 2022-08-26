@@ -1,0 +1,240 @@
+Windows 和 Linux 下 Composer 的安装及配置
+
+    介绍： Composer 是 PHP 用来管理依赖（ dependency ）关系的工具。你可以在自己的项目中声明所依赖的外部工具库（ libraries ）， Composer 会帮您安装这些依赖的库文件。
+
+(一)Window安装
+1.1 下载Composer
+
+Composer官网下载Composer.exe应用(https://getcomposer.org/)
+1.2 安装Composer
+
+    下载的版本为最新的Composer版本并且会自动设置PATH环境变量，这样您就可以从任何目录调用Composer
+
+    根据本地php配置的版本选择 
+    会在系统环境配置PATH下生成两个环境，composer和PHP.exe的位置，如果后续PHP版本升级，必须修改此处PHP环境才能运行composer
+    *如果PHP版本变动必须配置PHP环境
+
+    全局配置
+
+“path”—>打开“编辑系统环境变量”—“环境变量”
+
+配置Administrator用户变量
+
+
+1.3 安装成功
+
+# win+R 输入cmd 进入C:\Users\Administrator>composer
+
+ ______
+
+ / ____/___  ____ ___  ____  ____  ________  _____
+
+ / /   / __ \/ __ `__ \/ __ \/ __ \/ ___/ _ \/ ___/
+
+/ /___/ /_/ / / / / / / /_/ / /_/ (__  )  __/ /
+
+\____/\____/_/ /_/ /_/ .___/\____/____/\___/_/
+
+ /_/
+
+Composer version 2.1.9 2021-10-05 09:47:38
+(二)Linux安装
+2.1 下载Composer
+
+**# 进入根目录下载** [root@VM-12-9-centos /] curl -sS https://getcomposer.org/installer | php
+
+Composer (version 2.1.9) successfully installed to: //composer.phar
+
+Use it: php composer.phar #下载成功#友情提示：下载因为是外网可能会出现请求失败的情况，耐心多尝试下就成功了
+
+    如果下载频繁失败 ，则可以使用阿里云的镜像下载
+
+    #本镜像与 Packagist 官方实时同步，推荐使用最新的 Composer 版本
+    [root@VM-12-9-centos /] curl -sS mirrors.aliyun.com/composer/compos...
+
+2.2 全局配置
+
+# 复制composer.phar到/usr/local/bin/目录下生成composer的目录，方便全局使用[root@VM-12-9-centos /] mv composer.phar /usr/local/bin/composer
+2.3 更换镜像源
+
+    由于国外的网站在国内请求会很慢，所以我们可以更换国内源来加速源的下载。国内镜像源有很多种，下面列举常用的几种，您可以根据需求选择其中一种即可。
+
+    阿里云Composer镜像 【推荐 】
+
+composer config -g repo.packagist composer https://mirrors.aliyun.com/composer/
+国内云Composer镜像
+
+composer config -g repo.packagist composer https://packagist.phpcomposer.com
+腾讯云Composer镜像
+
+composer config -g repo.packagist composer https://mirrors.cloud.tencent.com/composer/
+华为云Composer镜像
+
+composer config -g repo.packagist composer https://repo.huaweicloud.com/repository/php/
+安畅云Composer镜像
+
+composer config -g repo.packagist composer https://php.cnpkg.org/
+2.4 安装成功
+
+    [root@VM-12-9-centos etc]# composer
+
+     ______
+
+    / ____/___  ____ ___  ____  ____  ________  _____
+
+    / /   / __ \/ __ `__ \/ __ \/ __ \/ ___/ _ \/ ___/
+
+    / /___/ /_/ / / / / / / /_/ / /_/ (__  )  __/ /
+
+    \____/\____/_/ /_/ /_/ .___/\____/____/\___/_/
+
+                      /_/
+
+    Composer version 2.1.9 2021-10-05 09:47:38
+
+(三)Composer命令
+3.1 查看版本
+
+composer --version# 查看版本会看到当前版本以及更新时间[root@VM-12-9-centos /]# composer --versionComposer version 2.1.9 2021-10-05 09:47:38
+3.2 版本升级
+
+# 升级将默认升到最新版本composer self-update# **友情提示：** 版本升级命令将会从官方版本去下载composer,phar镜像,速度将受限！强烈建议全局配置加速镜像
+3.3 执行诊断命令
+
+composer diagnose
+3.4 清除缓存
+
+composer clear
+3.5 项目更新composer.lock
+
+composer update --lock
+3.6 调试
+
+# **Composer调试只需要在命令前加上-vvv就可以打印出错信息** # 例如下载laravel命名为blog的项目composer -vvv create-project laravel/laravel blog
+3.7 安装依赖包
+
+# 该命令仅限在项目根目录操作
+
+composer install
+3.8 更新依赖包
+
+# 该命令仅限在项目根目录操作
+
+ 
+
+### 更新所有依赖包
+
+composer update
+
+ 
+
+### 更新指定依赖包
+
+composer update monolog/monolog
+
+ 
+
+### 更新多个指定依赖包
+
+composer update monolog/monolog symfony/dependency-injection
+
+ 
+
+### 根据通配符匹配更新依赖包
+
+composer update monolog/monolog symfony/*
+3.9 移除依赖包
+
+# 移除指定依赖包
+
+composer remove monolog/monolog
+
+ 
+
+# 根据通配符匹配移除依赖包
+
+composer remove monolog/monolog symfony/*
+3.10 搜索依赖包
+
+# 搜索依赖包：输出包及其描述信息
+
+composer search monolog
+
+ 
+
+# 只搜索包：--only-name
+
+composer search --only-name monolog
+
+ 
+
+# 根据通配符搜索依赖包
+
+composer search mono*
+3.11 查看依赖包
+
+# **该命令仅限项目根目录使用**# 查看**当前项目**已安装的依赖包
+
+composer show
+
+ 
+
+# 根据通配符**当前项目**进行筛选
+
+composer show laravel*# 查看**当前项目**指定依赖包
+
+composer show laravel/tinker
+(四)项目的使用
+
+    在项目中，我们常常使用composer来进行包或者库的下载与更新，但是往往我们在使用中也会遇到各种各样的问题。接下来，我们将解决常见的问题。
+
+4.1 宝塔面板安装Composer
+
+    composer 的安装需要php开启 putenv 函数 ，否则会安装失败！由于 putenv 函数可以设置特定的环境变量而被认为是一个潜在的安全漏洞，因此php在安装之初是默认禁止它的！
+
+    删除禁用函数
+
+    宝塔面板出于对于安全的考虑，自动禁用了一些函数；因为安装Composer也会用到相应的函数，我们应该先删除在安装 Composer 。         安装 Composer 需要删除 的 PHP 禁用函数：putenv()         友情提示： 在使用 Composer 的时候需要根据项目的php版本去做操作(安装多少个PHP版本就需要相对应删除)，下图示范是根据 php-8.0 来操作的。
+
+    非宝塔面板管理操作
+
+# 进入php.ini配置文件编辑--->搜索（输入 / 进入搜索模式，搜索disable_functions）# ---->依次删除putenv**### 第一步：查询php.ini路径** [root@VM-12-9-centos 74]# find / -name "php.ini"/www/server/php/56/etc/php.ini
+
+/www/server/php/80/etc/php.ini
+
+/www/server/php/74/etc/php.ini
+
+ 
+
+**### 第二步：依次编辑php.ini文件** : 删除函数putenvvim /www/server/php/56/etc/php.ini
+
+ 
+
+**### 第三步：搜索“disable_functions”** # ESC + ：+ / + disable_functions 将会自动定位到指定位置disable_functions = passthru,exec,system,**putenv** ,chroot,chgrp,chown,shell_exec,popen,proc_open,pcntl_exec,ini_alter,ini_restore,dl,openlog,syslog,readlink,symlink,popepassthru,pcntl_alarm,pcntl_fork,pcntl_waitpid,pcntl_wait,pcntl_wifexited,pcntl_wifstopped,pcntl_wifsignaled,pcntl_wifcontinued,pcntl_wexitstatus,pcntl_wtermsig,pcntl_wstopsig,pcntl_signal,pcntl_signal_dispatch,pcntl_get_last_error,pcntl_strerror,pcntl_sigprocmask,pcntl_sigwaitinfo,pcntl_sigtimedwait,pcntl_exec,pcntl_getpriority,pcntl_setpriority,imap_open,apache_setenv
+
+ 
+
+**### 第四步：保存文件并退出** ESC + :wq!
+
+    友情提醒
+
+    宝塔是支持php多版本的，如果在不同版本的php中使用 composer ，只要开启php中的 putenv 函数即可！
+
+4.2 PHP项目使用
+
+    composer.lock已经存在
+
+    使用场景： 由于下载代码或者git代码或者部署项目时会存在 composer.lock ， 首先应该删除composer.lock
+
+# 项目中composer.lock已经存在，需要进行删除，再重新安装，安装成功后会重新生成composer.lock文件# 案例示范：**### 第一步：进入项目blog根目录** cd www\wwwroot\blog
+
+ 
+
+**### 第二步：删除composer.lock文件** # 删除请核对文件名后谨慎操作rm -rf composer.lock
+
+ 
+
+**### 第三步：重新composer安装项目所需包** composer install
+(五)结尾
+
+    提示： 不要忘了经常执行 composer selfupdate 以保持 Composer 一直是最新版本哦！

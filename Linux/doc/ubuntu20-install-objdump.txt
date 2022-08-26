@@ -1,0 +1,222 @@
+Ubuntu20.04手动安装binutils objdump、arm-linux-objdump: command not
+【摘要】 Ubuntu20.04手动安装binutils objdump、arm-linux-objdump: command not found、bash: hello.s: Permission denied
+
+​
+解决：下载binutils仍然无法使用objdump
+
+操作背景：
+
+使用的是Ubuntu 20.04的WSL
+安装好了ARM32的交叉编译工具：sudo apt install gcc-arm-linux-gnueabi
+
+通过C语言的.c 文件编译出可执行文件
+
+arm-linux-gnueabi-gcc -E hello.c -o hello.i
+arm-linux-gnueabi-gcc -S hello.i -o hello.s
+arm-linux-gnueabi-gcc -c hello.s -o hello.o
+arm-linux-gnueabi-gcc  hello.o -o hello
+
+[点击并拖拽以移动]
+
+
+其中编译出的.s 汇编文件不够精简，包含很多C语言到汇编语言实现的说明
+
+然后想通过把可执行文件的反汇编，来得到纯粹的.s 汇编文件，来直观的学习汇编语言的语法和格式
+操作过程
+
+1.执行反汇编语句：
+
+arm-linux-objdump -d hello > arm_hello.s 
+
+[点击并拖拽以移动]
+
+然后系统提示我：arm-linux-objdump: command not found
+
+或有时提示我：bash: hello.s: Permission denied
+2.然后我查到说objdump是binutils下的工具
+
+
+所以我从http://ftp.gnu.org/gnu/binutils/下载了binutils-2.37.tar.gz这个包，导入了到Linux系统中，并且解压
+然后在解压的目录内执行了
+./configure
+make
+sudo make install
+然后我执行这个命令：arm-linux-gnueabi-objdump -d hello > arm_hello.s 
+
+成功！
+
+
+hello:     file format elf32-littlearm
+Disassembly of section .init:
+
+000102bc <_init>:
+   102bc:	e92d4008 	push	{r3, lr}
+   102c0:	eb000020 	bl	10348 <call_weak_fn>
+   102c4:	e8bd8008 	pop	{r3, pc}
+
+Disassembly of section .plt:
+
+000102c8 <.plt>:
+   102c8:	e52de004 	push	{lr}		; (str lr, [sp, #-4]!)
+   102cc:	e59fe004 	ldr	lr, [pc, #4]	; 102d8 <.plt+0x10>
+   102d0:	e08fe00e 	add	lr, pc, lr
+   102d4:	e5bef008 	ldr	pc, [lr, #8]!
+   102d8:	00010d28 	.word	0x00010d28
+
+000102dc <puts@plt>:
+   102dc:	e28fc600 	add	ip, pc, #0, 12
+   102e0:	e28cca10 	add	ip, ip, #16, 20	; 0x10000
+   102e4:	e5bcfd28 	ldr	pc, [ip, #3368]!	; 0xd28
+
+000102e8 <__libc_start_main@plt>:
+   102e8:	e28fc600 	add	ip, pc, #0, 12
+   102ec:	e28cca10 	add	ip, ip, #16, 20	; 0x10000
+   102f0:	e5bcfd20 	ldr	pc, [ip, #3360]!	; 0xd20
+
+000102f4 <__gmon_start__@plt>:
+   102f4:	e28fc600 	add	ip, pc, #0, 12
+   102f8:	e28cca10 	add	ip, ip, #16, 20	; 0x10000
+   102fc:	e5bcfd18 	ldr	pc, [ip, #3352]!	; 0xd18
+
+00010300 <abort@plt>:
+   10300:	e28fc600 	add	ip, pc, #0, 12
+   10304:	e28cca10 	add	ip, ip, #16, 20	; 0x10000
+   10308:	e5bcfd10 	ldr	pc, [ip, #3344]!	; 0xd10
+
+Disassembly of section .text:
+
+0001030c <_start>:
+   1030c:	e3a0b000 	mov	fp, #0
+   10310:	e3a0e000 	mov	lr, #0
+   10314:	e49d1004 	pop	{r1}		; (ldr r1, [sp], #4)
+   10318:	e1a0200d 	mov	r2, sp
+   1031c:	e52d2004 	push	{r2}		; (str r2, [sp, #-4]!)
+   10320:	e52d0004 	push	{r0}		; (str r0, [sp, #-4]!)
+   10324:	e59fc010 	ldr	ip, [pc, #16]	; 1033c <_start+0x30>
+   10328:	e52dc004 	push	{ip}		; (str ip, [sp, #-4]!)
+   1032c:	e59f000c 	ldr	r0, [pc, #12]	; 10340 <_start+0x34>
+   10330:	e59f300c 	ldr	r3, [pc, #12]	; 10344 <_start+0x38>
+   10334:	ebffffeb 	bl	102e8 <__libc_start_main@plt>
+   10338:	ebfffff0 	bl	10300 <abort@plt>
+   1033c:	0001047c 	.word	0x0001047c
+   10340:	000103fc 	.word	0x000103fc
+   10344:	0001041c 	.word	0x0001041c
+
+00010348 <call_weak_fn>:
+   10348:	e59f3014 	ldr	r3, [pc, #20]	; 10364 <call_weak_fn+0x1c>
+   1034c:	e59f2014 	ldr	r2, [pc, #20]	; 10368 <call_weak_fn+0x20>
+   10350:	e08f3003 	add	r3, pc, r3
+   10354:	e7932002 	ldr	r2, [r3, r2]
+   10358:	e3520000 	cmp	r2, #0
+   1035c:	012fff1e 	bxeq	lr
+   10360:	eaffffe3 	b	102f4 <__gmon_start__@plt>
+   10364:	00010ca8 	.word	0x00010ca8
+   10368:	0000001c 	.word	0x0000001c
+
+0001036c <deregister_tm_clones>:
+   1036c:	e59f0018 	ldr	r0, [pc, #24]	; 1038c <deregister_tm_clones+0x20>
+   10370:	e59f3018 	ldr	r3, [pc, #24]	; 10390 <deregister_tm_clones+0x24>
+   10374:	e1530000 	cmp	r3, r0
+   10378:	012fff1e 	bxeq	lr
+   1037c:	e59f3010 	ldr	r3, [pc, #16]	; 10394 <deregister_tm_clones+0x28>
+   10380:	e3530000 	cmp	r3, #0
+   10384:	012fff1e 	bxeq	lr
+   10388:	e12fff13 	bx	r3
+   1038c:	00021028 	.word	0x00021028
+   10390:	00021028 	.word	0x00021028
+   10394:	00000000 	.word	0x00000000
+
+00010398 <register_tm_clones>:
+   10398:	e59f0024 	ldr	r0, [pc, #36]	; 103c4 <register_tm_clones+0x2c>
+   1039c:	e59f1024 	ldr	r1, [pc, #36]	; 103c8 <register_tm_clones+0x30>
+   103a0:	e0413000 	sub	r3, r1, r0
+   103a4:	e1a01fa3 	lsr	r1, r3, #31
+   103a8:	e0811143 	add	r1, r1, r3, asr #2
+   103ac:	e1b010c1 	asrs	r1, r1, #1
+   103b0:	012fff1e 	bxeq	lr
+   103b4:	e59f3010 	ldr	r3, [pc, #16]	; 103cc <register_tm_clones+0x34>
+   103b8:	e3530000 	cmp	r3, #0
+   103bc:	012fff1e 	bxeq	lr
+   103c0:	e12fff13 	bx	r3
+   103c4:	00021028 	.word	0x00021028
+   103c8:	00021028 	.word	0x00021028
+   103cc:	00000000 	.word	0x00000000
+
+000103d0 <__do_global_dtors_aux>:
+   103d0:	e92d4010 	push	{r4, lr}
+   103d4:	e59f4018 	ldr	r4, [pc, #24]	; 103f4 <__do_global_dtors_aux+0x24>
+   103d8:	e5d43000 	ldrb	r3, [r4]
+   103dc:	e3530000 	cmp	r3, #0
+   103e0:	18bd8010 	popne	{r4, pc}
+   103e4:	ebffffe0 	bl	1036c <deregister_tm_clones>
+   103e8:	e3a03001 	mov	r3, #1
+   103ec:	e5c43000 	strb	r3, [r4]
+   103f0:	e8bd8010 	pop	{r4, pc}
+   103f4:	00021028 	.word	0x00021028
+
+000103f8 <frame_dummy>:
+   103f8:	eaffffe6 	b	10398 <register_tm_clones>
+
+000103fc <main>:
+   103fc:	e92d4800 	push	{fp, lr}
+   10400:	e28db004 	add	fp, sp, #4
+   10404:	e59f000c 	ldr	r0, [pc, #12]	; 10418 <main+0x1c>
+   10408:	ebffffb3 	bl	102dc <puts@plt>
+   1040c:	e3a03000 	mov	r3, #0
+   10410:	e1a00003 	mov	r0, r3
+   10414:	e8bd8800 	pop	{fp, pc}
+   10418:	0001048c 	.word	0x0001048c
+
+0001041c <__libc_csu_init>:
+   1041c:	e92d47f0 	push	{r4, r5, r6, r7, r8, r9, sl, lr}
+   10420:	e59f604c 	ldr	r6, [pc, #76]	; 10474 <__libc_csu_init+0x58>
+   10424:	e59f504c 	ldr	r5, [pc, #76]	; 10478 <__libc_csu_init+0x5c>
+   10428:	e08f6006 	add	r6, pc, r6
+   1042c:	e08f5005 	add	r5, pc, r5
+   10430:	e0466005 	sub	r6, r6, r5
+   10434:	e1a07000 	mov	r7, r0
+   10438:	e1a08001 	mov	r8, r1
+   1043c:	e1a09002 	mov	r9, r2
+   10440:	ebffff9d 	bl	102bc <_init>
+   10444:	e1b06146 	asrs	r6, r6, #2
+   10448:	08bd87f0 	popeq	{r4, r5, r6, r7, r8, r9, sl, pc}
+   1044c:	e3a04000 	mov	r4, #0
+   10450:	e1a02009 	mov	r2, r9
+   10454:	e1a01008 	mov	r1, r8
+   10458:	e1a00007 	mov	r0, r7
+   1045c:	e4953004 	ldr	r3, [r5], #4
+   10460:	e2844001 	add	r4, r4, #1
+   10464:	e12fff33 	blx	r3
+   10468:	e1560004 	cmp	r6, r4
+   1046c:	1afffff7 	bne	10450 <__libc_csu_init+0x34>
+   10470:	e8bd87f0 	pop	{r4, r5, r6, r7, r8, r9, sl, pc}
+   10474:	00010ae4 	.word	0x00010ae4
+   10478:	00010adc 	.word	0x00010adc
+
+0001047c <__libc_csu_fini>:
+   1047c:	e12fff1e 	bx	lr
+
+Disassembly of section .fini:
+
+00010480 <_fini>:
+   10480:	e92d4008 	push	{r3, lr}
+   10484:	e8bd8008 	pop	{r3, pc}
+
+[点击并拖拽以移动]
+
+一定要在要在解压的目录内执行第二步语句，如果还是解决不了，可以再在目录下试一下下面的命令
+
+export CC=afl-gcc； export CXX=afl-g++；
+
+sudo bash -c 'echo core >/proc/sys/kernel/core_pattern'
+
+sudo apt-get install texinfo
+
+一定要在objdump前面加上gnueabi
+
+arm-linux-gnueabi-objdump -d hello > arm_hello.s 
+
+祝你好运如果还解决不了，可以评论区留言
+
+
+还需安装：textinfo bison

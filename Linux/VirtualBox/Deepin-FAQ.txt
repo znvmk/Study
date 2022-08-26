@@ -1,0 +1,55 @@
+Deepin - deepin20更换软件源、镜像源
+    官方软件源商店部分：
+    文件路径：/etc/apt/sources.list.d/appstore.list
+    主要包括深度自己开发的deepinwine应用，部分商业合作应用，部分重分发授权应用
+deb https://community-store-packages.deepin.com/appstore eagle appstore
+
+    官方软件源打印机驱动部分：
+    文件路径：/etc/apt/sources.list.d/printer.list
+    主要包括深度适配的打印机驱动等
+deb https://community-packages.deepin.com/printer eagle non-free
+
+    官方软件源仓库部分：
+    文件路径：/etc/apt/sources.list
+    主要是不受商业协议影响的开源部分及上游更新的仓库
+deb [by-hash=force] https://community-packages.deepin.com/deepin/ apricot main contrib non-free
+    
+
+第三方软件源更换教程：
+
+可以更换的链接是第3部分：官方软件源仓库部分
+uos是商业版，没有其他的软件仓库，不要更换，切记！！！
+deepin 20 代号是 apricot
+(lion 是之前15的版本代号，注意不要写错了)
+    第三方源格式：
+deb [by-hash=force] [空格] $url$/deepin/  [空格]apricot main contrib non-free
+例：
+deb https://mirrors.aliyun.com/deepin/ apricot main contrib non-free
+
+官方源：
+https://community-packages.deepin.com/deepin/
+
+阿里源：
+deb [by-hash=force] https://mirrors.aliyun.com/deepin/ apricot main contrib non-free
+
+网易源：
+deb [by-hash=force] https://mirrors.163.com/deepin/ apricot main contrib non-free
+
+华为源：
+deb [by-hash=force] https://mirrors.huaweicloud.com/deepin/ apricot main contrib non-free
+
+清华源：
+deb [by-hash=force] https://mirrors.tuna.tsinghua.edu.cn/deepin/ apricot main contrib non-free
+
+
+运行命令：sudo apt full-upgrade  报错：
+dpkg:处理软件包XXXX（--configure)时出错
+$ sudo mv /var/lib/dpkg/info /var/lib/dpkg/info_old //现将info文件夹更名
+2.$ sudo mkdir /var/lib/dpkg/info //再新建一个新的info文件夹
+//3.$ sudo apt-get update && apt-get -f install //不用解释了吧
+$ sudo apt full-upgrade
+4.$ sudo mv /var/lib/dpkg/info/* /var/lib/dpkg/info_old //执行完上一步操作后会在新的info文件夹下生成一些文件，现将这些文件全部移到info_old文件夹下
+*或者查看info目录下生成了什么文件，删除info_old目录下对应文件，再将info目录下的文件复制到info_old目录下
+*$ sudo cp info/format inft_old/
+5.$ sudo rm -rf /var/lib/dpkg/info //把自己新建的info文件夹删掉
+6.$ sudo mv /var/lib/dpkg/info_old /var/lib/dpkg/info //把以前的info文件夹重新改

@@ -1,0 +1,45 @@
+ SSH Key 突然失效问题解答及处理办法
+SSH Key SSH 公钥
+出现的问题
+
+2021年09月26日发布的OpenSSH 8.8中移除了对RSA-SHA1的支持
+
+        最新的git for windows 2.33.1版本已使用OpenSSH 8.8
+        arch和manjaro等发行版的滚动升级比较激进，使用pacman -Syu就会升级所有软件到最新版本
+        此时的表现就是之前还可以正常使用，pacman -Syu或升级到git for windows 2.33.1之后使用git pull就出现fatal: 无法读取远程仓库的提示
+
+如果您升级到OpenSSH 8.8或以上版本，则使用ssh推拉Gitee代码时会出现校验不通过的问题
+
+
+原因
+
+我们使用golang.org/x/crypto/ssh来从public key中提取出指纹，以此从Gitee主应用兑换用户信息
+
+而这个库目前（2021-10-12）还没有支持RSA-SHA2算法，因此会获取不到指纹，导致用户校验失败
+临时解决
+
+下述三种方案任选其一即可
+
+    配置OpenSSH服务允许使用RSA-SHA1key
+
+    在 ~/.ssh/config 加上如下配置
+    Host gitee.com 
+    HostkeyAlgorithms +ssh-rsa 
+    PubkeyAcceptedAlgorithms +ssh-rsa
+
+    PS：这种方式不需要更换ssh key，推荐Linux和windows git bash用户使用
+
+    换用其他算法生成ssh key
+
+    ssh-keygen -t ed25519 -C "your@example.email"
+    之后到Gitee重新添加公钥即可
+
+    PS： 这种方式需要更换ssh key，推荐windows用户使用
+
+    暂时不要使用OpenSSH 8.8及以上版本
+
+结语
+
+目前golang社区已经关注到了这一情况，且已经在推进对RSA-SHA2的支持，详情
+
+我们会时刻关注相关进展，并在golang支持RSA-SHA2后第一时间跟进，感谢您对Gitee的支持

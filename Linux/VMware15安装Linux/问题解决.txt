@@ -1,4 +1,4 @@
-mier
+
 vmw14升级vmw15：点击升级，从原有系统升级
 
 deepin 跨版本升级问题
@@ -56,3 +56,39 @@ echo -e "export gtk_im_module=ibus\nexport xmodifiers=@im=ibus\nexport qt_im_mod
 
     * 退出并重新登录即可
 
+
+
+
+Ubuntu、Debian 及相关操作系统
+
+    请确保已更新软件包索引：
+
+sudo apt-get update
+
+如果虚拟机具有 GUI（X11 等），请安装或升级 open-vm-tools-desktop：
+
+sudo apt-get install open-vm-tools-desktop
+
+否则，请使用以下命令安装 open-vm-tools：
+
+    sudo apt-get install open-vm-tools
+
+RHEL、Fedora 和 CentOS
+
+    如果虚拟机具有 GUI（X11 等），请安装或升级 open-vm-tools-desktop：
+
+sudo yum install open-vm-tools-desktop
+
+否则，请安装 open-vm-tools：
+
+    sudo yum install open-vm-tools
+
+SLE 和 OpenSuSE
+
+    如果虚拟机具有 GUI（X11 等），请安装或升级 open-vm-tools-desktop：
+
+zypper install open-vm-tools-desktop
+
+否则，请安装 open-vm-tools：
+
+zypper install open-vm-tools

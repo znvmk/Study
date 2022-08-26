@@ -1,0 +1,4 @@
+项目，Add New->Resource File 
+资源Resources,右键添加现有项，在弹出文件目录浏览器中选择所要添加的资源
+/res/jpg/test.jpg
+在加载icon的时候，具体写":/res/jpg/test.jpg"

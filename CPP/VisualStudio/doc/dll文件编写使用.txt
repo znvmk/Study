@@ -1,0 +1,41 @@
+一、生成动态库文件
+新建空项目mydll:
+mydll.h:
+
+#pragma once
+extern "C" __declspec(dllexport) int adda(int a, int b);
+
+
+mydll.cpp:
+
+int adda(int a, int b)
+{
+	return a + b;
+}
+
+项目属性->配置属性->常规->配置类型：动态库（.dll）
+
+二、调用动态库
+创建测试项目，新建空项目test:
+
+test.cpp:
+
+#include <iostream>
+#include "mydll.h"
+
+int main()
+{
+    std::cout << "Hello World!\n";
+    int a = 9;
+    int b = 3;
+
+    int c = adda(a, b);
+}
+
+将mydll.h复制到当前项目目录下，mydll.dll文件复制到项目可执行文件输出文件夹，将mydll.lib所在目录添加到项目库目录配置中，链接器->附加依赖项->输入：mydll.lib
+即可加载运行
+
+
+
+
+

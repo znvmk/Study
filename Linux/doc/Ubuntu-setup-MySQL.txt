@@ -1,0 +1,92 @@
+apt-get install mysql-server
+apt-get install mysql-client
+apt-get install libmysqlclient-dev
+apt-get install mysql-workbench
+
+Ubuntu安装mysql没有提示设置密码的问题
+Ubuntu上安装MySql，使用了如下命令：
+$ sudo apt install mysql-server
+安装过程中竟然没有提示输入root账户的密码，查阅资料后，将修改root密码的过程记录如下：
+进入/etc/mysql目录，查看debian.cnf文件
+cd /etc/mysql
+$ sudo cat debian.cnf
+该文件中记录了用户名密码：
+使用上面文件中的user和password登录mysql
+$ mysql -udebian-sys-maint -pxedvSNKdLavjuEWV
+*注：-u -p 后不能有空格
+登录之后，使用如下方法修改root账户的密码
+use mysql;
+ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY '你的密码pwd';
+update user set plugin="mysql_native_password";
+flush privileges;
+quit;
+修改完成之后，即可使用root账户和你设置的密码登录mysql了
+mysql -uroot -p[你的密码]
+
+
+在安装完 MySQL 后，使用 SHOW TABLES 时，发现一直出现 ERROR 1449 (HY000):The user specified as a definer (‘mysql.infoschema‘@’localhost’) does not exist 
+
+mysql> mysql -uroot -p "密码"
+
+mysql> use mysql;
+
+****此命令无法使用***mysql> INSERT INTO mysql.user(`Host`,`User`,`plugin`,`authentication_string`,ssl_cipher,x509_issuer,x509_subject) VALUES ('localhost','mysql.infoschema','mysql_native_password','*THISISNOTAVALIDPASSWORDTHATCANBEUSEDHERE','','','');
+
+此命令替换为：create user 'mysql.infoschema'identified by 'root密码';
+
+mysql> FLUSH PRIVILEGES;
+
+mysql> update user set Select_priv = 'Y' where User = 'mysql.infoschema';
+
+mysql> FLUSH PRIVILEGES;
+mysql>exit
+mysql -uroot -p
+验证登陆
+mysql>show databases;
++--------------------+
+| Database           |
++--------------------+
+| information_schema |
+| mysql              |
+| performance_schema |
+| sys                |
++--------------------+
+mysql>sudo service mysql stop/start
+
+ mysql-创建用户报错ERROR 1396 (HY000): Operation CREATE USER failed for 'root'@'localhost'
+
+创建用户：
+create user ‘test’@’%’ identified by ‘test’;
+显示ERROR 1396 (HY000): Operation CREATE USER failed for ‘test’@’%’
+查看是不是存在这个用户
+select user from user;
+发现没有这个用户。
+记得上次有删除过这个用户。可能没有刷新权限
+flush privileges;
+之后还是不行报错ERROR 1396 (HY000): Operation CREATE USER failed for ‘test’@’%’
+没办法再删除一次：
+drop user ‘test’@’%’;
+flush privileges;
+之后create user ‘test’@’%’ identified by ‘test’;
+成功。
+网上找了下原因：
+Assume the user is there, so drop the user
+After deleting the user, there is need to flush the mysql privileges
+Now create the user.
+
+
+
+linux安装MySQL报错mysql-8.0未配置MySQL无法安装
+sudo apt-get install mysql-server 
+报错mysql-8.0未配置
+$ cd var/lib/dpkg
+$ ls 
+info
+$ sudo mv info info_old
+$ sudo apt-get update
+$ sudo apt-get -t install
+mysql-8.0已安装
+mysql 已安装
+$ sudo mv info/* info_old/
+$ sudo rm -rf info
+$ sudo mv info_old info

@@ -1,0 +1,7 @@
+megs:32
+romimage: file=/usr/share/bochs/BIOS-bochs-latest
+ata0-master: type=disk,path=boot.img,mode=flat
+boot:c
+log:bochsout.txt
+mouse:enabled=0
+keyboard:keymap=/usr/share/bochs/keymaps/x11-pc-us.map

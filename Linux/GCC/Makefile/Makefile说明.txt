@@ -54,3 +54,41 @@ $^：所有依赖文件
 $<：第一个依赖文件
 $?：所有更新过的依赖文件
 %.c %.o *.c *.o
+
+
+
+Makefile模板：
+
+CC  := g++
+CXXFLAGS:= -w -std=c++11 -c # 编译的一些参数
+LFLAGS  := -lpthread  # 这里放入要链接的库的名称
+BINS    := web_regular # 程序名,是main函数所在文件的名称(不要后缀)
+SRCS    := $(wildcard *.cpp) # 当前目录下的所有的.cpp文件
+OBJS    := $(SRCS:.cpp=.o) # 将所有的.cc文件名替换为.o
+
+.PHONY: all clean  # 表示all和clean是两个伪目标
+
+all:$(BINS) # make每次编译的时候总是认为伪目标改变了,会重新编译
+
+BINOS   = $(addsuffix .o, $(BINS))
+TEMP_OBJ= $(filter-out $(BINOS), $^)
+
+$(BINS):$(OBJS)
+    @echo "正在链接程序......"; \
+    $(foreach BIN, $@, $(CC) $(TEMP_OBJ) $(BIN).o $(LFLAGS) -o $(BIN));
+
+%.d:%.cpp
+    @echo "正在生成依赖中......"; \
+    rm -f $@; \
+    $(CC) -MM $< > $@.$$$$; \
+    sed 's,\($*\)\.o[ :]*,\1.o $@ : ,g' < $@.$$$$ > $@; \
+    rm -f $@.$$$$
+
+-include $(SRCS:.cpp=.d)
+
+clean:
+    rm -f *.o *.d
+    rm -f $(BINS)
+
+# makefile说白了就是拼凑字符串
+

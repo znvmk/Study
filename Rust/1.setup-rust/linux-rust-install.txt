@@ -1,0 +1,56 @@
+【Rust】Linux上安装Rust开发环境
+    第一步：加入中国科技大学网络镜像代理
+    第二步：执行脚本命令，完成rust安装
+    第三步： 输入 rustc -V 或 rustup -v 有提示相关说明，则生效
+    第四步：配置包管理镜像代理
+    第五步：安装RSL，RLS（Rust Language Server）是官方提供的一个标准化的编辑器增强工具
+    安装编译GCC工具链
+    验证安装成功
+
+官方安装教程：https://doc.rust-lang.org/nightly/book/ch01-01-installation.html
+
+官方安装教程对于国内安装网络会比较卡。
+
+很不幸，我根据官方教程安装了三次都没有安装成功，最后加了中科大的网络镜像代理才成功。
+
+下面我来介绍下怎么安装吧：
+第一步：加入中国科技大学网络镜像代理
+export RUSTUP_DIST_SERVER=https://mirrors.ustc.edu.cn/rust-static
+export RUSTUP_UPDATE_ROOT=https://mirrors.ustc.edu.cn/rust-static/rustup
+
+注意以上命令，仅仅在本次终端生效，切换终端，仍然需要再次执行一次
+第二步：执行脚本命令，完成rust安装
+curl https://sh.rustup.rs -sSf | sh
+*注：先安装 curl管理软件
+
+curl，一个用于管理Rust版本和相关工具的命令行工具，包括编译器，包管理工具
+在安装的时候，会让你选择安装路径，我们输入 1 （默认安装）回车
+安装成功之后，会提示：Rust is installed now. Great!
+
+我们执行重新加载环境变量，使rustup命令生效
+source $HOME/.cargo/env
+第三步： 输入 rustc -V 或 rustup -v 有提示相关说明，则生效
+
+第四步：配置包管理镜像代理
+在$HOME/.cargo目录下创建一个名为config的文本文件，其内容为：
+vi $HOME/.cargo/config
+[source.crates-io]
+registry = "https://github.com/rust-lang/crates.io-index"
+replace-with = 'ustc'
+[source.ustc]
+registry = "git://mirrors.ustc.edu.cn/crates.io-index"
+
+第五步：安装RSL，RLS（Rust Language Server）是官方提供的一个标准化的编辑器增强工具
+// 更新rustup到最新
+rustup self update
+rustup component add rls rust-analysis rust-src
+
+安装编译GCC工具链
+
+sudo apt-get install build-essential
+
+验证安装成功
+在终端输入：
+rustc --version
+
+如果输出你rustc的版本信息即成功。

@@ -5,36 +5,60 @@ https://github.com/g-truc/glm/releases/
 
 下载glfw,glew,glad,glm
 
-新建OpenGL目录，包含：include，lib
-头文件目录（include）：
-在include目录下复制
+新建Environment/OpenGL目录，包含：Include，Lib,Resources
+
+头文件目录（Include）：
+在Include目录下复制
 glew包含目录下的：GL，GL目录下包括：eglew.h,glew.h,glxew.h,wglew.h
+glad包含目录下的：glad,KHR,glad目录下包括：glad.h、glad.c,KHR目录下包括khrplatform.h
+**如果有需求，将glad目录下的glad.c复制到自己的项目目录中，或者直接添加现有项，将glad目录下的glad.c添加到项目中
+在glad.h的144行，使用"typedef khronos_int8_t GLbyte;"之前，添加：
+#include <glad/KHR/khrplatform.h>
+在点解决方案源目录，添加->现有项:Environment/OpenGL/Include/glad/glad/glad.c
+
+
 glfw包含目录下的：GLFW,GLFW目录包括：glfw3.h,glfw3native.h
-glad包含目录下的：glad,KHR,glad目录下包括：glad.h,KHR目录下包括khrplatform.h
-**如果有需求，将glad源码目录（src）下的glad.c复制到自己的项目目录中
-glm目录下的glm文件夹复制到include目录
+glm目录下的glm文件夹复制到include目录，不用编译
+其它扩展头文件：external目录
 将glew32.dll,glfw3.dll动态库复制到项目目录下
 
-
-
-库目录(lib)：
-glew-2.1.0\lib\Release\x64目录下的：glew32.dll,glew32.lib,glew32s.lib
+静态库目录(Lib)：
+glew-2.1.0\bin\Release\x64目录下的：glew32.dll,glweinfo.exe,visualinfo.exe
+glew-2.1.0\lib\Release\x64目录下的：glew32.lib,glew32s.lib
 glfw-3.3.2.bin.WIN64\lib-vc2019目录下的：glfw3.dll,glfw3.lib,glfw3dll.lib
 
-资源目录：
-    F:\znp\C++\VS2017\Projects\OpenGL\OpenGL\data\picture\jpg
-1.添加包含目录（glfw，glew,glad）：
-    项目->属性->VC++目录->包含目录->编辑->新建:F:\znp\C++\VS2017\Projects\OpenGL\OpenGL\include
-2.添加库目录(glfw,glew,glad)：
-    项目->属性->VC++目录->库目录->编辑->新建:F:\znp\C++\VS2017\Projects\OpenGL\OpenGL\lib
+动态库目录（Dll）
+assimp-vc140-mt.dll
+glew32.dll
+glfw3.dll
+ikpMP3.dll
+irrKlang.dll
+
+资源目录(Resources)：
+    F:\znp\C++\VS2017\Projects\OpenGL\OpenGL\Resources\picture\jpg
+
+1.调试目录：项目->属性->Debug,X64->调试->环境：Environment/OpenGL/Dll
+2.添加包含目录（glfw，glew,glad）：
+    项目->属性->VC++目录->包含目录->编辑->新建:F:\znp\C++\VS2017\Projects\OpenGL\OpenGL\Include
+3.添加库目录(glfw,glew,glad)：
+    项目->属性->VC++目录->库目录->编辑->新建:F:\znp\C++\VS2017\Projects\OpenGL\OpenGL\Lib
     
-3.之后包含的库文件VS还认不出来，我们需要指定一下。配置链接器：
+4.之后包含的库文件VS还认不出来，我们需要指定一下。配置链接器：
     项目->属性->链接器->输入->附加依赖项->编辑：
 opengl32.lib//**注意，虽然OpenGL目录下没有，但必须加
+vulkan-1.lib//使用Vulkan时添加
 
+assimp.lib
+freetype.lib
 opengl32.lib
-glfw3.lib
-glfw3dll.lib
 glew32.lib
 glew32s.lib
+glfw3.lib
+glfw3dll.lib
+irrKlang.lib
+SOIL.lib
+vulkan-1.lib
 注：行与行之间请按回车，opengl32.lib是系统自带的。
+
+动态运行库：
+glew32.dll,glfw3.dll

@@ -10,6 +10,10 @@ int main() {
 	FileReadWrite frw;
 	frw.WriteRandomFile();
 	frw.ReadRandomFile();
+//	frw.ReadRandomFilePicture();
+	frw.ifsr();
+	frw.ofsr();
+	frw.ifsr();
 	/*
 	char a = 0x12;
 	char b = 0x34;

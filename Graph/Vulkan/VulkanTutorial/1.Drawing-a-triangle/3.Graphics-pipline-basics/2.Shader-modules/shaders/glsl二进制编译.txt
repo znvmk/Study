@@ -1,0 +1,17 @@
+glsl二进制编
+Windows
+
+创建一个compile.bat文件，放在shaders目录下
+
+C:/VulkanSDK/x.x.x.x/Bin32/glslc.exe shader.vert -o vert.spv
+C:/VulkanSDK/x.x.x.x/Bin32/glslc.exe shader.frag -o frag.spv
+pause
+
+将路径替换为自己的Vulkan安装目录
+
+Linux
+
+创建一个compile.bat文件，放在shaders目录下
+
+/home/user/VulkanSDK/x.x.x.x/x86_64/bin/glslc shader.vert -o vert.spv
+/home/user/VulkanSDK/x.x.x.x/x86_64/bin/glslc shader.frag -o frag.spv

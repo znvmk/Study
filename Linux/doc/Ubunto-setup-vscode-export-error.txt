@@ -1,0 +1,28 @@
+解决ubuntu安装软件has install-snap change in progress错误 
+
+在 Ubuntu Software 软件商店安装 Visual Studio Code 时报错：
+
+    unable to install snap code has install-snap change in progress
+
+根据CSDN博主"山间明月江上清风_“的文章（https://blog.csdn.net/u011870280/article/details/80213866）
+
+发现问题之所以出现，是因为同一个软件之前安装了一次，只是没安装完。
+
+解决方案：
+
+Step1  在终端输入：
+
+    snap changes
+
+
+可以看到 ID=6 （即 Status 状态为 Doing 的一项） 是我之前安装失败的。
+
+对该项目进行终止命令
+
+    sudo snap abort 6
+
+
+此时 ID=6 的状态 Status  变为 Error
+
+
+好了，现在可以重新安装了

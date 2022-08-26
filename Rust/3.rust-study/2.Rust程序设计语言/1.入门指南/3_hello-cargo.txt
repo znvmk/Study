@@ -1,0 +1,33 @@
+WT
+$ cargo --version ,cargo -V
+$ cargo new hello_cargo
+$ cd hello-cargo
+$ ls
+.git src .gitignore Cargo.lock Cargo.toml
+Cargo.lock:程序依赖版本信息
+Cargo.toml:作者个人信息
+src/main.rs
+fn main(){
+    println!("Hello, world!);
+}
+
+构建Cargo项目
+$ cd hello-cargo 
+$ cargo build
+运行：
+$ cargo run 
+Hello, world!
+或者省略cargo build命令，直接运行cargo rum,构建并运行
+$ cargo check
+检查项目是否可以运行，指出错误
+
+当然，如果项目文件依赖较少，可进入hello_cargo/target/debug(or release)"./hello_cargo.exe来运行
+
+分布构建（release)
+$ cargo build release
+
+清理生成目标内容
+$cargo clean
+
+
+

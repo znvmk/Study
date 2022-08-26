@@ -1,0 +1,71 @@
+配置文件位置
+
+/etc/vim/vimrc
+编辑该配置文件即可
+gvim颜色配置在：/usr/share/vim/vim82目录下
+
+https://github.com/chxuan/vimplus
+安装vimplus
+git clone https://github.com/chxuan/vimplus.git ~/.vimplus
+cd ~/.vimplus
+./install.sh //不加sudo
+设置Nerd Font
+为防止vimplus显示乱码，需设置linux终端字体为Droid Sans Mono Nerd Font。
+
+多用户支持
+将vimplus在某个用户下安装好后，若需要在其他用户也能够使用vimplus，则执行
+
+sudo ./install_to_user.sh username1 username2 //替换为真实用户名
+更新vimplus
+紧跟vimplus的步伐，尝鲜新特性
+
+./update.sh
+
+
+
+Linux下运行bash脚本显示“: /usr/bin/env: "bash\r": 没有那个文件或目录
+
+用 ./ 运行bash脚本文件出现 报错信息 /usr/bin/env: "bash\r": 没有那个文件或目录
+
+错误原因：这主要是因为bash后面多了\r这个字符的原因。在linux终端下，输出\r会什么都不显示，只是把光标移到行首。于是终端虽然输出了/usr/bin/env bash，但是碰到\r后，光标会被移到行首，接着输出了:No such file or directory把前面的覆盖掉了。于是出现了那个莫名其妙的出错信息了
+
+解决办法：
+
+    用vim打开sh脚本文件， 重新设置文件的格式
+    输入命令：
+
+    ：set ff 然后回车  再重新设置下文件格式：
+
+    ：set ff=unix 然后保存退出
+
+    ：wq! 回车
+
+
+
+**********************************
+在.vim目录下配置vimrc不生效：sudo apt-get install vim-full
+    vim自定义键位：
+    建议：Capslock键改为ESC键
+    cd ~
+    mkdir .vim cd .vim
+    vim vimrc
+
+    noremep n h "n 映射为 h
+
+    map s <nop> "s 映射为无操作
+    map S :w<CR> "S 映射为：命令 ：w + Enter回车
+    map Q :q<CR> "Q : :q +Enter回车
+    "不退出vim重新加载vim配位置： ：source $MYVIMRC
+    map R :source $MYVIMRC<CR>
+
+    syntax on "语法高亮
+    set number "显示当前行号
+    set norelativenumber #不+从当前行号开始计数行号
+    set cursorline "在当前操作行显示下划线
+    set wrap 
+    set showcmd "显示当前输入的命令
+    set wildmenu "显示命令输入提示
+    set hlsearch "高亮搜索
+    exec "nohlsearch" "取消每次打开后显示显示上一次搜索
+    set smartcase "智能匹配搜索大小写
+

@@ -1,0 +1,4 @@
+到微软官网下载vscode linux版本安装包，Deepin和Ubuntu选择deb包
+卸载当前版本Vscode，安装：
+sudo apt install dpkg
+sudo dpkg -i code-***.deb

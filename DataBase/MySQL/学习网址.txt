@@ -10,3 +10,6 @@ use udb;
 
 查看当前数据库下所有表
 show tables;
+
+指定表中所有的字段名
+select column_name from information_schema.columns where table_schema = 'databases_name' and table_name='tablename'

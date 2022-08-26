@@ -1,11 +1,11 @@
-点击 安装VMwaretools
-
-然后我们直接把WMwareTools拷贝出来到桌面吧
+点击 安装VMwaretool
+打开CD，挂载VMware Workstation目录下linux.iso文件，进入\mnt\cdrom,
+然后我们直接把WMwareTools压缩包拷贝准备好的目录，
 
 然后打开终端解压
 
 命令：tar -xzvf  VMwareTools-10.0.6-3595377.tar.gz
-进入解压后的目录，执行：sudo ./wmware-install.pl  然后就一直回车了。
+进入解压后的目录，执行：sudo ./vmware-install.pl  然后就一直回车了。
 
 Ubuntu会进行的很顺利，而其他发行版却未必。一直回车到底，到最后提示成功，reboot就可以了。
 
@@ -22,6 +22,14 @@ Ubuntu会进行的很顺利，而其他发行版却未必。一直回车到底�
 使用【 ls】命令，将目录下的文件展开，然后使用命令【./vmware-install.pl】进行安装；
 然后对所有的询问都回车确认，就可以了；中间会遇到选择分辨率的步骤，我们根据自己的情况进行选择；
 这样就安装成功了！
+
+如果无hgfs目录，则：
+sudo apt-get install open-vm-tools
+sudo mkdir /mnt/hgfs
+sudo vmhgfs-fuse .host:/ /mnt/hgfs
+
+sudo cd /mnt/hgfs
+
 
 
 

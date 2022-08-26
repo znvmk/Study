@@ -1,0 +1,103 @@
+1、打开QuartusII，新建项目File->New Project Wizard
+Next:
+    路径：（不能有空格）...\led_test
+    Name:led_test
+    top-level design name:led_test
+**三个名字尽量一致
+Next：跳过
+Next：
+    Device family:Cyclone IV E (具体查看开发板上芯片型号)
+    Available devices:EP4CE10F17C8
+Next:
+    模拟器：默认，或者选Multisim
+Finish
+点击工具栏Device图标（芯片旁边有铅笔），打开刚刚的最后一个芯片选择页面：
+    Device and Pin Options...->category:
+        Configuration:Configuration device I/O voltage:3.3V 
+    Unused Pins:
+        Reserval all unused pins:As input tri-strated with weak pull-up(弱上拉)
+    Dual-Purpose Pins:
+        DCLK:选择"Use as regular I/O，其他若需要，全部选择此项，一般全部选择
+    Board Trance Model:
+        I/O standard:3.0-V LVTTL，电压选3.3V
+    Voltage：
+        Default I/O standard:3.3v 默认标准电压3.3V
+OK，OK，设置完成  
+2、File->new:Verilog HDL File(或者 VHDL File)
+编辑程序
+保存，重命名。
+运行（start compilation）,无报错，
+3、Assignments->Pin Planner
+查开发板原理图，搜索引脚名称，填写所用到引脚Location，填写完关闭。
+再全部编译一遍，无报错
+4、下载，菜单栏打开烧录下载图标（programmer）
+连接开发板数据线，供电，打开开关
+选择生成的led_test.sof 文件，下载，完成后看流水灯效果。
+5、固化
+此时下载的程序不是固化在芯片中，如果断电，则芯片恢复初始化，数据丢失。
+File->Convert Programming File:
+    Programming file type:JTAG Indirect Configuration File(.jic)  格式
+        Configuration device:EPCS16,64,128等
+    Input file to convert:
+        Flash Loader,Add Device...:Cyclone IV E->EP4CE10
+        SOF Date,Add File...:led_test.sof(之前生成的)
+重新打开下载烧录：
+删除之前得led_test.sof下载文件，
+左侧按钮点击添加，let_test\output_files目录下，选择文件：led_test.jic
+开始下载，下载jic文件会比之前下载sof文件慢很多
+下载完成之后，开发办断电，重新打开，流水灯正常运行。
+
+led_test.v
+
+`timescale 1ns / 1ps
+
+module led_test (
+                  clk,           // 开发板上输入时钟: 50Mhz
+                  rst_n,         // 开发板上输入复位按键
+                  led            // 输出LED灯,用于控制开发板上四个LED(LED0~LED3)
+             );
+             
+//=====================================================
+// PORT declarations
+//======================================================
+input clk;
+input rst_n;
+output [3:0] led;
+
+//寄存器定义
+reg [31:0] timer;                  
+reg [3:0] led;
+
+
+//========================================================
+// 计数器计数:循环计数0~4秒
+//===================================================
+  always @(posedge clk or negedge rst_n)    //检测时钟的上升沿和复位的下降沿
+    begin
+      if (~rst_n)                           //复位信号低有效
+          timer <= 0;                       //计数器清零
+      else if (timer == 32'd199_999_999)    //开发板使用的晶振为50MHz，4秒计数(50M*4-1=199_999_999)
+          timer <= 0;                       //计数器计到4秒，计数器清零
+      else
+		    timer <= timer + 1'b1;            //计数器加1
+    end
+
+//=====================================================
+// LED灯控制
+//=====================================================
+  always @(posedge clk or negedge rst_n)   //检测时钟的上升沿和复位的下降沿
+    begin
+      if (~rst_n)                           //复位信号低有效
+          led <= 4'b0000;                  //LED灯输出全为低，四个LED灯灭           
+      else if (timer == 32'd49_999_999)      //计数器计到1秒，
+          led <= 4'b0001;                  //LED1点亮
+      else if (timer == 32'd99_999_999)      //计数器计到2秒，
+          led <= 4'b0010;                  //LED2点亮
+      else if (timer == 32'd149_999_999)     //计数器计到3秒，
+          led <= 4'b0100;                  //LED3点亮                           
+      else if (timer == 32'd199_999_999)     //计数器计到4秒，
+          led <= 4'b1000;                  //LED4点亮        
+    end
+    
+endmodule
+

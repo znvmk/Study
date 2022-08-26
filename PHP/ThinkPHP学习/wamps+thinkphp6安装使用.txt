@@ -4,6 +4,11 @@ https://gitee.com/liu21st/thinkphp
 目录定位到APMS\wamp64-3.2.3\bin\php\php7.3.21\php.exe
 安装选项选择，添加到环境
 打开powershell,运行：composer
+升级composer:
+composer self-update 
+composer self-update --2    //2.x.x版本
+composer --version
+
 配置composer下载地址为阿里云：
  composer config -g repo.packagist composer https://mirrors.aliyun.com/composer/
  3.powershell进入到wamps网站根目录，创建安装tp6项目
@@ -11,6 +16,7 @@ https://gitee.com/liu21st/thinkphp
  4.如果要更新项目版本，直接进入项目根目录
  执行命令：APMS\wamp64-3.2.3\www\tp6> composer update topthink/framework
 看到“success"即成功升级到最新版本
+但是页面显示还是旧版本，删除重新创建显示最新版本。
 5.运行php
 执行命令：APMS\wamp64-3.2.3\www\tp6> php think run
 ThinkPHP Development server is started On <http://127.0.0.1:8000/>
@@ -21,6 +27,7 @@ Document root is: D:\ls\APMS\wamp64-3.2.3\www\tp6\public
 
 网页打开提示的地址：http://127.0.0.1:8000/，即可看到运行效果
 或者打开网址：http://localhost:8080/tp6/，点击public也可以打开
+如果wamps的80，或者8080端口冲突，修改Wamps->Apache->httpd.conf，端口改为8081或者其他，重启Wamps
 
 用CTRL-C命令退出，再刷新网址就打不开了。重新运行命令：php think run
 

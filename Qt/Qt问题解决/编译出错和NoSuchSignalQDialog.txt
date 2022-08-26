@@ -1,0 +1,5 @@
+Qt5 Q_OBJECT 编译出错和Object::connect: No such signal QDialog::....解决办法
+在新添加的类内部第一行添加：
+Q_OBJECT
+
+重新编译，运行

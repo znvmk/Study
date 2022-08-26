@@ -176,7 +176,20 @@ Microsoft.PowerShell.Utility\Write-Host "`nλ " -NoNewLine -ForegroundColor "Dar
 将λ改成$即可
 Microsoft.PowerShell.Utility\Write-Host "$" -NoNewLine -ForegroundColor "DarkGray"
 
-设置Cmder默认打开位置
+设置cmder默认git目录：
+打开：D:\ls\cmder\vendor\profile.ps1，修改：
+try {
+    # Check if git is on PATH, i.e. Git already installed on system
+    Get-command -Name "git" -ErrorAction Stop >$null
+} catch {
+    #$env:Path += $(";" + $env:CMDER_ROOT + "\vendor\git-for-windows\cmd")
+	$env:Path += $(";" + "D:\ls\Git\cmd")
+    # for bash.exe, which in the cmd version is found as <GIT>\usr\bin\bash.exe
+    #$env:Path += $(";" + $env:CMDER_ROOT + "\vendor\git-for-windows\bin")
+	$env:Path += $(";" + "D:\ls\Git\bin")
+}
+
+设置Cmder默认启动位置：
 settings-startup-task:
 选择{cmd::Cmder as Admin}，在右边下方命令输入框中最后面追加：-new_console:d:E:\
 或者点击Startup directory,在弹出框中选择E盘

@@ -1,0 +1,63 @@
+安装DOSBox-0.74-3，
+
+双击打开（别右键点击）DOSBox-0.74-3\DOSBox 0.74-3 Options.bat启动配置文件，在弹出的文本末尾（或者打开C:\Users\Administrator\AppData\Local\DOSBox\dosbox-0.74-3.conf文件）添加：
+
+#挂载驱动器（将汇编程序、编译工具文件夹挂载到一个虚拟盘）
+#目录结构D:\ls\masm\manual:asm,masm5,masm6,masm615
+mount E: D:\ls\masm\manual
+#添加系统临时变量（此时的E:代表的是D:\ls\msm\manual）
+set PATH=%PATH%;E:\masm6;
+#转到E：
+E:
+#进入ASM文件夹
+cd asm
+
+
+
+
+手动操作具体：
+
+#挂载驱动器（将汇编程序、编译工具文件夹挂载到一个虚拟盘）
+#目录结构D:\ls\masm\manual:asm,masm5,masm6
+Z:\>mount E: D:\ls\masm\manual
+#添加系统临时变量（此时的E:代表的是D:\ls\msm\manual）
+Z:\>set PATH=Z:\;E:\masm6;
+#转到E：
+Z:\>E:
+#进入ASM文件夹
+Z:\>cd asm
+#编译
+Z:\>masm hello.asm
+#三次回车，无报错即可
+#链接
+Z:\>link hello.obj
+#三次回车，无报错
+#调试生成的.exe文件
+Z:\>debug hello.exe
+-g
+-g
+
+
+hello.asm:
+DATAS  SEGMENT
+     STRING  DB  'Hello World!',13,10,'$'
+DATAS  ENDS
+
+CODES  SEGMENT
+     ASSUME    CS:CODES,DS:DATAS
+     
+START:
+     MOV  AX,DATAS
+     MOV  DS,AX
+     LEA  DX,STRING
+     MOV  AH,9
+     INT  21H
+   
+     MOV  AH,4CH
+     INT  21H
+CODES  ENDS
+    END   START
+
+
+
+

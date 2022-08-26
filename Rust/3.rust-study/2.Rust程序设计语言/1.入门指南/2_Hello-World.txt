@@ -1,0 +1,11 @@
+打开WT
+$ gvim main.rs:
+fn main(){
+    println!("Hello world!");
+}
+$ rustc main.rs
+$ ls
+main.exe main.pdb main.rs 
+$ ./main.exe 或  ./main
+Hello world!
+

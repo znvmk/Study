@@ -1,0 +1,32 @@
+1、下载安装keil5
+https://www.keil.com/download/product/
+下载MDK-Arm(v-5.36)
+下载安装keil5 STM32F1系列芯片
+https://www.keil.com/dd2/
+MDK5 Device List，打开STMicroselectronics
+下载STM32F0~STM32F7所有芯片
+
+安装keil5，安装完成后弹出芯片安装界面，下面选择本地芯片包，将刚刚下载的几个芯片包加载安装进去。
+2、配置野火开发板项目
+连接开发板电源，数据线，不需要安装驱动，打开keil5
+加载流水灯项目，
+配置项目：
+点击魔术棒图标（Options For Target ...，configure target options)
+Device:STM32F1 Series\STM32F103ZE(按照开发板芯片选择，当前开发板芯片为STM32F103ZET6）
+Debug：Use:CMSIS-DAP Debugger
+            Settings:
+                Debug:
+                    CMSIS-DAP -JTAG/SW Adapter:选any或fire -CMSIS-DAP
+                    Max Clock:10MHz(最大时钟选10兆赫兹)
+                    Debug\Connect & Reset options\Rerset:SYSRESTREQ(必选此项)
+                Flash Download：
+                    Download Function：
+                        勾选EraseSectors（部分擦除，只擦除当前程序所用到的块，下载速度会提升）
+                        勾选Reset and Run(下载后自动重置，启动程序，不用再按开发板上的开关按钮断电重启运行下载好的程序)
+                    Programming Algorithm：
+                        （如果没自动选择当前芯片，点击手动添加）
+                        STM32F10x High-density Flash 512k On-chip Flash 08000000H-0807FFFFH
+Utilities:Configure Flash Menu Command：勾选右边Use Debug Driver 复选框。   
+编译下载：
+点击编译，无报错
+点击下载，下载完成后在开发版上查看流水灯效果。           

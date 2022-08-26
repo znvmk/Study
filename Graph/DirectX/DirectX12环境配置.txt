@@ -1,0 +1,25 @@
+打开Visual Studio 2022 新建win32空项目，设置平台为x64，打开项目属性->链接器->输入->附加依赖项：
+d3d12.lib
+dxgi.lib
+d3dcompiler.lib
+Visual Studio 2022 自动设置包含DirectX12的库目录为x64位，故无需修改
+
+新建main.cpp:
+#include <Windows.h>
+#include <d3d12.h>
+#include <dxgi1_4.h>
+#include <d3dcompiler.h>
+#include <DirectXMath.h>
+//#include "d3dx12.h"
+
+
+
+int WINAPI WinMain(
+	_In_ HINSTANCE hInstance, //若不添加"_In_"等，会报错“WinMain”批注不一致
+	_In_opt_ HINSTANCE, 
+	_In_ LPSTR, 
+	_In_ int nCmdShow)
+{
+	system("pause");
+	return 0;
+}

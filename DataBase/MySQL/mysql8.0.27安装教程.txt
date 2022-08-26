@@ -1,0 +1,38 @@
+官网下载mysql-8.0.27-winx64，解压
+进入到mysql-8.0.27-winx64\目录下，新建my.ini：
+[mysqld]
+port=3306
+max_connections=200
+max_connect_errors=10
+character-set-server=utf8mb4
+
+初始化：
+进入到mysql-8.0.27-winx64\bin目录下，管理员打开命令窗口：
+./mysqld --initialize --console
+**注意：现在没有配置路径，所以都用“./”来运行
+程序会初始化，并且生成mysql-8.0.27-winx64\data目录
+注意，命令窗口运行完毕，最后一行：
+2022-01-03T12:48:22.050727Z 6 [Note] [MY-010454] [Server] A temporary password is generated for root@localhost: btWKh9EplU.<
+btWKh9EplU.<，是MySQL的默认随机密码，注意及时保存。（密码不带前面的空格）
+
+安装:(一定用"./",否则会安装系统中的其他MySQL数据库)
+./mysqld --install
+
+启动：
+net start mysql
+
+登录：(一定用"./",否则会登录系统中的其他MySQL数据库，报错)
+
+./mysql -u root -p
+btWKh9EplU.<(刚刚复制保存的密码)
+
+修改默认密码：
+mysql>ALTER USER root@localhost IDENTIFIED BY 'newpasswd3';
+运行，重新登录，./mysql.exe -u root -p，输入：newpassd3即可登录。
+
+如果要使用小皮面板中的MySQL
+./mysqld.exe --remove
+再次切换：
+关闭小皮面板中的MySQL进入到单独安装MySQL的bin目录
+管理员身份运行：
+./mysqld.exe --install 

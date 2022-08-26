@@ -18,6 +18,7 @@
 10.打开：SQL Server 2017 Master Data Services 配置管理器，连接到服务器“USERCOMPUTER”，添加数据库db。
 11.打开SQL Server Management Studio,连接SQL Server数据库：
 服务器名称："USERCOMPUTER"
+**注：如果计算机名称修改，相应服务器名称也要同步修改才能登录
 Windows身份验证
 或者，SQL Server 身份验证：sa 密码
 12.配置OSQL命令环境：将：C:\Program Files\Microsoft SQL Server\140\Tools\Binn添加的系统环境变量path
@@ -27,6 +28,6 @@ osql -S usercomputer -U sa -P ******
 osql -S localhost -U sa -P ******
 
 
-
+启动SQL Server 服务：C:\Windows\SysWOW64\SQLServerManager14.msc
 
 win7安装SQL Server 2014:https://blog.csdn.net/qqj3066574300/article/details/91914917

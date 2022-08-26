@@ -1,4 +1,12 @@
+最直接的办法：
+QtCrator设置
+选项-》环境-》代码编码：utf-8
+选项-》文本编辑-》behavior-》文本编辑：utf-8
+设置后无乱码问题。
+
+
 原文：https://blog.csdn.net/qq_35820350/article/details/82347652
+
 
 QT5 解决中文显示乱码问题
 

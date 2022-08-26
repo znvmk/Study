@@ -1,0 +1,7 @@
+git
+neovim  gvim vscode Typora 
+火狐浏览器 QQ WeChat  钉钉 WPS 讯读PDF大师 网易云音乐 QQ音乐 QQ邮箱 网易邮箱大师 金山词霸百度网盘 腾讯会议 央视频 迅雷 有道云笔记 石墨文档 uTools XMind AnyDesk ToDesk 向日葵远程控制
+VLC
+GIMP Krita 
+qemu nasm 
+Qt Cteator gcc g++ redis dpkg 

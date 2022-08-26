@@ -1,14 +1,29 @@
+一、单独配置
 1.按照OpenGL的方法配置好glfw,glm,glad等
 2.添加包含目录（vulkan）：
-    项目->属性->VC++目录->包含目录->编辑->新建:D:\ls\VulkanSDK\1.2.162.0\Include
+    项目->属性->VC++目录->包含目录->编辑->新建:
+    D:\ls\VulkanSDK\1.2.182.0\Include
+    D:\znp\Environment\OpenGL\Include
+    D:\ls\VulkanSDK\1.2.182.0\Third-Party\Include
+
 2.添加库目录(glfw,glew,glad)：
-    项目->属性->VC++目录->库目录->编辑->新建:D:\ls\VulkanSDK\1.2.162.0\lib
+    项目->属性->VC++目录->库目录->编辑->新建:
+    D:\ls\VulkanSDK\1.2.182.0\Lib
+    D:\znp\Environment\OpenGL\Lib
+    D:\ls\VulkanSDK\1.2.182.0\Third-Party\Bin
 注：vulkan安装目录下有lib和lib32两个文件夹，选lib
     
 3.之后包含的库文件VS还认不出来，我们需要指定一下。配置链接器：
     项目->属性->链接器->输入->附加依赖项->编辑：
-    vulkan-1.lib
-注：此库在D:\ls\VulkanSDK\1.2.162.0\lib目录下
+opengl32.lib
+glew32.lib
+glew32s.lib
+glfw3.lib
+glfw3dll.lib
+vulkan-1.lib
+SDL2.lib
+SDL2main.lib
+注：此库在D:\ls\VulkanSDK\1.2.162.0\lib,Third-Party目录下
 
 代码测试：
 #define GLFW_INCLUDE_VULKAN
@@ -49,3 +64,22 @@ int main() {
 }
 
 创建了一个空窗口
+
+二、配置Vulkan项目模板
+1.打开Vulkan安装目录，打开模板目录，找到当前vs版本对应模板目录：
+D:\ls\VulkanSDK\1.2.182.0\Templates
+将该目录下的项目模板压缩包复制到vs C++项目模板目录：
+C:\Users\Administrator\Documents\Visual Studio 2019\Templates\ProjectTemplates\Visual C++ 项目
+2.打开vs，创建新项目，选择全部类别，搜索Vulkan
+在四个Vulkan模板中选择C或C++的Vulkan模板，windowed窗口化模板，或者基础模板。
+创建项目
+运行测试C++ windowed模板
+
+创建了一个空窗口
+
+
+
+VulkanSamples编译：
+在系统环境中添加Vulkan头文件目录：
+名称：VULKAN_HEADERS_INSTALL_DIR 
+变量：D:\ls\VulkanSDK\1.2.182.0\Include

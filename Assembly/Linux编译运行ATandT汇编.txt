@@ -1,0 +1,26 @@
+Linux编译运行AT&T汇编
+gcc
+vim test.s:
+.section .data
+			output:
+					.ascii "Hello world !"
+					len = .-output
+.section .text
+.global _start
+_start:
+		movl $4,%eax
+		movl $1,&ebx
+		movl $output,%ecx
+		movl $len,%edx
+		int $0x80
+
+		movl $1,%eax
+		movl $0,%ebx
+		int $0x80
+
+编译：as -o test.o test.s
+链接：ld -o test test.o
+运行：./test
+Hello world !
+
+

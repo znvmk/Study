@@ -1,0 +1,123 @@
+ 中国大陆开源镜像站汇总 原创
+
+rainbow70626
+2022-04-02 11:05:58
+博主文章分类：计算机与操作系统
+
+文章标签
+开源镜像
+linux
+开源镜像站
+ruby
+文章分类
+其它
+其它
+阅读数
+450
+
+​中国大陆开源镜像站汇总​
+
+本文来源：各大开源软件、发行版镜像页面。
+
+请注意这是一个总结，如果您自己搭建了一个小型开源镜像，这里并没有。以下列出的是包含大量不同镜像的站点。
+
+​具体配置中，我建议您使用大企业的镜像。大学的镜像有的只是内部使用，而且未必速度快的像您所期待的那样。同时，我建议您使用某些加速插 件，比如RHEL系列的yum-plugin-fastestmirror，apt-fast，axel，netselect-apt，apt-spy等 等。​
+
+如果您是教育网用户，若果本校没有源，请选择清华大学源来进行配置。毕竟教育网骨干在此。
+
+一、        企业类 ：
+
+    搜狐开源镜像站：http://mirrors.sohu.com/
+    网易开源镜像站：http://mirrors.163.com/
+    首都在线科技股份有限公司：http://mirrors.yun-idc.com/
+    阿里云开源镜像：http://mirrors.aliyun.com/
+    LUPA：http://mirror.lupaworld.com/
+    常州贝特康姆软件技术有限公司(原cn99）：http://centos.bitcomm.cn/
+
+二、       大学类：
+
+    中山大学镜像：http://mirror.sysu.edu.cn/
+    山东理工大学：http://mirrors.sdutlinux.org/
+    哈尔滨工业大学：http://run.hit.edu.cn/
+    中国地质大学：http://cugbteam.org/
+    大连理工大学：http://mirror.dlut.edu.cn/
+    西南林业大学http://cs3.swfu.edu.cn/cs3guide.html
+    北京化工大学（仅教育网可以访问），包含 CentOS 镜像：http://ubuntu.buct.edu.cn/
+    天津大学：http://mirror.tju.edu.cn/
+    西南大学：http://linux.swu.edu.cn/swudownload/Distributions/
+    青岛大学：http://mirror.qdu.edu.cn/
+    南京师范大学：http://mirrors.njnu.edu.cn/
+    大连东软信息学院：http://mirrors.neusoft.edu.cn/
+    浙江大学：http://mirrors.zju.edu.cn/
+    兰州大学：http://mirror.lzu.edu.cn/
+    厦门大学：http://mirrors.xmu.edu.cn/
+    北京理工大学：
+
+         http://mirror.bit.edu.cn (IPv4 only)
+
+         http://mirror.bit6.edu.cn (IPv6 only)
+
+    北京交通大学：
+
+         http://mirror.bjtu.edu.cn (IPv4 only)
+
+         http://mirror6.bjtu.edu.cn (IPv6 only)
+
+         http://debian.bjtu.edu.cn (IPv4+IPv6)
+
+    上海交通大学：
+
+         http://ftp.sjtu.edu.cn/ (IPv4 only)
+
+         http://ftp6.sjtu.edu.cn (IPv6 only)
+
+    清华大学：
+
+         http://mirrors.tuna.tsinghua.edu.cn/ (IPv4+IPv6)
+
+         http://mirrors.6.tuna.tsinghua.edu.cn/ (IPv6 only)
+
+         http://mirrors.4.tuna.tsinghua.edu.cn/ (IPv4 only)
+
+    中国科学技术大学：
+
+         http://mirrors.ustc.edu.cn/ (IPv4+IPv6)
+
+         http://mirrors4.ustc.edu.cn/
+
+         http://mirrors6.ustc.edu.cn/
+
+    东北大学：
+
+         http://mirror.neu.edu.cn/ (IPv4 only)
+
+         http://mirror.neu6.edu.cn/ (IPv6 only)
+
+    华中科技大学：
+
+         http://mirrors.hust.edu.cn/
+
+         http://mirrors.hustunique.com/
+
+    电子科技大学：http://ubuntu.uestc.edu.cn/
+
+         电子科大凝聚工作室(Raspbian单一系统镜像) http://raspbian.cnssuestc.org/
+
+         电子科大星辰工作室(少数小众发布版镜像) http://mirrors.stuhome.net/
+
+三、       PyPi 镜像
+
+    豆瓣：http://pypi.douban.com/
+    山东理工大学：http://pypi.sdutlinux.org/
+    中山大学：http://mirror.sysu.edu.cn/pypi/
+    V2EX：http://pypi.v2ex.com/simple/
+
+四、       RubyGems 镜像
+
+    中山大学：http://mirror.sysu.edu.cn/rubygems/
+    山东理工大学：http://ruby.sdutlinux.org/
+    淘宝网：http://ruby.taobao.org/
+
+五、       npm 镜像   
+
+    cnpmjs：http://cnpmjs.org/

@@ -14,6 +14,8 @@ public function envconf()
 use think\facade\Env;
 
 在网页上输入网址：http://localhost:8000/tp6/public/index/envconf
+php think run -p 83
+*http://localhost:83/index/envconf
 显示env文件中的主机地址“127.0.0.1”
 本地测试，.env里面的优先高于config
 

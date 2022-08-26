@@ -1,0 +1,245 @@
+在Linux命令行中使用计算器的5个命令
+良许
+发布于 2020-08-21
+
+大家好，我是良许。
+
+在使用 Linux 时，我们有时会需要做一些计算，那么我们就可能需要用到计算器。在 Linux 命令行里，有许多计算器工具，这些命令行计算器可以让我们执行科学计算、财务计算或者一些简单的计算。当然，我们也可以在 Shell 脚本中使用这些命令执行更为复杂的数学运算。
+
+这里我们主要介绍5种命令行计算器：
+
+    bc
+    calc
+    expr
+    gcalccmd
+    qalc
+
+1. 如何在 Linux 中使用 bc 执行计算
+
+bc 是一种以交互式语句执行的方式支持任意精度的数字的语言，它的语法和 C 语言有一些相似之处。
+
+bc 的命令行选项中有一个可用的标准数学库，如果有相关要求，bc 会在处理任何文件之前先定义好标准数学库，bc 会以命令中的顺序处理命令中列出的各个文件的代码。
+
+默认情况下，bc 在所有 Linux 发行版中都是安装了的，如果你的系统中没有 bc，可以按照以下命令自行安装：
+
+对于 Fedora 系统中，使用 DNF 命令进行安装
+
+$ sudo dnf install bc
+
+对于 Debian/Ubantu 系统，使用 APT-GET 或 APT 命令进行安装
+
+$ sudo apt install bc
+
+对于基于 Arch Linux 的系统，使用 Pacman 命令进行安装
+
+$ sudo pacman -S bc
+
+对于 RHEL/CentOS 系统，使用 YUM 命令进行安装
+
+$ sudo yum install bc
+
+对于 openSUSE Leap 系统，使用 Zypper 命令进行安装
+
+$ sudo zypper install bc
+
+如何使用 bc 命令
+
+我们可以用 bc 命令直接在终端中执行 + - * / ^ % 等各种计算
+
+    $ bc
+    bc 1.07.1
+    Copyright 1991-1994, 1997, 1998, 2000, 2004, 2006, 2008, 2012-2017 Free Software Foundation, Inc.
+    This is free software with ABSOLUTELY NO WARRANTY.
+    For details type `warranty'.
+
+    1+2
+    3
+
+    10-5
+    5
+
+    2*5
+    10
+
+    10/2
+    5
+
+    13/5
+    2
+
+    (2+4)*5-5
+    25
+
+    2^3
+    8
+
+    8%3
+    2
+
+    quit
+
+使用 -l 来定义标准数学库。默认情况下， 3/5 在 bc 的结果里是 0 ，因为只是取整而已。如果你想要得到正确答案，那么就需要使用 -l 选项了。
+
+    $ bc -l
+    bc 1.07.1
+    Copyright 1991-1994, 1997, 1998, 2000, 2004, 2006, 2008, 2012-2017 Free Software Foundation, Inc.
+    This is free software with ABSOLUTELY NO WARRANTY.
+    For details type `warranty'.
+
+    3/5
+    .60000000000000000000
+
+    quit
+
+2. 如何在 Linux 中使用 calc 进行计算
+
+calc 是一个任意精度的计算器，是一个可以在命令行中执行各种计算的简单计算器。
+
+如果你需要安装 calc 命令，可以参照上面的 bc 命令安装方法。
+如何使用 calc 命令
+
+我们可以用 calc 在终端中交互地执行各种类型的计算。
+
+    $ calc
+    C-style arbitrary precision calculator (version 2.12.7.1)
+    Calc is open software. For license details type:  help copyright
+    [Type "exit" to exit, or "help" for help.]
+
+    ; 5+1
+            6
+    ; 5-1
+            4
+    ; 5*2
+            10
+    ; 10/2
+            5
+    ; 13/5
+            2.6
+    ; 13%5
+            3
+    ; 2^4
+            16
+    ; 9^0.5
+            3    
+    ; quit
+
+当然，你也可以在非交互模式下使用：
+
+$ calc 3/5
+          0.6
+
+3. 如何在 Linux 中使用 expr 进行计算
+
+expr 是核心工具库的一部分，因此我们不需要安装它。
+
+我们可以使用以下的命令进行基础的计算：
+
+$ expr 2 + 3
+6
+
+$ expr 6 - 2
+4
+
+$ expr 3 * 4
+12
+
+$ expr 15 / 3
+5
+
+但是一定要注意，数字和符号需要用空格隔开，否则的话命令将不认识你写的表达式：
+
+$ expr 2+3
+2+3
+
+$ expr 2*3
+2*3
+
+4. 如何在 Linux 中使用 gcalccmd 进行计算
+
+gnome-calculator 是 GNOME 桌面环境的官方计算器。gcalccmd 是Gnome Calculator 工具的控制台版本。默认情况下，gcalccmd 已安装在GNOME桌面中。
+使用 gcalccmd 命令进行计算
+
+gcalccmd 也是有一个交互试的界面，计算式写起来与其它几种计算器无异。
+
+    $ gcalccmd
+    > 5+1
+    6
+
+    > 5-1
+    4
+
+    > 5*2
+    10
+
+    > 10/2
+    5
+
+    > sqrt(16)   
+    4
+
+    > 3/5
+    0.6
+
+    > quit
+
+5. 如何在 Linux 中使用 qalc 进行计算
+
+Qalculate 是一款多功能跨平台的桌面计算器。它使用较为简单，但是功能却十分强大 。它提供了一些很强大的多功能数学库，以及一些满足日常需求的实用工具（例如货币换算和百分比计算等）。
+
+Qalculate 的功能包括大量可自定义的函数库，单位计算和转换，符号计算（包括积分和方程式），任意精度，不确定性传播，区间算术，绘图以及用户友好的界面（GTK +和CLI）。
+
+对于 Fedora 系统中，使用 DNF 命令进行安装
+
+$ sudo dnf install libqalculate
+
+对于 Debian/Ubantu 系统，使用 APT-GET 或 APT 命令进行安装
+
+$ sudo apt install libqalculate
+*sudo apt-get install libqalculate-gtk
+对于基于 Arch Linux 的系统，使用 Pacman 命令进行安装
+
+$ sudo pacman -S libqalculate
+
+对于 RHEL/CentOS 系统，使用 YUM 命令进行安装
+
+$ sudo yum install libqalculate
+
+对于 openSUSE Leap 系统，使用 Zypper 命令进行安装
+
+$ sudo zypper install libqalculate
+
+使用 qalc 命令进行计算
+
+    $ qalc
+    > 5+1
+
+      5 + 1 = 6
+
+    > ans*2
+
+      ans * 2 = 12
+
+    > ans-2
+
+      ans - 2 = 10
+
+    > 1 USD to INR
+    It has been 36 day(s) since the exchange rates last were updated.
+    Do you wish to update the exchange rates now? y
+
+      error: Failed to download exchange rates from coinbase.com: Resolving timed out after 15000 milliseconds.
+      1 * dollar = approx. INR 69.638581
+
+    > 10 USD to INR
+
+      10 * dollar = approx. INR 696.38581
+
+    > quit
+
+6. 如何使用 Shell 命令进行计算
+
+其实在 Shell 命令行下，我们可以直接使用 echo ，awk 等命令直接进行计算，十分方便。
+
+$ echo $((5+5))
+10
+$ cat data | awk '{sum+=$1} END {print "Sum = ", sum}' # 计算data文件里数据之和
