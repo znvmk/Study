@@ -1,0 +1,122 @@
+Termux在手机上安装Arch Linux 
+
+ Android手机手动设定XFCE4桌面环境的Arch Linux ARM，并可以播放音乐影片和使用桌面Linux的APP。如此这般，不用Root权限，将增加Android手机/平板的用途，变成小电脑。
+自己打命令会对系统有更多认识，起码设置Proot不用硬盘分区。懒的手动设定的请改用一键安装脚本：Udroid：在手机快速安装Ubuntu Linux:https://ivonblog.com/posts/install-proot-ubuntu-on-android/
+
+目录
+1. 前置需求
+2. 安装Proot Arch Linux
+3. Arch Linux换源
+4. 新增使用者并给予系统管理者权限
+5. 设置图形介面和VNC server
+6. 设置中文和输入法
+7. 安装完成以后的登入程序
+8. 一些疑难杂症
+9. 延伸阅读在
+
+
+1. 前置需求
+使用Proot前应当有以下认识：
+Proot不是完整的GNU/Linux系统，而是容器，无经开机程序，无法使用Systemd服务
+Proot-distro安装的是纯文字介面的最小系统，图形介面要自行设定。
+很难实现GPU加速手机建议至少有5GB的储存空间和4GB以上RAM。
+  1.请先阅读：Termux基础教学 https://ivonblog.com/posts/how-to-use-termux/
+  2. 安装RealVNC Viewer https://www.realvnc.com/en/connect/download/viewer/
+  3. 如果手机是Android 12以上，务必停用Phantom killing防止出现signal 9错误。 https://www.bilibili.com/video/BV1aZ4y1C73E/
+
+2. 安装Proot Arch LinuxTermux执行时建议通知栏下滑，按AQUIRE WAKELOCK使其保持在背景执行。
+  1.首先，安装proot-distro包
+  pkg update
+  pkg install proot-distro
+  2. 查看Termux线上有哪些发行版
+    proot-distro list
+  3. 安装Arch Linux
+    proot-distro install archlinux
+  4. 下载完成后使用以下命令登入：
+    proot-distro login archlinux
+
+3. Arch Linux换源
+  到Arch Linux官网找一个镜像站点加快下载速度。https://archlinux.org/mirrors/status/
+  用vi编辑/etc/pacman.d/mirrorlist，将每一行$repo前面的网址前替换成镜像/archlinux的网址修改好后更新系统：
+  pacman -Syu4. 新增使用者并给予系统管理者权限
+  1.先给root变更密码
+    passwd
+  2. 新增一般使用者ivon，加入wheel群组，修改密码
+    pacman -S sudo vim
+    useradd -m -g users -G wheel -s /bin/bash ivon
+    passwd ivon
+  3.赋予一般使用者sudo权限，用vi编辑/etc/sudoers，在"root ALL=(ALL) ALL"的下一行加入以下内容:
+    ivon ALL=(ALL) ALL
+  4. 接着登入ivon这个帐号。以后都是使用一般使用者帐号登入系统，不要使用root。
+    su ivon
+    cd
+  5. 新增配置文件，用vi编辑~/.profile，加入以下内容
+    #使执行sudo时等同sudo -S，如此才能输入密码
+    alias sudo="sudo -S"
+
+5. 设置图形介面和VNC server
+  在Proot环境中，系统不会「开机」，因此访问图形介面最简单的方法就是直接执行vncserver。
+  1.安装XFCE4桌面环境、浏览器、中文字体、SSH、TigerVNC
+    pacman -S  firefox networkmanager xorg xorg-server pulseaudio xfce4 xfce4-goodies lightdm noto-fonts-cjk  git openssh fakeroot base-devel tigervnc neofetch
+  2. 建立六位数vnc密码
+    vncpasswd
+  3. 用vim编辑vnc配置文件 ~/.vnc/config，加入以下内容：
+    session=xfce4
+    geometry=1920x1080
+    localhost
+    alwaysshare
+  4. 编辑~/.vnc/xstartup，设定执行vncserver后执行xfce4：
+    #!/bin/bash
+    unset SESSION_MANAGER
+    unset DBUS_SESSION_BUS_ADRESS
+    export PULSE_SERVER=127.0.0.1 && pulseaudio --start --disable-shm=1 --exit-idle-time=-1
+    exec startxfce4 &
+
+6. 设置中文和输入法
+  RealVNC Viewer可以直接用手机键盘输入文字。时区要进入桌面后对时钟按右键手动设定。
+  1.编辑/etc/locale.gen，将zh_CN.UTF-8取消注解。
+  2. 然后生成语言。sudo locale-gen
+  3. 如果还是没看到中文，在~/.profile加入以下参数：
+    LANG="zh_CN.UTF-8"
+    LC_CTYPE="zh_CN.UTF-8"
+    LC_NUMERIC="zh_CN.UTF-8"
+    LC_TIME="zh_CN.UTF-8"
+    LC_COLLATE="zh_CN.UTF-8"
+    LC_MONETARY="zh_CN.UTF-8"
+    LC_MESSAGES="zh_CN.UTF-8"
+    LC_PAPER="zh_CN.UTF-8"
+    LC_NAME="zh_CN.UTF-8"
+    LC_ADDRESS="zh_CN.UTF-8"
+    LC_TELEPHONE="zh_CN.UTF-8"
+    LC_MEASUREMENT="zh_CN.UTF-8"
+    LC_IDENTIFICATION="zh_CN.UTF-8"
+    LC_ALL=
+  4. 安装Fcitx5输入法框架
+    sudo pacman -S fcitx5-config-qt fcitx5-qt fcitx5-gtk fcitx5-chinese-addons
+  5. 在~/.profile加入以下内容：
+    GTK_IM_MODULE=fcitx
+    QT_IM_MODULE=fcitx
+    XMODIFIERS=@im=fcitx
+    SDL_IM_MODULE=fcitx
+    GLFW_IM_MODULE=ibus
+
+7. 安装完成以后的登入程序
+  在安装完成后，以后登入Arch Linux的步骤如下。
+  1. 启动Termux，直接以一般使用者登入Arch Linux。
+    proot-distro login --user ivon archlinux
+  2. 启动vncserver，端口预设从5900开始算，像:1的端口是5901。
+    vncserver :1
+  3. 打开RealVNC Viewer，新增连线输入localhost:5901，输入密码，连线到vncserver。
+  4. 点i，调整图形质量。
+  5. 要登出的话，VNC Viewer返回断线，接着回到Termux内按CTRL+Z终止vncserver，然后输入exit登出proot。
+
+8. 一些疑难杂症
+  1.如果Proot无法输出音效，在Termux(非proot内)执行：
+    pulseaudio --start --load="module-native-protocol-tcp auth-ip-acl=127.0.0.1 auth-anonymous=1" --exit-idle-time=-1
+  2. Proot-distro会把手机内部储存空间bind mount到proot系统的/sdcard目录，可直接用XFCE的Thunar文件管理器打开。
+  3. 此外可使用此命令备份proot系统：
+    proot-distro backup --output archbackup.tar.gz archlinux
+  4. 并使用此命令还原proot系统：
+    proot-distro restore archbackup.tar.gz 
+
+9. 延伸阅读Proot-distro项目在Github上的页面

@@ -250,11 +250,11 @@ void CMSerDlg::RecvData(CServerSocket* pSocket)
 
 {
 	char* pData = NULL;
-	pData = new char[1024];
-	memset(pData, 0, sizeof(char) * 1024);
+	pData = new char[MAX_MESSAGE_DATA_RECIVE]; 
+	memset(pData, 0, sizeof(char) * MAX_MESSAGE_DATA_RECIVE);
 	UCHAR leng = 0;
 	CString str=_T("");
-	leng = pSocket->Receive(pData, 1024, 0);
+	leng = pSocket->Receive(pData, MAX_MESSAGE_DATA_RECIVE, 0);
 	str.Format(_T("%d"), leng);
 	//AfxMessageBox(_T("接收信息长度：") + str);
 
@@ -265,7 +265,7 @@ void CMSerDlg::RecvData(CServerSocket* pSocket)
 		CString csM,csUserCount=_T("");
 		csM=csUserCount=_T("");
 		csUserCount.Format(_T("%d"), m_uiUserCount);
-		csM += _T("你好，当前用户数量为：1234567890");//CString连接数字后，会丢失10个字节，即“1234567890”全部丢失，其中汉字字符占两个字节，数字字符占一个字节。
+		csM += _T("你好，当前用户数量为：1234567890");//CString连接数字后，会丢失10个字节，即“1234567890”（占位）全部丢失，其中汉字字符占两个字节，数字字符占一个字节。
 		csM += csUserCount;
 //		AfxMessageBox(csUserCount);
 		if (str == csConnectCode)
@@ -277,7 +277,7 @@ void CMSerDlg::RecvData(CServerSocket* pSocket)
 		}
 		else
 		{
-			SendMSG(_T("发送成功:") + str);     // 转发数据给所有用户，包括发送数据的用户
+			SendMSG(_T("发送成功: ") + str +_T("1234"));     // 转发数据给所有用户，包括发送数据的用户
 		}
 	}
 	//AfxMessageBox(str);
@@ -293,7 +293,7 @@ void CMSerDlg::UpdateEvent(CString str)
 	str += _T("\r\n");
 
 	// 获取系统当前时间
-	string = _T("\r\nServer:")+ time.Format(_T("\t %Y/%m/%d %H:%M:%S\r\n") + str);
+	string = _T("\t")+ time.Format(_T("\t %Y/%m/%d %H:%M:%S\r\n")) + _T("Server:") + str;
 	// 格式化当前时间
 	int lastLine = m_edit_log.LineIndex(m_edit_log.GetLineCount() - 1);
 	//获取编辑框最后一行索引

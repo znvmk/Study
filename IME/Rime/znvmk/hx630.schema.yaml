@@ -1,0 +1,294 @@
+# Rime schema settings
+# encoding: utf-8
+schema:
+  schema_id: hx630
+  name: 鹤形630
+  version: "1"
+  author:
+    -  谁动了我的魔方
+  dependencies:
+    - pinyin
+    - easy_en
+
+switches:
+  - options: [ _keyboard_functions, _keyboard_qwerty ]
+#    states: [ "☯", "☯"]
+  - name: _hide_candidate
+    reset: 0
+  - name: ascii_mode
+    reset: 0
+    #states: [ 中, 英 ]
+   #注音 
+  - name: spelling
+    states: [码, 音]  
+    reset: 0
+  #简繁转换
+  - name: jffh
+    reset: 0
+    states: [ 简, 繁 ]
+  #全半转换
+  - name: full_shape
+    reset: 0
+    states: [ 全, 半 ]
+  #表情滤镜
+  - name: emoji_cn
+    reset: 0
+    states: [ 无情, 表情 ]
+  - name: dic_4w_en
+  # 翻译开关，0为不翻译，1为翻译
+    reset: 1
+    states: ["不译", "翻译"]
+  - name: EN2en
+    reset: 1
+  - name: ascii_punct
+    states: [ 。，, ．， ]
+ 
+
+
+engine:
+  processors:
+    - ascii_composer
+    - recognizer
+    - key_binder
+    - speller
+    - punctuator
+    - selector
+    - navigator
+    - express_editor
+  segmentors:
+    - ascii_segmentor
+    - matcher
+    - affix_segmentor@easy_en   
+    - abc_segmentor
+    - punct_segmentor
+    - fallback_segmentor
+  translators:
+    - punct_translator
+    - table_translator
+    - table_translator@easy_en
+    - reverse_lookup_translator
+    - table_translator@custom_phraseUser2
+    - table_translator@custom_phraseBuchong 
+    - table_translator@custom_phraseTop #置顶词库
+    - table_translator@custom_phraseUser #用户词库
+    - table_translator@hx630_630
+    - history_translator@repeat_history
+    - "lua_translator@date_translator"   #加载日期脚本
+    - "lua_translator@number_translator" #加载数字脚本
+    - "lua_translator@time_translator"   #加载时间脚本
+  
+  filters:
+    - simplifier
+    - simplifier@emoji_cn #表情滤镜
+    - "simplifier@spelling"  #注音滤镜
+    - simplifier@jffh #简繁滤镜
+    - simplifier@bmms
+    - simplifier@EN2en
+    - simplifier@easy_en     #临时英文
+    - simplifier@dic_4w_en #翻译滤镜
+    - uniquifier
+    - reverse_lookup_filter@hx630_630_lookup #简词提示
+
+speller:
+  delimiter: " '"
+  auto_select: true
+#  finals: '/'
+  alphabet: "zyxwvutsrqponmlkjihgfedcba789;'"
+  initials: "abcdefghijklmnopqrstuvwxyz;"
+
+
+translator:
+  dictionary: hx630.sys #系统词库
+  enable_charset_filter: false
+  enable_completion: true
+  enable_encoder: true
+  enable_sentence: false
+  enable_user_dict: false
+  encode_commit_history: false
+  max_phrase_length: 99
+  initial_quality: 1000
+  comment_format:
+    - xform|~||
+    
+spelling:
+  opencc_config: spelling.json
+  option_name: spelling
+  show_in_comment: true
+  comment_format:
+    - "xform/☯/ · /"    
+    - "xform/<br>/\r/"
+  tags:
+    - abc
+  tips: all 
+
+repeat_history:
+  input: ;f #重复上次上屏内容
+  size: 1
+  initial_quality: 100000
+ 
+EN2en:
+  opencc_config: EN2en.json
+  option_name: EN2en
+
+emoji_cn:
+  opencc_config: emoji.json
+  option_name: emoji_cn
+  tips: all
+
+jffh:
+  opencc_config: s2tw.json
+  option_name: jffh
+
+bmms:
+  opencc_config: pinyin.json
+  option_name: bmms
+  show_in_comment: true
+  comment_format:
+    - xform/'/ /
+
+custom_phraseBuchong:
+  dictionary: ""
+  user_dict: buchong
+  db_class: stabledb
+  enable_sentence: false
+  enable_completion: false
+  initial_quality: 999 #本表词和系统词重码居后
+
+custom_phraseTop:
+  dictionary: ""
+  user_dict: top
+  db_class: stabledb
+  enable_sentence: false
+  enable_completion: false
+  initial_quality: 1000 #用户词和系统词重码 置顶
+  
+custom_phraseUser:
+  dictionary: ""
+  user_dict: user
+  db_class: stabledb
+  enable_sentence: false
+  enable_completion: false
+  initial_quality: 999 #用户词和系统词重码居后
+  
+custom_phraseUser2:
+  dictionary: ""
+  user_dict: fy.sys
+  db_class: stabledb
+  enable_sentence: false
+  enable_completion: false
+  initial_quality: 999 #用户词和系统词重码居后
+
+
+
+easy_en:
+  tag: easy_en
+  prefix: "'"
+  tips: "〔临时英文〕"
+  dictionary: easy_en
+  enable_sentence: true
+  enable_completion: false
+  enable_user_dict: false #true
+  initial_quality: "0"       
+  
+dic_4w_en:
+  opencc_config: dic_4w_en.json
+  option_name: dic_4w_en
+  show_in_comment: true #开启编码滤镜
+  comment_format:  #编码滤镜正则处理
+#    - "xform/<br>/\n/" #编码滤镜内容换行。注意: 如果用于小狼毫,请将\n改为\r,否则无效
+    - "xform/<br>/\r/" #编码滤镜内容换行。注意: 如果用于小狼毫,请将\n改为\r,否则无效
+    - "xform/&nbsp/ /" #编码滤镜内容显示空格
+#上述带#号为编码滤镜模式工作选项, 普通滤镜直接在行首用#号屏蔽
+  tags:
+    - easy_en
+  tips: all #none无注释,char单字注释,all全部注释
+ 
+reverse_lookup:
+  dictionary: flypydz
+  comment_format:
+    - xform/^/〔/
+    - xform/$/〕/
+    - xform/ /, /
+    
+hx630_630:
+  dictionary: hx630_630
+  enable_sentence: false
+  enable_encoder: false
+  encode_commit_history: false
+  enable_completion: true
+  enable_user_dict: false
+  initial_quality: 1001 #630候选置前（数值需比翻译器高1）
+
+hx630_630_lookup:
+#  tags: [hx630_630]
+  dictionary: hx630_630 #反查其码
+  overwrite_comment: true
+  comment_format:
+    - xform/^/〔/
+    - xform/$/〕/
+    - xform/ / /
+
+punctuator:
+  import_preset: symbols
+
+key_binder:
+  bindings:
+#手机配置
+    - {accept: minus, send: Page_Up, when: has_menu}
+    - {accept: equal, send: Page_Down, when: has_menu}
+    #- { when: has_menu, accept: "'", send: 2 }
+     #- {accept: comma, send: 3, when: has_menu} #逗号次选
+    - {accept: dollar, send: 2, when: composing}   
+#电脑小狼毫按键配置 
+#key_binder:
+#  bindings:
+    - {accept: minus, send: Page_Up, when: has_menu}
+    - {accept: equal, send: Page_Down, when: has_menu}
+#翻页    
+    - { when: composing, accept: Escape, send: Escape }
+    - { when: has_menu, accept: Escape, send: Escape }
+#ESC清除编码
+#    - { when: composing, accept: Return, send: Escape }
+#    - { when: has_menu, accept: Return, send: Escape }
+ #回车清除编码   
+#    - {accept: "Shift+space", send: space, when: composing}   #小狼毫输入法中进行引导造词时的上屏组合键（Shift+space），同文输入法则需要点击候选词上屏
+#    - {accept: "space", send: 1, when: composing}   #引导造词中空格等于首选，空格就丧失了上屏的功能（在引导造词中）
+    - { when: composing, accept: semicolon, send: 2 }
+    - { when: has_menu, accept: apostrophe, send: 3 }
+    - { when: has_menu, accept: '/', send: 4 }
+    - {accept: "Shift+Shift_L", send: 7, when: has_menu} #左shift出7
+    - {accept: "Tab", send: 8, when: composing} #tab出8
+#分号次选，引号三选    
+    - {accept: "Caps_Lock", send: Escape, when: composing} 
+    - {accept: "Shift_R", send: Escape, when: composing}
+    - {accept: "Shift+space", toggle: full_shape, when: always} #切换全半角
+    - {accept: "Control+j", toggle: simplification, when: always} #切换简繁
+    - {accept: "Control+period", toggle: ascii_punct, when: always} #切换中英标点
+    - {accept: "Control+m", select: .next, when: always} #切换方案     
+
+
+recognizer:
+  import_preset: default
+  patterns:
+    reverse_lookup: "[a-z`]*`+[a-z`]*"
+    punct: "^/([0-9]0?|[a-z]+)$"
+    mkst: "^#[a-z0-9)(,./:?!']*'?$"
+#    mkst: '^[a-z]*/[a-z`]*$'
+    easy_en: "^'[A-Z|a-z]*'?$"    
+    email: "^[A-Za-z][-_.0-9A-Za-z]*@.*$"
+    url: "^(www[.]|https?:|ftp[.:]|mailto:|file:).*$|^[a-z]+[.].+$"
+    
+ascii_composer:
+  good_old_caps_lock: true
+  switch_key:
+    Shift_L: commit_code
+    Shift_R: commit_code
+    Control_R: noop
+    Caps_Lock: Escape
+    Eisu_toggle: clear
+    
+menu:
+  page_size: 7 #候选项数
+  
+style:
+  horizontal: false #横排为true，竖排为false

@@ -1,0 +1,128 @@
+写入二进制引导文件，512byte:
+操作符：
+reg   when w=0 when w=1		Effective Address  Mod   R/M		HLT
+000    AL        AX                 [BX+SI]        00    000         1111 0100
+001    CL        CX		    [BX+DI]              001
+010    DL        DX		    [BP+SI]              010
+011    BL        BX		    [BP+DI]	         011 
+100    AH        SP		    [SI]                 100
+101    CH        BP		    [DI]                 101
+110    DH        SI                 disp16-2             110
+111    BH        DI		    [BX]                 11
+000    ES
+001    CS
+010    SS
+011    DS
+100    FS
+101    GS
+110    Reserved1
+111    Reserved
+
+vim -b test.bin
+
+mov ax.0xb800	 10111000 00000000 10111000                   		b8 00 b8
+mov ds,ax	 10001110 11011000           				8e e8
+mov byte[0],0x48 11000110 00000110 00000000 00000000 01001000		c6 06 00 00 48
+mov byte[1],0x04 11000110 00000110 00000001 00000000 00000100		c6 06 01 00 04
+mov byte[2],0x69 11000110 00000110 00000010 00000000 01101001           c6 06 02 00 69
+mov byte[3],0x04 11000110 00000110 00000011 00000000 00000100		c6 06 03 00 04
+hlt        	 11110100						f4
+"补充字节足够512 00000000 00000000 00000000 00000000 00000000 
+		 00000000 00000000 00000000 00000000 00000000 
+		 00000000 00000000 00000000 00000000 00000000 
+		 00000000 00000000 00000000 00000000 00000000 
+		 00000000 00000000 00000000 00000000 00000000 
+		 00000000 00000000 00000000 00000000 00000000 
+		 00000000 00000000 00000000 00000000 00000000 
+		 00000000 00000000 00000000 00000000 00000000 
+		 00000000 00000000 00000000 00000000 00000000 
+		 00000000 00000000 00000000 00000000 00000000 
+		 00000000 00000000 00000000 00000000 00000000 
+		 00000000 00000000 00000000 00000000 00000000 
+		 00000000 00000000 00000000 00000000 00000000 
+		 00000000 00000000 00000000 00000000 00000000 
+		 00000000 00000000 00000000 00000000 00000000 
+		 00000000 00000000 00000000 00000000 00000000 
+		 00000000 00000000 00000000 00000000 00000000 
+		 00000000 00000000 00000000 00000000 00000000 
+		 00000000 00000000 00000000 00000000 00000000 
+		 00000000 00000000 00000000 00000000 00000000 
+		 00000000 00000000 00000000 00000000 00000000 
+		 00000000 00000000 00000000 00000000 00000000 
+		 00000000 00000000 00000000 00000000 00000000 
+		 00000000 00000000 00000000 00000000 00000000 
+		 00000000 55aa
+转为二进制：vim命令模式下:%!xxd -r -p
+转为十六进制：vim命令模式下：%!xxd
+sudo bximge,选1,创建软盘，默认hd，默认flat,输入镜像名称（默认c.img):boot.img
+写入程序：
+sudo dd if=./test.bin of=./boot.img bs=512 count=1 seek=0 conv=notrunc
+
+创建bochs配置文件：bochsrc
+
+megs:32
+romimage: file=$BXSHARE/BIOS-bochs-latest #/opt #/usr/share/bochs/BIOS-bochs-latest
+vgaromimage: file=$BXSHARE/VAGBIOS-lgpl-latest #/usr/share/vgabios/vgabios.bin
+#ata0-master: type=disk,path=boot.img,mode=flat
+floppya:1_44=a.img,status=inserted
+#boot:a
+log:bochsout.txt
+mouse:enabled=0
+keyboard:keymap=/usr/share/bochs/keymaps/x11-pc-us.map
+
+
+运行程序：sudo bochs -f bochsrc，默认6 选项
+<bochs:1>c 输入c,打开界面
+
+
+
+可以直接运行的系统
+mbr.s:
+
+;----BIOS把启动区加载到内存的该位置，所以需设置地址偏移量
+section mbr vstart=0x7c00
+
+;----卷屏中断，目的是清屏
+mov ax,0x0600
+mov bx,0x0700
+mov cx,0
+mov dx,0x184f
+int 0x10;
+
+----直接往显存中写数据
+mov ax,0xb800
+mov gs,ax
+mov byte [gs:0x00],'h'
+mov byte [gs:0x02],'e'
+mov byte [gs:0x04],'l'
+mov byte [gs:0x06],'l'
+mov byte [gs:0x08],'o'
+
+;----512字节的最后两字节是启动区标识
+times 510-($-$$) db 0db 0x55,0xaa
+
+
+>>bximage
+>>1  ;创建一个镜像
+>>fd ;格式有fd(软盘)，hd(硬盘)，选择软盘
+>>1.44Mb ;软盘大小选择1.44Mb
+>>a.img ;镜像名称，默认a.img
+info:floppya：imag="a.img",status=inserted 
+
+编译mbr.s
+masm -o mbr mbr.s
+
+将编译好的二进制文件写入到镜像中
+dd if=mbr of=a.img bs=512 count=1 seek=1 conv=notrunc
+
+安装qemu-system-i386
+
+加载运行：qemu-system-i386 a.img
+
+
+创建磁盘镜像
+qemu-img create -f raw mbr.raw 1440K
+写入二进制引导文件
+dd if=mbr of=a.img bs=512 count=1 seek=1 conv=notrunc
+
+

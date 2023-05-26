@@ -1,0 +1,43 @@
+ keil4如何将c语言转换成汇编语言
+
+在keil软件中
+
+方法：(假设当前工程中只有一个C代码文件)
+
+第1步：新建一个工程，添加C文件，编译通过
+
+第2步：右击Keil界面中Project Workspace里的C文件名，选择‘Option for…’
+
+第3步：点击‘Generate Assembler SRC File’‘Assemble SRC File’两个三态复选框使它们呈高亮并勾选，点击确定
+
+第4步：将KEIL安装目录下C51/LIB/C51S.LIB(如果是SMALL模式)文件复制到工程目录下
+
+第5步：添加库文件C51S.LIB文件到工程，即右击‘Source Group $2，选择‘Add Files to Group …’，在工程目录下选择C51S.LIB，点击打开
+
+(因为有了第3步中的操作，如果在这里不添加库文件，则编译生成的HEX文件不能被单片机正确执行，同时编译时会出现一个警告：
+
+WARNING L1:UNRESOLVED EXTERNAL SYMBOL
+
+SYMBOL: ?C_STARTUP
+
+无法识别?C_STARTUP这个标号，这个标号是在库文件中定义
+
+)
+
+第6步：打开工程目录，可以看到新生成一个扩展名为.SRC的文件，将其扩展名改成.A51
+
+第7步：添加这个.A51文件到工程(这时候工程就包含C51S.LIB库文件，不然编译会产生第5步中说明的警告，且生成的HEX文件不能被单片机正确运行)
+
+第8步：重新编译，生成HEX文件，加载到单片机中，可以发现与C语言运行的现象是一致的
+
+
+
+输出bin和汇编
+
+在keil中进行如下配置 ，表示在工程编译以后所执行的命令行。
+
+命令行如下，方便大伙copy：
+
+fromelf --text -c -o “$L@L.asm” “#L”
+
+fromelf --bin -o “$L@L.bin” “#L”

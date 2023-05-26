@@ -240,7 +240,7 @@ void CMClientDlg::UpdateEvent(CString str)
 	str += _T("\r\n");
 	
 	// 获取系统当前时间
-	cstr= _T("Client:\t") + time.Format(_T("  %Y/%m/%d %H:%M:%S \r\n") + str);
+	cstr = _T("\t") + time.Format(_T("  %Y/%m/%d %H:%M:%S \r\n")) + _T("Client: ") + str;
 	// 格式化当前时间
 	int lastLine = m_edit_log.LineIndex(m_edit_log.GetLineCount() - 1);
 	//获取编辑框最后一行索引
@@ -289,7 +289,7 @@ int  CMClientDlg::nSendMessage(CString message)
 		//	AfxMessageBox(message);
 		nErrorCode=pSock->SendMSG(pBuff, message.GetLength());
 
-		if(message != csConnectCode) UpdateEvent(_T("_send:\t")+m_strSend);
+		if(message != csConnectCode) UpdateEvent(_T("Client Send:")+m_strSend);
 
 		return nErrorCode;
 	}
@@ -300,7 +300,7 @@ int  CMClientDlg::nSendMessage(CString message)
 void CMClientDlg::setReceiveMessage(int nErrorCode)
 {
 	m_strReceive=pSock->OnRecevie(nErrorCode);
-	if(m_strReceive != _T("") /*&& m_strReceive != csSendCode*/) UpdateEvent(_T("_receive:\t") + m_strReceive);
+	if(m_strReceive != _T("") /*&& m_strReceive != csSendCode*/) UpdateEvent(_T("Client Receive:") + m_strReceive);
 	m_strReceive != _T("");
 
 }

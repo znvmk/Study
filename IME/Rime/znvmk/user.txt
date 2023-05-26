@@ -1,0 +1,83 @@
+# coding: utf-8
+# 魔方用户词库
+# 该文件以UTF-8编码保存
+# 编码各字段以制表符（Tab）分隔
+# ============================
+# Tab符（右滑T）或（长按G）点Tab
+# ============================
+# 词组	编码
+user 	user
+dict 	dict
+schemal 	sche
+yaml 	yaml
+list 	list
+👌	ok
+🐂	nq
+🐂🚶	nqrf
+🐮🍺	nqbi
+🌶️💩💉💧🐮🍺	lunb
+🕰️👊🏻➗🐔	vqij
+🐎🐎🐯🐯	mmh
+.com	dcom
+CAPS LOCK	caps
+CTRL	ctrl
+EMMMMMMM	emmm
+ENNNN	ennn
+ENTER	enter
+ESC	esc
+EXCEL	excl
+GDP	gdp
+GIF	gif
+PPT	ppt
+PY交易	pyjy
+QQ	qq
+QQ号	qqh
+QQ拼音	qqpy
+QQ群	qqqw
+QQ音乐	qqyy
+RIME	rime
+ROOT	root
+ABC	abc
+shit	shit
+SHIFT	shit
+SIM卡	sim
+ALT	alt
+ANDROID	andd
+APK	apk
+APP	app
+ATM	atm
+THX	thx
+TIM	tim
+U盘	upj
+VIP	vip
+WELCOME	welc
+WIFI	wifi
+WIKI	wiki
+WIN10	wins
+WINDOWS10	wins
+WIN7	wins
+WINDOWS7	wins
+WINDOWS	wins
+WORD	word
+WPS	wps
+http://	http
+@163.com	;aw
+@qq.com	;aq
+配置 字数 	ziuu
+配置 字数 30	ziuu
+配置 字数 100	ziuu
+文章 b 1	wfvh
+文章成绩 b 1	wfvh
+的时候	deh
+这件事	vju
+1015609771@qq.com	oyx
+13138755345@163.com	oyx
+哈哈	hh
+不吹不黑	bibh
+魔鹤大一统	mhdt
+鹤形630	hexk
+消化	xnhx
+我草了	wcl
+
+老污龟	lwg
+

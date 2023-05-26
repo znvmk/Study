@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<header role="banner">
+    <meta charset="UTF-8" />
+    <title>
+        Antoni Gaudi-Introduction
+    </title>
+    <!--图片底部样式颜色设置为红色
+	<style>
+	img{
+		border:4px solid red;
+}
+	</style>
+-->
+    <!--	.frame{
+		border:4px solid red;
+}-->
+
+    <nav>
+        <ul> <!--定义选择器-->
+            <li><a href="#gaudi">Barcelona's Architect</a></li>
+            <li lang="es"><a href="#sagrada-familia">Laa Sagrada Familia </a></li>
+            <li><a href="#park-guell">Park Guell</a></li>
+        </ul>
+    </nav>
+</header>
+<main role="main">
+    <article>
+        <h1 id="gaudi">Barcelona's Architect</h1>
+        <p>Antoni Guadi's incredible buildings bring millions of turists to Barcelona each year.</p>
+        <h2 id="park-guell">Park Guell</h2>
+        <p>park guell id</p>
+
+        <h2 id="sagrada-familia">Laa Sagrada Familia</h2>
+        <p>Laa sagrada familia id</p>
+        <!--文章的也叫，并非页面级的页脚-->
+        <footer>
+            <p>Leandra Allen is a freelance journalist who earned her degree in anothropology from the Unviersity of
+                Copenhagen.</p>
+            <address>
+                You may reach her at <a href="mailto:Leandra@...">leandra@...</a>
+            </address>
+        </footer>
+    </article>
+</main>
+
+<body>
+    <!--开始页面容器-->
+    <!-- === 开始主体内容=== -->
+    <div class="container">
+        <!--ARIA:地标角色
+		role="main"(主体)
+		role="complemmentary"(补充性内容)
+		role="conteninfo"(内容信息)
+		-->
+        <header role="banner">
+            <nav role="navigation">
+                Global navigation
+                <ul title="Table of Contents"> <!--为元素添加title属性-->
+                    <li><a href="#gaudi">Barcelona's Architect</a></li><!--创建链接到特定锚得链接-->
+                    <li lang="es"><a href="#sagrada-familia">Laa Sagrada Familia </a></li>
+                    <li><a href="#park-guell">Park Guell</a></li>
+                    <h1>Barcelona's Architect</h1>
+                    <h2 lang="es">La Sagrada Familia</h2>
+                    <h3>Video Playback</h3>
+                    <h4>Jumping to Markers</h4>
+
+                    <p>cite：参考标签</p>
+                    <p>He espacially enjoyed this selection from
+                        <cite>The Adventures of Huckleberry finn</cite>by Mark Twain:
+                    </p>
+
+                    <blockquote cite="http://www.marktwainbooks.edu/the-adventures-of-huckleberry-finn/">
+                        <p>He said there warn't no home like a raft,after all.</p>
+                    </blockquote>
+
+                </ul>
+
+            </nav>
+        </header>
+        <style>
+            {
+
+                .intro p {
+                    font-size: 17px;
+                    font-size: 1.0265rem;
+                }
+        </style>
+
+        <article>
+            <div class="intro">
+                <h1>2013 Revenue by Industry</h1>
+                <p>...【报告内容】...</p>
+                <figure>
+                    <figcaption><b>Figure 3:</b> Breakdown of Revenue by Industry</figcaption>
+                    <img src="../../Image/Blue_Flax.jpg" width="180" height="143"
+                        alt="Revenue chart:Clothing 42%,Toys 36%,Food 22%" style="border:4px solid green" />
+                    <!--内联样式-->
+                    <!--class="frame"-->
+                </figure>
+
+                <!--alt:代替文本，当图片无法正常显示得时候网页会显示代替文本-->
+                <p>As Figure 3 illustrates,..</p>
+                <p>...【其它报告】...</p>
+
+                <p>The train arrives at <time>08:45</time> and <time>16:20</time> on <time>2017-03-19</time>.</p>
+                <p>The train arrives at <time datatime="2017-03-19T08:45:00">July 13,1925 at 11:05 a.m.</time> and <time
+                        datatime="2017-03-19T08:45:00">July 13</time> on <time datatime="2017-03-19T08:45:00">16</time>.
+                </p>
+        </article>
+
+
+
+        <footer role="contentinfo">
+            <p><small>&copy;Copyright All About Gaudi.</small></p>
+        </footer>
+    </div>
+
+</body>
+
+</html>

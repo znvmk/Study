@@ -1,0 +1,22 @@
+var:
+  last_build_time: 1662040785
+  option:
+    extended_charset: false
+    full_shape: false
+    simplification: true
+  previously_selected_schema: hx630
+  schema_access_time:
+    double_pinyin_flypy: 1585839411
+    double_pinyin_mspy: 1585581395
+    flypy: 1586352695
+    fy: 1586353249
+    hx630: 1586354056
+    jimh: 1586353236
+    pinyin: 1585833557
+    sbfd: 1585907070
+    sbfdgd: 1585887043
+    sp_flypy: 1586353858
+    stroke: 1585581412
+    xhup: 1585829851
+    xhup_express: 1585829669
+    xhup_fluency: 1585830057

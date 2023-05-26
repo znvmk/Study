@@ -1,0 +1,402 @@
+# Rime schema settings
+# encoding: utf-8
+ 
+schema:
+  schema_id: xhyx
+  name: 鹤形630
+  version: "2.0"
+  author:
+    - 魔方
+  description: |
+    鹤形630主码表+简码提示+临时英文+造词+超字集
+
+#↓状态栏开关
+switches:
+  - name: ascii_mode
+    reset: 0
+  - name: full_shape
+    reset: 0
+  - name: jffh
+    reset: 0
+    states: [ 简体, 繁體 ]
+  - name: ascii_punct
+    reset: 0
+  - name: spelling
+    states: [编码, 注音]  
+    reset: 0
+  - name: emoji_cn
+    reset: 0
+    states: [OFF, 表情]
+  - name: dic_4w_en
+    reset: 1
+    states: ["OFF", "翻译"]
+  - name: _hide_candidate
+    reset: 1
+  - options: [_key_&]
+    states: [二分]
+  - options: [_key_~]
+    states: [纯双]
+
+engine:
+  processors:
+    - ascii_composer
+    - recognizer
+    - key_binder
+    - speller
+    - punctuator
+    - selector
+    - navigator
+    - express_editor
+  segmentors:
+    - ascii_segmentor
+    - matcher
+    - affix_segmentor@easy_en       
+    - affix_segmentor@xhyx_viqm4
+    - affix_segmentor@xhyx_vihz4
+    - affix_segmentor@xhup
+    - abc_segmentor
+    - punct_segmentor
+    - fallback_segmentor
+  translators:
+    - punct_translator
+    - table_translator
+    - table_translator@easy_en
+    - "lua_translator@time_translator"
+    - "lua_translator@date_translator"
+    - "lua_translator@number_translator"
+    - table_translator@xhyx_viqm4
+    - table_translator@xhyx_viqm3
+    - table_translator@xhyx_vihz4
+    - table_translator@xhyx_vihz3
+    - table_translator@xhyx_viqm
+    - table_translator@xhyx_vihz
+    - table_translator@xhyx_dict
+    - history_translator@history
+    - reverse_lookup_translator
+    - table_translator@hx630_630
+    - table_translator@heulerff
+    - script_translator@xhup
+  filters:
+    - simplifier
+    - simplifier@emoji_cn #表情滤镜
+    - simplifier@spelling  #注音滤镜
+    - simplifier@easy_en     #临时英文
+    - simplifier@dic_4w_en #翻译滤镜
+    - simplifier@jffh
+    - reverse_lookup_filter@hx630_630_lookup
+    - reverse_lookup_filter@heulerff_lookup
+    - reverse_lookup_filter@heulerff2_lookup
+    - reverse_lookup_filter@xhup_lookup
+    - uniquifier
+
+speller:
+  alphabet: '/@''zyxwvutsrqponmlkjihgfedcba789;'
+  initials: '/@abcdefghijklmnopqrstuvwxyz'';'
+  finals: '/'
+  #delimiter: " '"
+#  max_code_length: 4
+  auto_select: true   #顶字上屏
+#  auto_select_unique_candidate: true
+#  auto_select_pattern: ^[a-z]{4}$|^(.*)/$|^@(.*)$|^;f$
+#  auto_clear: auto #manual|auto|max_length 空码按下一键确认清屏|空码自动清|达到最长码时后码顶上清屏
+  algebra: 
+    - xform/[0-9]$//  #无数字
+    - xform/[0-9]$//  #无数字
+    
+#↓主编译器
+translator:
+  dictionary: xhyx
+  initial_quality: 1
+  enable_charset_filter: false
+  enable_sentence: false
+  enable_completion: true #编码提示开关
+  enable_user_dict: false
+  db_class: userdb
+  disable_user_dict_for_patterns:
+  comment_format:
+    - xform|~||
+    - xform/[0-9]//  #无数字
+    
+#↓重复上屏 
+history:
+   input: ;f
+   size: 1 #重复前几次上屏
+   initial_quality: 999
+   
+#↓注音滤镜  
+spelling:
+  opencc_config: spelling.json
+  option_name: spelling
+  show_in_comment: true
+  comment_format:
+    - "xform/☯/ · /"    
+    - "xform/<br>/\r/"
+  tags:
+    - abc
+  tips: all 
+  
+#↓emoji表情滤镜  
+emoji_cn:
+  opencc_config: emoji.json
+  option_name: emoji_cn
+  tips: all
+  
+#↓临时英文  
+easy_en:
+  tag: easy_en
+  prefix: "'"
+  tips: "〔英文〕"
+  dictionary: easy_en
+  enable_sentence: true
+  enable_completion: true
+  enable_user_dict: false #true
+  initial_quality: "0"       
+#临时英文翻译  
+dic_4w_en:
+  opencc_config: dic_4w_en.json
+  option_name: dic_4w_en
+  show_in_comment: true #开启编码滤镜
+  comment_format:  #编码滤镜正则处理
+#    - "xform/<br>/\n/" #编码滤镜内容换行。注意: 如果用于小狼毫,请将\n改为\r,否则无效
+    - "xform/<br>/\r/" #编码滤镜内容换行。注意: 如果用于小狼毫,请将\n改为\r,否则无效
+    - "xform/&nbsp/ /" #编码滤镜内容显示空格
+#上述带#号为编码滤镜模式工作选项, 普通滤镜直接在行首用#号屏蔽
+  tags:
+    - easy_en
+  tips: all #none无注释,char单字注释,all全部注释
+  
+#↓简繁滤镜
+jffh:
+  opencc_config: s2tw.json
+  option_name: jffh
+  
+#↓用户词库  
+xhyx_dict:
+  dictionary: ""
+  user_dict: user_dict
+  db_class: stabledb
+  enable_sentence: false
+  enable_completion: false
+  initial_quality: 1 #用户词和系统词重码居后
+  comment_format:
+    - xform|~||
+    - xform/[0-9]//  #无数字
+    
+#↓单字反查
+reverse_lookup:
+  dictionary: flypydz
+  comment_format:
+    - xform/[0-9]//  #无数字
+    - xform/^/〔/
+    - xform/$/〕/
+    - xform/ / /
+    
+#二简提示
+hx630_630:
+  dictionary: hx630_630
+  enable_sentence: false
+  enable_encoder: false
+  encode_commit_history: false
+  enable_completion: true
+  enable_user_dict: false
+  initial_quality: 2 #简码候选置前（数值需比翻译器高1）
+
+hx630_630_lookup:
+  dictionary: hx630_630 #反查其码
+  overwrite_comment: true
+  comment_format:
+    - xform/^/〔/
+    - xform/$/〕/
+    - xform/ / /
+
+TS2:
+  comment_format:
+    - xform/([A-Z][0-9]?)+([A-Z][0-9]?)$/$2/
+    - xform/.....U|.(.)...V|...W|..X|.Y|Z|......A|.....B|....C|...D|..E|.F/$1/
+    - xform|1|_|
+    - xform/^/〔/
+    - xform/$/〕/
+    - xform/ / /
+    
+#↓鹤双超字集
+heulerff:
+  tag: heulerff
+  dictionary: heulerff
+  db_class: tabledb
+  enable_user_dict: false
+  prefix: "&"
+  tips: "〔二分〕"
+    
+heulerff_lookup:
+  tags: [heulerff]
+  dictionary: heulerff
+  overwrite_comment: true
+  enable_user_dict: false
+  
+  
+heulerff2_lookup:
+  __include: /TS2
+  tags: [heulerff]
+  dictionary: flypydz
+  overwrite_comment: true
+  enable_user_dict: false
+  
+#↓小鹤双拼  
+xhup:
+  tag: xhup
+  dictionary: xhup
+  user_dict: easy_en
+  db_class: tabledb
+  enable_sentence: true
+  enable_completion: true
+  enable_user_dict: true
+  db_class: tabledb
+  preedit_format:
+    - xform/([bpmfdtnljqx])n/$1iao/
+    - xform/(\w)g/$1eng/
+    - xform/(\w)q/$1iu/
+    - xform/(\w)w/$1ei/
+    - xform/([dtnlgkhjqxyvuirzcs])r/$1uan/
+    - xform/(\w)t/$1ve/
+    - xform/(\w)y/$1un/
+    - xform/([dtnlgkhvuirzcs])o/$1uo/
+    - xform/(\w)p/$1ie/
+    - xform/([jqx])s/$1iong/
+    - xform/(\w)s/$1ong/
+    - xform/(\w)d/$1ai/
+    - xform/(\w)f/$1en/
+    - xform/(\w)h/$1ang/
+    - xform/(\w)j/$1an/
+    - xform/([gkhvuirzcs])k/$1uai/
+    - xform/(\w)k/$1ing/
+    - xform/([jqxnl])l/$1iang/
+    - xform/(\w)l/$1uang/
+    - xform/(\w)z/$1ou/
+    - xform/([gkhvuirzcs])x/$1ua/
+    - xform/(\w)x/$1ia/
+    - xform/(\w)c/$1ao/
+    - xform/([dtgkhvuirzcs])v/$1ui/
+    - xform/(\w)b/$1in/
+    - xform/(\w)m/$1ian/
+    - xform/([aoe])\1(\w)/$1$2/
+    - "xform/(^|[ '])v/$1zh/"
+    - "xform/(^|[ '])i/$1ch/"
+    - "xform/(^|[ '])u/$1sh/"
+    - xform/([jqxy])v/$1u/
+    - xform/([nl])v/$1ü/
+  prefix: "~"
+  tips: "〔纯双〕"
+
+#↓引导加词
+xhyx_viqm4:
+  tag: xhyx_viqm4
+  dictionary: xhyx_4
+  user_dict: xhyx_viqm
+  db_class: tabledb
+  enable_charset_filter: false
+  enable_completion: true
+  enable_encoder: true
+  enable_sentence: true
+  enable_user_dict: true
+  encode_commit_history: false
+  prefix: "["
+  tips: "〔置前〕"
+  preedit_format:
+    - xform|1|_|
+  comment_format:
+    - xform|1||
+    - xform|~||
+xhyx_viqm3:
+  __include: /xhyx_viqm4
+  tag: xhyx_viqm3
+  dictionary: xhyx_3
+  prefix: "~Q"
+  tips: "〔置前〕"
+xhyx_vihz4:
+  __include: /xhyx_viqm4
+  tag: xhyx_vihz4
+  user_dict: xhyx_vihz
+  prefix: "]"
+  tips: "〔置后〕"
+xhyx_vihz3:
+  __include: /xhyx_viqm4
+  tag: xhyx_vihz3
+  dictionary: xhyx_3
+  user_dict: xhyx_vihz
+  prefix: "~H"
+  tips: "〔置后〕"
+xhyx_viqm:
+  dictionary: ""
+  user_dict: xhyx_viqm
+  db_class: stabledb
+  enable_sentence: false
+  enable_completion: false
+  comment_format:
+    - xform|~||
+  initial_quality: 999
+xhyx_vihz:
+  dictionary: ""
+  user_dict: xhyx_vihz
+  db_class: stabledb
+  enable_sentence: false
+  enable_completion: false
+  comment_format:
+    - xform|~||
+  initial_quality: 0
+
+#↓符号表
+punctuator:
+  import_preset: symbols
+  
+#↓按键输入
+key_binder:
+  bindings:
+#↓选重键
+    - { when: composing, accept: semicolon, send: 2 }
+    - { when: has_menu, accept: apostrophe, send: 3 }
+    - { when: has_menu, accept: '/', send: 4 }
+    - {accept: "Shift+Shift_L", send: 7, when: has_menu} #左shift出7
+    - {accept: "Tab", send: 8, when: composing} #tab出8
+#↓造词上屏
+    - {accept: "Shift_R+space", send: space, when: composing}
+    - { when: composing, accept: Return, send: space }
+    - {accept: "space", send: 1, when: has_menu}
+#↓#翻页   
+    - {accept: minus, send: Page_Up, when: has_menu}
+    - {accept: equal, send: Page_Down, when: has_menu} 
+#↓ESC清除编码
+    - { when: composing, accept: Escape, send: Escape }
+    - { when: has_menu, accept: Escape, send: Escape }
+#↓PC端滤镜开关
+    - {accept: "Control+b", toggle: full_shape, when: always} #切换全半角
+    - {accept: "Control+j", toggle: simplification, when: always} #切换简繁
+    - {accept: "Control+period", toggle: ascii_punct, when: always} #切换中英标点
+    - {accept: "Control+m", select: .next, when: always} #切换方案     
+
+recognizer:
+  import_preset: default
+  patterns:
+    punct: "^/.+$"
+    easy_en: "^'[A-Z|a-z,.;/']*'?$"    
+    reverse_lookup: "[a-z`]*`[a-z`]*$"
+    xhyx_viqm4: "^\\[[A-Z|a-z][A-Z|a-z0-9,.;/']*'?$"
+    xhyx_vihz4: "^\\][A-Z|a-z][A-Z|a-z0-9,.;/']*'?$"
+    3m: "^[a-z]{2,3}$" #定长方案三码无重不自动上屏
+    uppercase: "" #中文状态大写锁定直接上屏
+    heulerff: "^&[a-z'`/]*"
+    url: "^(www[.]|https?:|ftp[.:]|mailto:|file:).*$|^[a-z]+[.].+$"
+    xhup: "^~[a-z']*'?$"
+    
+ascii_composer:
+  good_old_caps_lock: true
+  switch_key:
+    Shift_L: commit_code
+    Shift_R: commit_code
+    Control_R: noop
+    Caps_Lock: Escape
+    Eisu_toggle: clear
+    
+#menu:
+#  page_size: 4 #候选项数 
+#style:
+#  horizontal: false #横排为true，竖排为false

@@ -1,0 +1,8 @@
+Hello, world!
+["target\\debug\\minigrep.exe", "to", "poem.txt"]
+Searching for to
+In file poem.txt
+With text:
+Are you nobody,too?
+With text:
+How dreary to be somebody!

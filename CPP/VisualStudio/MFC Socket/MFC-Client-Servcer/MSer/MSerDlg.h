@@ -6,6 +6,7 @@
 #include "ServerSocket.h"
 #include "DataProcess.h"
 
+const int MAX_MESSAGE_DATA_RECIVE = 10240;
 
 class CServerSocket;
 

@@ -1,0 +1,246 @@
+# Rime schema settings
+# encoding: utf-8
+schema:
+  schema_id: xasc
+  name: 晓岸三重
+  version: "1"
+  author:
+    -  晓岸
+  dependencies:
+    - pinyin
+    - easy_en
+
+switches:
+  - options: [ _keyboard_functions, _keyboard_qwerty ]
+#    states: [ "☯", "☯"]
+  - name: _hide_candidate
+    reset: 0
+  - name: ascii_mode
+    reset: 0
+    states: [ 中, 英 ]
+  #简繁转换
+  - name: jffh
+    reset: 0
+    states: [ 简, 繁 ]
+  #全半转换
+  - name: full_shape
+    reset: 0
+    states: [ 全, 半 ]
+  #表情字符
+  - name: emoji_cn
+    reset: 0
+    states: [ 无情, 表情 ]
+  - name: dic_4w_en
+    reset: 1
+    states: ["不译", "翻译"]
+  - name: EN2en
+    reset: 1
+  - name: ascii_punct
+    states: [ 。，, ．， ]
+
+
+ 
+
+engine:
+  processors:
+    - ascii_composer
+    - recognizer
+    - key_binder
+    - speller
+    - punctuator
+    - selector
+    - navigator
+    - express_editor
+  segmentors:
+    - ascii_segmentor
+    - matcher
+    - affix_segmentor@easy_en   
+    - abc_segmentor
+    - punct_segmentor
+    - fallback_segmentor
+  translators:
+    - punct_translator
+    - table_translator
+    - table_translator@easy_en
+    - reverse_lookup_translator
+#    - table_translator@custom_phrase
+    - table_translator@custom_phraseBuchong
+    - table_translator@custom_phraseTop
+    - table_translator@custom_phraseUser
+    - table_translator@ejtu
+    - history_translator@repeat_history
+    - "lua_translator@date_translator"   #加载日期脚本
+    - "lua_translator@number_translator" #加载数字脚本
+    - "lua_translator@time_translator"   #加载时间脚本
+  filters:
+    - simplifier
+    - simplifier@emoji_cn
+    - simplifier@jffh
+    - simplifier@bmms
+    - simplifier@EN2en
+    - simplifier@easy_en     
+    - simplifier@dic_4w_en
+    - uniquifier
+    - reverse_lookup_filter@ejtu_lookup
+
+
+speller:
+  delimiter: "'"
+  alphabet: "zyxwvutsrqponmlkjihgfedcba;/'"
+  initials: "abcdefghijklmnopqrstuvwxyz;"
+  finals: '/'
+  max_code_length: 4 #全码码长，过则顶字上屏
+  auto_select: true   #自动上屏
+  auto_select_pattern: ^;.$|^\w{4}$ #自动上屏规则
+  auto_clear: max_length #manual|auto|max_length 空码按下一键确认清屏|空码自动清|达到最长码时后码顶上清屏
+
+
+translator:
+  dictionary: xasc.sys
+  enable_charset_filter: false
+  enable_completion: true
+  enable_encoder: true
+  enable_sentence: false
+  enable_user_dict: false
+  encode_commit_history: true
+  max_phrase_length: 4
+  initial_quality: 1000
+  comment_format:
+    - xform|~||
+
+repeat_history:
+  input: ;f #重复上次上屏内容
+  size: 1
+  initial_quality: 100000
+ 
+EN2en:
+  opencc_config: EN2en.json
+  option_name: EN2en
+
+emoji_cn:
+  opencc_config: emoji.json
+  option_name: emoji_cn
+  tips: all
+
+jffh:
+  opencc_config: s2tw.json
+  option_name: jffh
+
+bmms:
+  opencc_config: pinyin.json
+  option_name: bmms
+  show_in_comment: true
+  comment_format:
+    - xform/'/ /
+
+custom_phraseBuchong:
+  dictionary: ""
+  user_dict: buchong
+  db_class: stabledb
+  enable_sentence: false
+  enable_completion: false
+  initial_quality: 999 #本表词和系统词重码居后
+
+custom_phraseTop:
+  dictionary: ""
+  user_dict: top
+  db_class: stabledb
+  enable_sentence: false
+  enable_completion: false
+  initial_quality: 1000 #用户词和系统词重码 置顶
+  
+custom_phraseUser:
+  dictionary: ""
+  user_dict: user
+  db_class: stabledb
+  enable_sentence: false
+  enable_completion: false
+  initial_quality: 999 #用户词和系统词重码居后
+
+
+easy_en:
+  tag: easy_en
+  prefix: "'"
+  tips: "〔临时英文〕"
+  dictionary: easy_en
+  enable_sentence: true
+  enable_completion: false
+  enable_user_dict: false #true
+  initial_quality: "0"       
+  
+dic_4w_en:
+  opencc_config: dic_4w_en.json
+  option_name: dic_4w_en
+  show_in_comment: true #开启编码滤镜
+  comment_format:  #编码滤镜正则处理
+#    - "xform/<br>/\n/" #编码滤镜内容换行。注意: 如果用于小狼毫,请将\n改为\r,否则无效
+    - "xform/<br>/\r/" #编码滤镜内容换行。注意: 如果用于小狼毫,请将\n改为\r,否则无效
+    - "xform/&nbsp/ /" #编码滤镜内容显示空格
+#上述带#号为编码滤镜模式工作选项, 普通滤镜直接在行首用#号屏蔽
+  tags:
+    - easy_en
+  tips: all #none无注释,char单字注释,all全部注释
+ 
+reverse_lookup:
+  dictionary: flypydz
+  comment_format:
+    - xform/^/〔/
+    - xform/$/〕/
+    - xform/ /, /
+    
+ejtu:
+  dictionary: ejtu
+  enable_sentence: false
+  enable_encoder: false
+  encode_commit_history: false
+  enable_completion: true
+  enable_user_dict: false
+  initial_quality: 1001 #二简候选置前（数值需比翻译器高1）
+
+ejtu_lookup:
+  dictionary: ejtu #反查其码
+  overwrite_comment: true
+  comment_format:
+    - xform/^/〔/
+    - xform/$/〕/
+    - xform/ / /
+
+punctuator:
+  import_preset: symbols
+
+key_binder:
+  bindings:
+#手机配置
+    - {accept: minus, send: Page_Up, when: has_menu}
+    - {accept: equal, send: Page_Down, when: has_menu}
+    #- { when: has_menu, accept: "'", send: 2 }
+     #- {accept: comma, send: 3, when: has_menu} #逗号次选
+    - {accept: dollar, send: 2, when: composing}   
+#电脑小狼毫按键配置 
+#key_binder:
+#  bindings:
+    - {accept: minus, send: Page_Up, when: has_menu}
+    - {accept: equal, send: Page_Down, when: has_menu}
+#翻页    
+    - { when: composing, accept: Escape, send: Escape }
+    - { when: has_menu, accept: Escape, send: Escape }
+#ESC清除编码
+#    - { when: composing, accept: Return, send: Escape }
+#    - { when: has_menu, accept: Return, send: Escape }
+ #回车清除编码   
+    - { when: composing, accept: semicolon, send: 2 }
+    - { when: has_menu, accept: apostrophe, send: 3 }
+#分号次选，引号三选    
+    - { when: always, accept: F7, toggle: jffh } #简繁快捷开关
+#    - { when: always, accept: F9, toggle: emoji_cn } #表情快捷开关
+    - { when: always, accept: F8, toggle: full_shape } #全半角快捷开关
+
+recognizer:
+  import_preset: default
+  patterns:
+    reverse_lookup: "[a-z`]*`+[a-z`]*"
+    punct: '^/([0-9]|10|[A-Za-z]+)$'
+#    mkst: '^[a-z]*/[a-z`]*$'
+    easy_en: "^'[A-Z|a-z]*'?$"    
+    email: "^[A-Za-z][-_.0-9A-Za-z]*@.*$"
+    url: "^(www[.]|https?:|ftp[.:]|mailto:|file:).*$|^[a-z]+[.].+$"

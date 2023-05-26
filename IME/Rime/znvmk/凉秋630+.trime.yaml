@@ -1,0 +1,61 @@
+# Trime default style settings
+# encoding: utf-8
+
+config_version: "for磐石207"
+name: 磐石+
+# 本主题为补丁主题，依附于别的主题使用，下面__include: 之后紧跟的就是主题名
+# 如使用本主题，主题名应为：磐石 2.0.7v.trime；如主题名为：我是渣渣.trime.yaml，则需在本文件内查找“__include: 磐石 2.0.7v.trime”替换为“__include: 我是渣渣.trime”
+# 
+author: 魔方
+height:
+  A: &VJG 47 #行高
+
+style:
+  __include: 凉秋1.8.11.trime:/style
+  key_height: *VJG
+android_keys:
+  __include: 凉秋1.8.11.trime:/android_keys
+preset_keys:
+  __include: 凉秋1.8.11.trime:/preset_keys
+  #__patch:
+    #K_defaultVJ:  #注销助记键盘设定键
+fallback_colors:
+  __include: 凉秋1.8.11.trime:/fallback_colors
+preset_color_schemes:
+  __include: 凉秋1.8.11.trime:/preset_color_schemes
+preset_keyboards:
+  __include: 凉秋1.8.11.trime:/preset_keyboards
+  #__patch:
+    #defaultVJ:  #注销助记键盘
+  default:
+    __include: 凉秋1.8.11.trime:/preset_keyboards/default
+    height: *VJG
+    __patch:
+        "keys/@before 0": {height: 38, click: '_Keyboard_clip', composing: '2', long_click: DeleteCandidate, width: 20}
+        "keys/@before 1": {click: "'", long_lick: 'dic_4w_en', composing: '3', swipe_left: '[', swipe_right: ']', width: 16}
+        "keys/@before 2": {click: VOICE_ASSIST, composing: '4', width: 16}
+        "keys/@before 3": {click: 'emoji_cn', composing: '7', width: 16}
+        "keys/@before 4": {click: 'dic_4w_en', long_click: '_Keyboard_phrase', composing: '8', width: 16}
+        "keys/@before 5": {click: 'spelling', long_click: 'lua_script_all', composing: '9', width: 16}
+
+preset_keys:
+  lua_script_all: {label: 脚本, send: function, command: '01启动器/启动器01.lua', option: "%1$s"}
+  DeleteCandidate: {label: 🗑, send: Control+Delete, functional: false}
+  Keyboard_default: {label: 返回, send: Eisu_toggle, select: .last}
+  _add_phrase: {label: ➕️, functional: false, send: function, command: add_phrase}
+  _Keyboard_clip: {label: 📋, functional: false, send: Eisu_toggle, select: _clip_board}
+  _Keyboard_phrase: {label: 📌, functional: false, send: Eisu_toggle, select: _phrase_board}
+  _Keyboard_candidate: {label: ☘, functional: false, send: Eisu_toggle, select: _candidate_board}
+  float_mode: {when: always, toggle: float_mode, functional: false, send: Mode_switch, states: [ 悬 , 浮 ]}    #开关悬浮键盘
+  small_mode: {when: always, toggle: small_mode, functional: false, send: Mode_switch, states: [ 单 , 手 ]}    #开关单手键盘
+  emoji_cn: {when: always, toggle: emoji_cn, functional: false, send: Mode_switch, states: [ 🔅, 🔆 ]}
+  dic_4w_en: {when: always, toggle: dic_4w_en, functional: false, send: Mode_switch, states: [ 📔, 📖 ]}
+  .next: {when: always, toggle: .next, functional: false, send: Mode_switch, states: [ ♈, ♉] } #下一方案
+  simplification: {when: always, toggle: simplification, functional: false, send: Mode_switch, states: [ 简, 繁 ]}  #简繁
+  simplification2: {when: always, toggle: simplification, functional: false, send: Mode_switch, states: [ 繁, 简 ]}  #繁简
+  spelling: {when: always, toggle: spelling, functional: false, send: Mode_switch, states: [ 编码, āóě ]}  #
+  ascii_mode: {when: always, toggle: ascii_mode, functional: false, send: Mode_switch, states: [ 中, 英 ]}  #中英
+  full_shape: {when: always, toggle: full_shape, functional: false, send: Mode_switch, states: [ 🌙, 🌝 ]}  #全半角
+  ascii_punct: {when: always, toggle: ascii_punct, functional: false, send: Mode_switch, states: [ ❄, ❇ ]}  #标点符号
+  VOICE_ASSIST: {label: '🎙', functional: false, send: VOICE_ASSIST}
+

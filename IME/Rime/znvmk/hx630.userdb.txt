@@ -1,0 +1,46 @@
+# Rime user dictionary
+#@/db_name	hx630.userdb
+#@/db_type	userdb
+#@/rime_version	1.5.3
+#@/tick	49
+#@/user_id	 mf
+b 	不	c=2 d=1.99501 t=35
+da 	大	c=2 d=1.99501 t=24
+dc 	到	c=2 d=1.99501 t=6
+ddi 	待	c=2 d=1.99501 t=37
+dg 	等	c=6 d=5.48273 t=48
+gh 	刚	c=2 d=1.99501 t=5
+hc 	好	c=2 d=1.99501 t=23
+hcle 	好了	c=2 d=1.99501 t=34
+hcui 	好事	c=1 d=1 t=26
+hdui 	还是	c=2 d=1.99501 t=27
+hv 	会	c=2 d=1.99501 t=38
+hvk 	回	c=2 d=1.99501 t=33
+kz 	口	c=2 d=1.99501 t=47
+l 	了	c=4 d=3.96032 t=4
+ma 	吗	c=2 d=1.99501 t=19
+mwn 	妹	c=2 d=1.99501 t=31
+n 	你	c=4 d=3.69505 t=49
+pc 	跑	c=2 d=1.99501 t=42
+px 	批	c=1 d=1 t=41
+rj 	然	c=2 d=1.99501 t=36
+tht 	趟	c=2 d=1.99501 t=44
+uv 	水	c=2 d=1.99501 t=7
+uvxi 	水洗	c=1 d=1 t=11
+vumw 	猪妹	c=2 d=1.99501 t=21
+vuq 	猪	c=2 d=1.99501 t=30
+w 	我	c=4 d=3.71214 t=45
+x 	小	c=4 d=3.89272 t=29
+xia 	西	c=3 d=2.97521 t=13
+xiq 	吸尘器	c=1 d=1 t=8
+xua 	戌	c=2 d=1.98511 t=12
+xx 	下	c=2 d=1.99501 t=22
+xxbj 	下班	c=2 d=1.99501 t=1
+xxie 	下车	c=2 d=1.99501 t=14
+y 	一	c=2 d=1.99501 t=43
+yc 	要	c=4 d=3.74682 t=40
+yiqi 	一起	c=2 d=1.99501 t=32
+yug 	雨	c=2 d=1.99501 t=25
+yzv 	又	c=2 d=1.99501 t=39
+z 	在	c=2 d=1.99501 t=46
+zm 	怎么	c=2 d=1.99501 t=3

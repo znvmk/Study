@@ -2,6 +2,7 @@
 pip show pip
 升级pip
 python -m pip install --upgrade pip
+/usr/bin/python -m pip install --upgrade pip
 看到Successfully字样即安装成功
 再查看pip的版本，
 pip show pip 

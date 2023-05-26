@@ -1,0 +1,21 @@
+---
+name: xhyx_3
+version: "Q1"
+sort: by_weight
+import_tables:
+  - xhyx
+  - xhyx_user
+columns:
+  - text
+  - code
+  - stem
+  - weight
+encoder:
+  rules:
+    - length_equal: 2
+      formula: "AaAbBa"
+    - length_equal: 3
+      formula: "AaBaCa"
+    - length_in_range: [4, 99]
+      formula: "AaBaCa"
+...

@@ -19,7 +19,7 @@ Finish
     Dual-Purpose Pins:
         DCLK:选择"Use as regular I/O，其他若需要，全部选择此项，一般全部选择
     Board Trance Model:
-        I/O standard:3.0-V LVTTL，电压选3.3V
+        I/O standard:3.3-V LVTTL，电压选3.3V
     Voltage：
         Default I/O standard:3.3v 默认标准电压3.3V
 OK，OK，设置完成  
@@ -38,14 +38,20 @@ OK，OK，设置完成
 File->Convert Programming File:
     Programming file type:JTAG Indirect Configuration File(.jic)  格式
         Configuration device:EPCS16,64,128等
+        点击右边"..."，Configuration Device:
+            Device family:Cyclone IV E
+            Configuration mod:Active Serial
+            选择EPCS16
     Input file to convert:
-        Flash Loader,Add Device...:Cyclone IV E->EP4CE10
-        SOF Date,Add File...:led_test.sof(之前生成的)
+        Flash Loader:Add Device...:Cyclone IV E->EP4CE10，此项可查看芯片上的前缀
+        SOF Date:Add File...:led_test.sof(之前生成的)
+        点击：Generate 生成，点击close
 重新打开下载烧录：
 删除之前得led_test.sof下载文件，
 左侧按钮点击添加，let_test\output_files目录下，选择文件：led_test.jic
+选择校验：Program/Configure,选择Verify
 开始下载，下载jic文件会比之前下载sof文件慢很多
-下载完成之后，开发办断电，重新打开，流水灯正常运行。
+下载完成之后，需将开发板断电，重新打开，流水灯正常运行。
 
 led_test.v
 

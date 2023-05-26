@@ -1,8 +1,16 @@
 配置文件位置
+方案一、使用给定配置
+打开/etc/vim/vimrc可以看到，加载的是对应安装目录下vim版本的脚本，如vim90版本的配色方案在/usr/share/vim/vim90/目录下
+因此只需进入到/usr/share/vim/vim90/目录下，将vimrc_example.vim修改成为自己的配色方案即可，例如我自己用的是gvim的配色：cp /usr/share/vim/gvimrc /usr/share/vim/vim90/vimrc.vim
 
-/etc/vim/vimrc
-编辑该配置文件即可
-gvim颜色配置在：/usr/share/vim/vim82目录下
+方案二、使用当前账户配置
+在当前用户文件夹下，新建~.vim/vimrc，或者直接新建~.vimrc
+eg： cp /usr/share/vim/gvimrc ~.vim/vimrc
+配色方案可直接用vim自带配色方案，如default.vim，该文件在/usr/share/vim/vim90/colors/default.vim
+
+方案三、直接指定加载项
+在/etc/vim/vimrc文件中修改：runtime! debian.vim 为 ***/*.vim即可，
+
 
 https://github.com/chxuan/vimplus
 安装vimplus

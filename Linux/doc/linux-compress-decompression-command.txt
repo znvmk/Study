@@ -46,7 +46,7 @@ bz命令
 
 　　解压2：bunzip2 FileName.bz
 
-　　压缩：未知
+　　压缩：tar jcvf FileName.tar.bz
 
 　　.tar.bz
 

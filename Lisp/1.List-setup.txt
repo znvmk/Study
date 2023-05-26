@@ -1,0 +1,75 @@
+Lisp编程环境的搭建
+ 
+
+对很多程序员来讲Lisp都是一个神秘的语言，有可能从来没有接触过Lisp，或者根本没有听说过Lisp。不过，如果你接触一些黑客大家的文章，你会经常看到Lisp这个名字，而且在很多大虾眼中Lisp都是一个超级牛语言，不少大虾把Lisp列为程序员必学的语言之一。
+
+很多人因为大虾的鼓吹开始学习Lisp语言，其中也包括我自己，不过Lisp和其它语言真的差别太大，常常让人摸不着门道，就是简单的环境设置都让人叫苦不已。一般建议的Lisp编程环境是clisp+emacs+slime的组合，安装过程还比较简单，安装完了一打开emacs就傻眼，和常见的IDE相差太大，emacs被称为黑客编辑器中的两大神器之一还真不是盖的。
+
+我自己折腾一天总算有点认识，可以开始写一些简单的Lisp程序。不过就反过来想，有没有更简单一点的Lisp环境，或者说是更像普通编程环境的Lisp环境。总结一下发现clisp+vim的方式比较接近常见的编程环境，比较像早期学习java时notepad+javac的环境，下面记录clisp+vim的环境搭建过程，供各位参考。
+
+
+
+首先是clisp的安装，在ubuntu环境下安装clisp很简单，直接apt-get 就可以，命令如下：
+
+sudo apt-get install clisp
+
+或者Windows环境下安装CygWin，安装clisp
+
+
+
+安装成功后通过clisp命令可以启动clisp环境。启动后可以尝试一两个Lisp语句，如：
+
+（+ 1 2）
+
+敲回车后就回显3，虽然和一般语言的语法有一点不同，不过作为程序员还是容易理解的，就是1+2=3了，同样可以尝试(- 5 4)之类的
+
+然后再尝试字符串，如
+
+“hello world”
+
+clisp环境直接回显“hello world”字样
+
+测试完了以后可以通过（quit）命令退出。
+
+
+
+安装好clisp环境后很多人都会问，不是就这样写程序吧，写一句执行一句，太奇怪了。虽然这就是Lisp典型的REPL（Read-Evaluate-Print-Loop）方式，是Lisp的优势之一，但是确实太奇怪，暂且不理睬这种奇怪的行为，按我们习惯的方式写程序吧。
+
+按一般写程序的方式，就是拿个编辑器，写好程序后编译执行。我们就用Ubuntu下的vim当编辑器吧，当然你可以使用任何一种你喜欢的编辑器，如gedit等。
+
+执行命令vim ./lisptest.lisp创建一个后缀为lisp的文件，我自己是在home目录创建了一个workspace/lisp目录，所以我创建的文件路径是：～/workspace/lisp/lisptest.lisp
+
+在文件中输入以下内容：
+
+(defun helloworld () (format t "hello world"))
+
+以上语句定义了一个方法叫“helloworld”，作用是输出“hello world”字样。
+
+
+保存lisptest.lisp文件，退出vim，然后再次通过clisp命令启动lisp环境。
+
+Lisp环境启动后通过一下命令加载lisptest.lisp文件：
+
+（load "~/workspace/lisp/lisptest.lisp"）
+
+注意语句开头和结束的括号，不要省略。同时注意其中的文件路径，如果你的文件路径不同需要作相应调整。
+
+载入成功的话会出现类似下面的输出：
+
+;; Loading file /home/damon/workspace/lisp/lisptest.lisp ...
+;; Loaded file /home/damon/workspace/lisp/lisptest.lisp
+T
+
+载入后就可以执行helloworld方法了，命令如下：
+
+（helloworld）
+
+命令执行结果如下：
+
+[2]> (helloworld)
+hello world
+NIL
+可以看到命令执行成功，lisp环境执行了helloworld方法，输出了“helloworld”字样。
+
+到现在为止你就有一个简单的Lisp编程环境了，虽然使用比较麻烦，不过使用起来比较直观，更接近我们经常使用的编程环境。
+

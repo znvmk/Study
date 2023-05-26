@@ -1,0 +1,45 @@
+下载开发版安装包，解压复制firefox到/opt/firefox-dev
+
+创建桌面菜单
+
+创建文件 ~/.local/share/applications/firefox_dev.desktop来在系统上创建Firefox developer edition的启动器。
+[Desktop Entry]
+Name=Firefox Developer
+GenericName=Firefox Developer Edition
+Exec=/opt/firefox-dev/firefox
+Terminal=false
+Icon=/opt/firefox-dev/browser/icons/default128.png
+Type=Application
+Categories=Application;Network;X-Developer;
+Comment=Firefox Developer Edition Web Browser.
+
+FirefoxNightly:
+[Desktop Entry]
+
+Name=Firefox Nightly
+
+GenericName=Firefox Nightly 
+
+Exec=/opt/firefox/firefox-nightly/firefox/firefox
+
+Terminal=false
+
+Icon=/opt/firefox/firefox-nightly/firefox/browser/chrome/icons/default/default128.png
+
+Type=Application
+
+Categories=Application;Network;X-Developer;
+
+Comment=Firefox Nightly Web Browser.
+
+4。启动Firefox开发版
+从文件管理进入Firefox安装文件夹，双击firefox（不是firefox.bin），启动，可以看到底部已经可以显示刚刚设置的图标了，而不是齿轮形状。再固定到快捷栏即可。
+最后，通过单击启动器图标启动Firefox开发版，或者直接使用二进制脚本启动它。
+$ /usr/local/firefox_dev
+$ ./firefox &
+
+更新Firefox开发版：
+下载最新版得火狐开发版压缩包，解压到下载目录
+>>sudo cp /home/account(自己的账户)/下载/firefox/* /opt/firefox-dev/ 即可
+若firefox.bin无法覆盖，则提前用管理员账户删除。
+覆盖后快捷启动栏图标依旧有效，启动后发现之前配置的用户数据都在

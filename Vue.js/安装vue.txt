@@ -1,0 +1,77 @@
+ Vue.js 中文社区
+https://cn.vuejs.org/guide/quick-start.html#creating-a-vue-application
+ 
+ >npm init vue@latest
+
+Vue.js - The Progressive JavaScript Framework
+
+√ Project name: ... vue-project
+√ Add TypeScript? ... No / Yes
+√ Add JSX Support? ... No / Yes
+√ Add Vue Router for Single Page Application development? ... No / Yes
+√ Add Pinia for state management? ... No / Yes
+√ Add Vitest for Unit Testing? ... No / Yes
+√ Add an End-to-End Testing Solution? » Playwright
+√ Add ESLint for code quality? ... No / Yes
+√ Add Prettier for code formatting? ... No / Yes
+npm WARN deprecated sourcemap-codec@1.4.8: Please use @jridgewell/sourcemap-codec instead
+
+added 441 packages, and audited 442 packages in 7m
+
+98 packages are looking for funding
+  run `npm fund` for details
+
+found 0 vulnerabilities
+
+
+
+> cd vue-project
+> npm install
+> npm run lint
+> npm run dev
+
+
+>npm fund
+ npm fund
+vue-project@0.0.0
+├─┬ https://github.com/sponsors/posva
+│ │ └── pinia@2.0.29, vue-router@4.1.6
+│ └── https://github.com/sponsors/antfu
+│     └── vue-demi@0.13.11, vitest@0.25.8, local-pkg@0.4.3, strip-literal@1.0.0
+├─┬ https://opencollective.com/eslint
+│ │ └── eslint@8.33.0, @eslint/eslintrc@1.4.1, espree@9.4.1
+│ ├── https://github.com/sponsors/nzakas
+│ │   └── @humanwhocodes/module-importer@1.0.1
+│ ├── https://github.com/sponsors/epoberezkin
+│ │   └── ajv@6.12.6
+│ ├─┬ https://github.com/chalk/chalk?sponsor=1
+│ │ │ └── chalk@4.1.2
+│ │ └── https://github.com/chalk/ansi-styles?sponsor=1
+│ │     └── ansi-styles@4.3.0
+│ ├── https://github.com/sponsors/sindresorhus
+│ │   └── escape-string-regexp@4.0.0, find-up@5.0.0, locate-path@6.0.0, p-locate@5.0.0, p-limit@3.1.0, yocto-queue@0.1.0, globals@13.20.0, type-fest@0.20.2, import-fresh@3.3.0, strip-json-comments@3.1.1, camelcase@6.3.0, html-tags@3.2.0, globby@11.1.0
+│ ├── https://opencollective.com/js-sdsl
+│ │   └── js-sdsl@4.3.0
+│ └── https://github.com/sponsors/isaacs
+│     └── rimraf@3.0.2, glob@7.2.3, glob@8.1.0
+├── https://github.com/prettier/prettier?sponsor=1
+│   └── prettier@2.8.3
+├── https://opencollective.com/postcss/
+│   └── postcss@8.4.21
+├─┬ https://github.com/inikulin/parse5?sponsor=1
+│ │ └── parse5@7.1.2
+│ └── https://github.com/fb55/entities?sponsor=1
+│     └── entities@4.4.0
+├─┬ https://opencollective.com/babel
+│ │ └── @babel/core@7.20.12
+│ └── https://opencollective.com/browserslist
+│     └── browserslist@4.21.5, caniuse-lite@1.0.30001449, update-browserslist-db@1.0.10
+├── https://opencollective.com/typescript-eslint
+│   └── @typescript-eslint/eslint-plugin@5.50.0, @typescript-eslint/scope-manager@5.50.0, @typescript-eslint/types@5.50.0, @typescript-eslint/visitor-keys@5.50.0, @typescript-eslint/type-utils@5.50.0, @typescript-eslint/typescript-estree@5.50.0, @typescript-eslint/utils@5.50.0, @typescript-eslint/parser@5.50.0
+├── https://github.com/fb55/nth-check?sponsor=1
+│   └── nth-check@2.1.1
+└── https://github.com/sponsors/ljharb
+    └── shell-quote@1.8.0, string.prototype.padend@3.1.4, call-bind@1.0.2, get-intrinsic@1.2.0, has-symbols@1.0.3, define-properties@1.1.4, has-property-descriptors@1.0.0, es-abstract@1.21.1, available-typed-arrays@1.0.5, es-to-primitive@1.2.1, is-date-object@1.0.5, is-symbol@1.0.4, function.prototype.name@1.1.5, functions-have-names@1.2.3, get-symbol-description@1.0.0, globalthis@1.0.3, gopd@1.0.1, has-proto@1.0.1, is-array-buffer@3.0.1, is-callable@1.2.7, is-negative-zero@2.0.2, is-regex@1.1.4, is-shared-array-buffer@1.0.2, is-string@1.0.7, is-typed-array@1.1.10, is-weakref@1.0.2, object-inspect@1.12.3, object.assign@4.1.4, regexp.prototype.flags@1.4.3, safe-regex-test@1.0.0, string.prototype.trimend@1.0.6, string.prototype.trimstart@1.0.6, typed-array-length@1.0.4, unbox-primitive@1.0.2, has-bigints@1.0.2, which-boxed-primitive@1.0.2, is-bigint@1.0.4, is-boolean-object@1.1.2, is-number-object@1.0.7, which-typed-array@1.1.9, has-tostringtag@1.0.0, side-channel@1.0.4, resolve@1.22.1, is-core-module@2.11.0, supports-preserve-symlinks-flag@1.0.0
+
+
+

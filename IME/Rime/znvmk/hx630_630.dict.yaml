@@ -1,0 +1,7 @@
+---
+name: hx630_630
+version: "Q1"
+sort: original
+import_tables:
+  - hx630.630
+...

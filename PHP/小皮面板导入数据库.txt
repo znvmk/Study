@@ -1,0 +1,7 @@
+cd phpstudy_pro/Extensions/MySQL 8.02nts/bin/
+./mysql -u root -p
+***
+mysql>show databases;
+...test
+mysql>use test
+mysql>source d:/test.sql

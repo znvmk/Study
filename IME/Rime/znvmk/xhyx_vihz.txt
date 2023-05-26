@@ -1,0 +1,5 @@
+# Rime table
+#@/db_name	xhyx_vihz.txt
+#@/db_type	tabledb
+#@/rime_version	1.5.3
+#@/tick	2
