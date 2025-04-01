@@ -1,2 +1,2 @@
 # Study
-This is my personal knowledge base.
+This is my personal knowledge datebase.
