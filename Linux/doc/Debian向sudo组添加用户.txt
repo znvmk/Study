@@ -1,0 +1,66 @@
+如何在 Debian 12 Linux 中向 sudo 组添加用户
+
+#1st 方法
+首先切换到 root 用户
+
+由于我们当前的用户在 Debian 上没有 sudo 权限，因此我们无法使用管理员权限将其添加到 sudo 组。因此，请使用以下命令并首先切换到 root 用户。当它要求输入密码时，请输入您为 Debian 12 根用户设置的密码。
+
+su -
+
+将当前用户添加到 Debian 12 sudo 组
+
+现在，我假设您已经在 Debian 系统上有一个用户，您希望将其添加到 sudo 组以在 root 权限下运行命令。如果是的话，请按照以下命令进行操作。
+
+您 可能 会在 usermod 时收到找不到命令的错误，因此
+
+首先，运行以下命令：
+
+ln /usr/sbin/usermod /usr/bin
+
+现在，使用以下语法：
+
+usermod -aG sudo linuxshout
+
+在上面的命令中将 linuxshout 更改为您要添加到 sudo 组的当前系统 用户。
+
+之后 刷新 sudo 组：
+
+newgrp sudo
+
+此外，如果您除了 root 没有其他用户或者您想要 添加新用户，则运行：
+
+adduser 用户名
+
+上述命令将允许您添加一个新用户。
+
+注意：将 用户名 替换为您要为新用户分配的名称。
+
+#2nd 方法
+
+如果由于任何原因，先前解释的方法无法将您的当前用户添加到 Debian 12 sudo 组中，则可以使用另一种方法。在此方法中，我们直接 编辑 Sudoers 文件以 添加用户。为此，请使用以下命令：
+
+如果您还没有，请切换到 root 用户。
+
+su root
+
+在 Debian 12 上编辑 Sudoers 文件
+
+现在，使用以下命令编辑 sudoers 文件。
+
+nano /etc/sudoers
+
+添加您的用户
+
+滚动到文件末尾并添加以下行。
+
+用户名 ALL=(ALL:ALL) ALL
+
+注意：将 用户名 替换为您要为 Debian 12 BookWorm 的 sudo 组添加的用户。
+
+例如，如果我们的用户名是 linuxshout，则上述命令将如下所示：
+
+linuxshout ALL=(ALL:ALL) ALL
+
+按下 Ctrl + O 保存文件，使用 Ctrl + X 键退出文件。
+
+注销并重新登录以应用更改。之后，您将能够在 Debian 12 Linux 系统中使用 sudo 命令与您的当前用户。

@@ -1,0 +1,297 @@
+1.初始化目录
+mkdir my-electron-app && cd my-electron-app
+npm init
+2.安装Electorn APP
+npm install electron --save-dev
+如果因网速问题安装失败：npm install -g package --registry=https://registry.npmmirror.com    //淘宝镜像
+npm install -g cnpm --registry=https://registry.npmmirror.com    //淘宝镜像
+cnpm install -g electron
+在初始化并且安装完 Electron 之后，您的 package.json 应该长下面这样。 文件夹中会出现一个 node_modules 文件夹，其中包含了 Electron 可执行文件；还有一个 package-lock.json 文件，指定了各个依赖的确切版本。
+package.json
+
+{
+  "name": "my-electron-app",
+  "version": "1.0.0",
+  "description": "Hello World!",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Jane Doe",
+  "license": "MIT",
+  "devDependencies": {
+    "electron": "23.1.3"
+  }
+}
+
+高级安装步骤
+
+If installing Electron directly fails, please refer to our Advanced Installation documentation for instructions on download mirrors, proxies, and troubleshooting steps.
+添加 .gitignore 文件
+
+.gitignore 文件可以指定哪些文件和目录应该在Git中不被跟踪。 建议您复制一份 GitHub 的 Node.js gitignore 模板 到您项目的根目录，以避免将 node_modules 文件夹提交到版本控制系统中。
+运行 Electron 应用
+
+:::延伸阅读
+
+Read Electron's process model documentation to better understand how Electron's multiple processes work together.
+
+:::
+
+您在 package.json 中指定的 main 文件是 Electron 应用的入口。 这个文件控制 主程序 (main process)，它运行在 Node.js 环境里，负责控制您应用的生命周期、显示原生界面、执行特殊操作并管理渲染器进程 (renderer processes)，稍后会详细介绍。
+
+在继续编写您的 Electron 应用之前，您将使用一个小小的脚本来确保主进程入口点已经配置正确。 在根目录的 main.js 文件中写一行代码：
+main.js
+
+console.log('Hello from Electron 👋')
+
+Because Electron's main process is a Node.js runtime, you can execute arbitrary Node.js code with the electron command (you can even use it as a REPL). 要执行这个脚本，需要在 package.json 的 scripts 字段中添加一个 start 命令，内容为 electron . 。 这个命令会告诉 Electron 在当前目录下寻找主脚本，并以开发模式运行它。
+package.json
+
+{
+  "name": "my-electron-app",
+  "version": "1.0.0",
+  "description": "Hello World!",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Jane Doe",
+  "license": "MIT",
+  "devDependencies": {
+    "electron": "23.1.3"
+  }
+}
+
+    npm
+    Yarn
+
+npm run start
+
+您的终端应该会输出 欢迎来到 Electron 👋。 恭喜，您已经在 Electron 中执行了您的第一行代码！ 接下来，您会学习如何用 HTML 创建用户界面，并将它们装载到原生窗口中。
+将网页装载到 BrowserWindow
+
+在 Electron 中，每个窗口展示一个页面，后者可以来自本地的 HTML，也可以来自远程 URL。 在本例中，您将会装载本地的文件。 在您项目的根目录中创建一个 index.html 文件，并写入下面的内容：
+index.html
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <!-- https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP -->
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; script-src 'self'"
+    />
+    <meta
+      http-equiv="X-Content-Security-Policy"
+      content="default-src 'self'; script-src 'self'"
+    />
+    <title>Hello from Electron renderer!</title>
+  </head>
+  <body>
+    <h1>Hello from Electron renderer!</h1>
+    <p>👋</p>
+  </body>
+</html>
+
+Now that you have a web page, you can load it into an Electron BrowserWindow. 将 main.js 中的内容替换成下列代码。 我们马上会逐行解释。
+main.js
+
+const { app, BrowserWindow } = require('electron')
+
+const createWindow = () => {
+  const win = new BrowserWindow({
+    width: 800,
+    height: 600
+  })
+
+  win.loadFile('index.html')
+}
+
+app.whenReady().then(() => {
+  createWindow()
+})
+
+导入模块
+main.js (Line 1)
+
+const { app, BrowserWindow } = require('electron')
+
+在第一行中，我们使用 CommonJS 语法导入了两个 Electron 模块：
+
+    app, which controls your application's event lifecycle.
+    BrowserWindow, which creates and manages app windows.
+
+模块名的大小写规范
+类型化导入别名
+Electron 中的 ES 模块
+
+Electron 28 起，Electron 支持ECMAScript 模块（即使用 import 加载模块）。 您可以在我们的 ESM 指南 中找到有关 Electron 中 ESM 状态以及如何在我们的应用程序中使用它们的更多信息。
+将可复用的函数写入实例化窗口
+
+createWindow() 函数将您的页面加载到新的 BrowserWindow 实例中：
+main.js (Lines 3-10)
+
+const createWindow = () => {
+  const win = new BrowserWindow({
+    width: 800,
+    height: 600
+  })
+
+  win.loadFile('index.html')
+}
+
+在应用准备就绪时调用函数
+main.js (Lines 12-14)
+
+app.whenReady().then(() => {
+  createWindow()
+})
+
+Electron 的许多核心模块都是 Node.js 的事件触发器，遵循 Node.js 的异步事件驱动架构。 app 模块就是其中一个。
+
+In Electron, BrowserWindows can only be created after the app module's ready event is fired. You can wait for this event by using the app.whenReady() API and calling createWindow() once its promise is fulfilled.
+info
+
+通常我们使用触发器的 .on 函数来监听 Node.js 事件。
+
++ app.on('ready', () => {
+- app.whenReady().then(() => {
+  createWindow()
+})
+
+但是 Electron 暴露了 app.whenReady() 方法，作为其 ready 事件的专用监听器，这样可以避免直接监听 .on 事件带来的一些问题。 参见 electron/electron#21972 。
+
+此时，运行 start 命令应该能成功地打开一个包含您网页内容的窗口！
+
+您应用中的每个页面都在一个单独的进程中运行，我们称这些进程为 渲染器 (renderer) 。 渲染进程使用与常规Web开发相同的JavaScript API和工具，例如使用 webpack来打包和压缩您的代码，或使用 React 构建用户界面。
+管理应用的窗口生命周期
+
+应用窗口在不同操作系统中的行为也不同。 Electron 允许您自行实现这些行为来遵循操作系统的规范，而不是采用默认的强制执行。 您可以通过监听 app 和 BrowserWindow 模组的事件，自行实现基础的应用窗口规范。
+针对特定进程的控制流
+
+通过检查 Node.js 的 process.platform 变量，您可以针对特定平台运行特定代码。 请注意，Electron 目前只支持三个平台：win32 (Windows), linux (Linux) 和 darwin (macOS) 。
+关闭所有窗口时退出应用 (Windows & Linux)
+
+在 Windows 和 Linux 上，我们通常希望在关闭一个应用的所有窗口后让它退出。 To implement this pattern in your Electron app, listen for the app module's window-all-closed event, and call app.quit() to exit your app if the user is not on macOS.
+
+app.on('window-all-closed', () => {
+  if (process.platform !== 'darwin') app.quit()
+})
+
+如果没有窗口打开则打开一个窗口 (macOS)
+
+与前二者相比，即使没有打开任何窗口，macOS 应用通常也会继续运行。 在没有窗口可用时调用 app 会打开一个新窗口。
+
+To implement this feature, listen for the app module's activate event, and call your existing createWindow() method if no BrowserWindows are open.
+
+因为窗口无法在 ready 事件前创建，你应当在你的应用初始化后仅监听 activate 事件。 要实现这个，仅监听 whenReady() 回调即可。
+
+app.whenReady().then(() => {
+  createWindow()
+
+  app.on('activate', () => {
+    if (BrowserWindow.getAllWindows().length === 0) createWindow()
+  })
+})
+
+完整实现代码
+docs/fiddles/tutorial-first-app (35.0.1)
+
+    main.js
+    index.html
+
+const { app, BrowserWindow } = require('electron/main')
+
+const createWindow = () => {
+  const win = new BrowserWindow({
+    width: 800,
+    height: 600
+  })
+
+  win.loadFile('index.html')
+}
+
+app.whenReady().then(() => {
+  createWindow()
+
+  app.on('activate', () => {
+    if (BrowserWindow.getAllWindows().length === 0) {
+      createWindow()
+    }
+  })
+})
+
+app.on('window-all-closed', () => {
+  if (process.platform !== 'darwin') {
+    app.quit()
+  }
+})
+
+可选：使用 VS Code 调试
+
+如果您希望使用 VS Code 调试您的程序，您需要让 VS Code 监听主进程 (main process) 和渲染器进程 (renderer process) 。 下面为您提供了一个简单的配置文件。 请在根目录新建一个 .vscode 文件夹，然后在其中新建一个 launch.json 配置文件并填写如下内容。
+.vscode/launch.json
+
+{
+  "version": "0.2.0",
+  "compounds": [
+    {
+      "name": "Main + renderer",
+      "configurations": ["Main", "Renderer"],
+      "stopAll": true
+    }
+  ],
+  "configurations": [
+    {
+      "name": "Renderer",
+      "port": 9222,
+      "request": "attach",
+      "type": "chrome",
+      "webRoot": "${workspaceFolder}"
+    },
+    {
+      "name": "Main",
+      "type": "node",
+      "request": "launch",
+      "cwd": "${workspaceFolder}",
+      "runtimeExecutable": "${workspaceFolder}/node_modules/.bin/electron",
+      "windows": {
+        "runtimeExecutable": "${workspaceFolder}/node_modules/.bin/electron.cmd"
+      },
+      "args": [".", "--remote-debugging-port=9222"],
+      "outputCapture": "std",
+      "console": "integratedTerminal"
+    }
+  ]
+}
+
+保存后，当您选择侧边栏的 “运行和调试”，将会出现一个 "Main + renderer" 选项。然后您便可设置断点，并跟踪主进程和渲染器进程中的所有变量。
+
+上文中我们在 launch.json 所做的其实是创建三个配置项：
+
+    Main 用来运行主程序，并且暴露出 9222 端口用于远程调试 (--remote-debugging-port=9222) 。 我们将把调试器绑定到那个端口来调试 renderer 。 因为主进程是 Node.js 进程，类型被设置为 node。
+    Renderer 用来调试渲染器进程。 因为后者是由主进程创建的，我们要把它 “绑定” 到主进程上 ()"request": "attach"，而不是创建一个新的。 渲染器是 web 进程，因此要选择 chrome 调试器。
+    Main + renderer 是一个 复合任务，可以同时执行上述任务。
+
+注意事项
+
+由于我们要将进程绑定到 Renderer 任务，您应用中的前几行代码可能会被跳过，因为调试器 (Debugger) 在执行代码之前没有足够的时间进行连接。 在开发环境中，您可以通过刷新页面或者使用 setTimeout 延迟运行代码，来避开这个问题。
+延伸阅读
+
+如果您希望深挖调试步骤，可以查看以下指南：
+
+    调试应用
+    DevTools 扩展
+
+摘要
+
+Electron 程序是通过 npm 包创建的。 您应将 Electron 依赖安装到 devDependencies ，然后在 package.json 中设置一个脚本来运行。
+
+执行命令后，Electron 程序会运行您在 package.json 文件的 main 字段设置的入口文件。 这个入口文件控制着 Electron 的主进程，后者运行于 Node.js 实例，负责应用的生命周期、展示原生窗口、执行特殊操作和管理渲染进程。
+
+渲染器进程(简称渲染器) 负责展示图形内容。 您可以将渲染的网页指向 web 地址或本地 HTML 文件。 渲染器和常规的网页行为很相似，访问的 web API 也相同。
+
+在教程下一节，我们将会学习如何使用 API 给渲染器提权，以及如何在进程间通信。

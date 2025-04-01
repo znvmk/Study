@@ -1,0 +1,124 @@
+1.检测当前引导模式是否是 UEFI
+>>ls /sys/firmware/efi/efivars
+boot检测输出即通过
+2.检测网络连接
+>>ping www.baidu.com
+
+
+
+Arch Linux报错: failed to synchronize all databases (unable to lock database)
+sudo rm -rf /var/lib/pacman/db.lck
+再次更新
+
+
+sudo pacman -Su
+
+    错误：python-cairo: 来自 "Caleb Maclennan <alerque@archlinux.org>" 的签名是未知信任的
+    :: 文件 /var/cache/pacman/pkg/python-cairo-1.24.0-1-x86_64.pkg.tar.zst 已损坏 (无效或已损坏的软件包 (PGP 签名)).
+    打算删除吗？ [Y/n]
+    错误：luajit: 来自 "Daurnimator <daurnimator@archlinux.org>" 的签名是未知信任的
+    :: 文件 /var/cache/pacman/pkg/luajit-2.1.1694285958-1-x86_64.pkg.tar.zst 已损坏 (无效或已损坏的软件包 (PGP 签名)).
+    打算删除吗？ [Y/n]
+    错误：python-jaraco.functools: 来自 "Chih-Hsuan Yen <yan12125@archlinux.org>" 的签名是未知信任的
+    :: 文件 /var/cache/pacman/pkg/python-jaraco.functools-3.9.0-1-any.pkg.tar.zst 已损坏 (无效或已损坏的软件包 (PGP 签名)).
+    打算删除吗？ [Y/n]
+    错误：无法提交处理 (无效或已损坏的软件包)
+    发生错误，没有软件包被更新。
+
+原因
+
+太久没更新系统，一些gpg公钥失效了。
+解决
+
+sudo pacman -Sy archlinux-keyring
+
+####################################################
+linux中如何把普通用户的权限设置为超级管理员
+linux 权限
+
+在Linux中，普通用户的权限不能直接设置为超级管理员。只有超级管理员（也称为root用户）才具有完全的系统管理权限。如果需要授权给普通用户一些超级管理员的权限，则可以通过设置sudo权限来实现。
+
+sudo是Linux中的一个命令，可以让普通用户以超级管理员的身份运行指定的命令或程序。通过设置sudo权限，可以让普通用户具有一定的系统管理权限，例如安装软件、修改系统配置等。
+
+要设置sudo权限，请按照以下步骤操作：
+
+1. 以超级管理员身份登录系统（或者使用su命令切换到超级管理员账户）
+
+2. 执行以下命令来安装sudo：
+
+
+apt-get install sudo
+
+3. 执行以下命令来将普通用户添加到sudo组：
+
+
+sudo usermod -aG sudo username
+
+其中，username是要授权的普通用户的用户名。
+
+添加管理员权限
+XXXX is not in the sudoers file. This incident will be reported解决方法
+
+假设你用的是Red Hat系列（包括Fedora和CentOS）的Linux系统。当你执行sudo命令时可能会提示“某某用户 is not in the sudoers file. This incident will be reported.”
+
+解决方法:编辑sudoers文件有两种办法，一种是以root帐号执行visudo，另一种是root帐号执行vi /etc/sudoers.其实两者都是修改/etc/sudoers。
+
+    注意：在修改 /etc/sudoers时，一定注意该文件是否有写权限，如果没有写权限，则使用 chmod u+w /etc/sudoers使其拥有写权限
+    。写完后注意将写权限去掉，以防止误操作。
+su
+chmod 666 sudoers ;提升权限为可读写
+vim sudoers:添加
+usename ALL=(ALL) ALL
+保存退出
+chmod 444 sudoers ;降级权限为只读，防止误操作
+
+假设你的用户名是“minghai”，属于“minghai”用户组。
+
+为了让用户minghai能够执行sudo命，你可以在sudoers文件中加上一下四行的任意一行。
+
+minghai           ALL=(ALL)             ALL
+
+%minghai          ALL=(ALL)             ALL
+
+minghai           ALL=(ALL)             NOPASSWD：ALL
+
+%minghai          ALL=(ALL)             NOPASSWD：ALL
+
+
+
+解释说明：
+
+    第一行：允许用户minghai执行sudo命令（需要输入密码）。
+    第二行：允许用户组minghai里面的用户执行sudo命令（需要输入密码）。
+    第三行：允许用户minghai执行sudo命令，并且在执行的时候不输入密码。
+    第四行：允许用户组minghai里面的用户执行sudo命令，并且在执行的时候不输入密码。
+
+当然如果你理解上面的原理后，可以直接输入如下命令解决此问题
+
+su - echo 'xxx ALL=(ALL) ALL' >> /etc/sudoers  (其中xxx代表用户名)
+
+    1
+
+原理扩展
+
+    通过su可以直接将身份变为 root，但需要 root 的密码
+    通过sudo可以执行 root 的命令串，sudo 只需要输入自己的密码，或者在sudoer中配置不需要任何密码
+
+还可以可以使用visudo修改 /etc/sudoers 文件
+
+    visudo：visudo 是利用 vi 将 /etc/sudoers 文件调出来进行修改而已
+
+sudoers 文件中每列的含义，以上面的示例
+
+用户账号       登陆者的来源主机名称=(可切换的身份)    可执行的命令
+minghai                      ALL=(ALL)              ALL
+
+    1
+    2
+
+上面这一行四个组件的意义：
+
+    【用户账号】操作系统的那个账号可以使用 sudo 这个命令，如果前面加 % 代表那个用户组可以使用 sudo 命令。
+    【登陆者的来源主机名称】这个账号由那台主机连接到本 Linux 主机
+    【可切换的身份】来源主机的用名称
+    【可执行的命令】可以执行什么命令。这个命令必须使用决定命令，多个命令用逗号隔开

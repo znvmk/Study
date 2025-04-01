@@ -1,8 +1,0 @@
-1.检测当前引导模式是否是 UEFI
->>ls /sys/firmware/efi/efivars
-boot检测输出即通过
-2.检测网络连接
->>ping www.baidu.com
-
-
-

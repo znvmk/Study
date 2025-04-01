@@ -1,0 +1,77 @@
+
+Termux 与 PRoot
+PRoot
+
+PRoot 是一个 chroot, mount –bind, 和 binfmt_misc 的用户空间实现。这意味着，用户不需要任何特殊权限和设置就可以使用任意目录作为新的根文件系统或者通过QEMU运行为其它CPU架构构建的程序。
+
+使用如下命令安装PRoot：
+
+pkg install proot
+
+Termux 维护了一个与安卓系统兼容的PRoot版本。源代码在： https://github.com/termux/proot
+
+    PRoot 通过伪造系统调用的参数和返回值，可以使程序看起来像运行在root用户下，但它并不提供任何方法来真正的提权。确实需要root权限去修改内核或硬件状态的程序将无法工作。
+
+比较 PRoot 与 chroot
+
+chroot和PRoot的一个主要区别是chroot是原生的。PRoot通过使用 ptrace() 劫持系统调用参数和返回值来伪造文件系统布局和用户/组ID。chroot不造成额外的开销，在任何设备上都不会出现问题，但是它需要root权限。
+
+如果你有root过的设备并且希望在Termux中更好的使用Linux发行版，那么请使用chroot。这种情况可以尝试使用 Linux Deploy 这个应用以自动安装Linux发行版。
+用法介绍
+
+PRoot 主要用于在不root的情况下在Termux中运行Linux发行版。
+
+proot启动发行版系统根目录中的shell：
+
+unset LD_PRELOAD
+proot -r ./rootfs -0 -w / -b /dev -b /proc -b /sys /bin/sh
+
+其中：
+
+    unset LD_PRELOAD - Termux-exec, execve() 的钩子，与PRoot冲突。
+    -r ./rootfs - 指定Linux发行版的根目录。
+    -0 - 通知PRoot模拟一个在Linux发行版中始终可用的root用户，允许使用Linux发行版中的包管理器。
+    -b /dev -b /proc -b /sys - 使位于 /dev, /proc, /sys 的文件系统在rootfs中可见。这三个绑定非常重要，可供多种实用程序使用。
+    /bin/sh - 在rootfs中启动的应用，通常是个shell。
+
+通过运行 proot --help 可查看所有的参数项。
+安装Linux发行版
+
+Termux提供一个 proot-distro 包，负责在Termux内部管理Linux发行版。运行如下命令以安装proot-distro：
+
+pkg install proot-distro
+
+当前支持以下发行版：
+
+    Alpine Linux (edge)
+    Arch Linux / Arch Linux 32 / Arch Linux ARM
+    Debian (stable)
+    Fedora 34
+    OpenSUSE (Tumbleweed)
+    Ubuntu (21.04)
+    Void Linux
+
+安装Linux发行版的方法：
+
+proot-distro install <alias>
+
+其中 <alias> 应被替换为想安装的Linux发行版的名称，例如 “alpine” 。需要注意的是安装过程需要一个稳定的网络连接，否则可能会下载失败。
+
+通过运行如下命令，启动一个发行版的shell：
+
+proot-distro login <alias>
+
+下面是proot-distro可用功能的概述：
+
+    proot-distro list - 显示支持的发行版及其状态。
+    proot-distro install - 安装一个发行版。
+    proot-distro login - 为发行版启动一个root shell。
+    proot-distro remove - 卸载发行版。
+    proot-distro reset - 重新安装发行版。
+
+运行 proot-distro help 以显示内置用法信息。另外可在每个功能后追加 --help 参数查看每个功能的详细用法信息（list功能除外）。更多功能细节可从项目主页了解： https://github.com/termux/proot-distro#functionality-overview
+
+一个安装和启动 Debian 的例子：
+
+proot-distro install debian
+proot-distro login debian

@@ -1,0 +1,25 @@
+新建用户，登录
+在root权限下删除原用户
+1.打开终端
+快捷键Ctrl+Alt+T
+
+2.创建用户和密码
+sudo useradd -m aaa
+创建用户名为aaa的用户
+-m：自动建立用户的登入目录
+sudo是允许系统管理员让普通用户执行root命令的一个工具（获取权限）
+这里会需要输入管理员的密码（不是你想给新用户设置的密码！！！）
+
+sudo passwd aaa
+输入用户aaa的密码
+第二次确认输入的密码在这里插入图片描述
+3.设置给予的权限
+sudo vi /etc/sudoers
+找到user privilege这一行
+通过按i写入如上命令 给aaa分配所有权限
+root ALL=(ALL:ALL) ALL
+aaa  ALL=(ALL:ALL) ALL
+然后按esc退出编辑模式 输入:w!强制入 然后:q退出
+（这里注意vi编辑器是有两种模式的也就是 按i键进入写入模式 按esc退出当前模式）可能需要大家了解一下vi编辑器 这里对新手确实不太友好
+
+sudo userdel -r aaa

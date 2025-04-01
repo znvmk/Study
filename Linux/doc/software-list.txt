@@ -4,4 +4,4 @@ neovim  gvim vscode Typora
 VLC
 GIMP Krita 
 qemu nasm 
-Qt Cteator gcc g++ redis dpkg 
+Qt Cteator gcc g++ gdb redis dpkg 

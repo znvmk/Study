@@ -1,0 +1,232 @@
+ linux C/C++ 静态库和动态库
+有爱心的马良
+2022-02-21
+197
+阅读3分钟
+静态库和动态库
+1 扫盲
+
+    库是什么?
+        二进制的程序
+    为什么要使用库?
+        方便使用:
+            发布给使用者
+        保密
+    库有了如何使用?
+        要将生成的库给到使用者
+        需要将头文件给到使用者
+
+2 静态库
+
+    命名规则
+        Linux
+            libxxx.a
+                lib: 前缀
+                .a: 后缀
+                xxx: 名字, 由库的制作者定的
+        windows
+            libxx.lib
+
+    静态库制作
+
+.
+├── add.c
+├── div.c
+├── include
+│   └── head.h
+├── main.c
+├── mult.c
+└── sub.c
+
+1 directory, 6 files
+# 1. 将源文件生成 .o 文件
+$ gcc -c sub.c add.c mult.c div.c  -I ./include/
+robin@OS:~/Linux/3Day/calc$ tree
+.
+├── add.c
+├── add.o
+├── div.c
+├── div.o
+├── include
+│   └── head.h
+├── main.c
+├── mult.c
+├── mult.o
+├── sub.c
+└── sub.o
+
+1 directory, 10 files
+
+# 2. 将.o 文件打包 生成 库文件
+# 语法: ar rcs 生成的库的名字 *.o文件
+$ ar rcs libcalc.a *.o
+robin@OS:~/Linux/3Day/calc$ ls
+add.c  add.o  div.c  div.o  include  `libcalc.a`  main.c  mult.c  mult.o  sub.c  sub.o
+
+
+# 发布
+将 `libcalc.a`  `head.h` 拷贝给使用者即可
+
+静态库使用
+
+    .
+    ├── include
+    │   └── head.h	`静态库对应的头文件`
+    ├── libcalc.a	`静态库`
+    └── main.c	`测试程序`
+
+    1 directory, 3 files
+    # 编译测试程序
+    $ gcc main.c -o app -I include/
+    /tmp/cceWxYij.o: In function `main':
+    main.c:(.text+0x38): undefined reference to `add'
+    main.c:(.text+0x58): undefined reference to `subtract'
+    main.c:(.text+0x78): undefined reference to `multiply'
+    main.c:(.text+0x98): undefined reference to `divide'
+    collect2: error: ld returned 1 exit status
+    # 错误原因: 编译的时候找不到对应的库, 库中有函数定义(函数实现)
+    # 指定自己编译的库需要使用的参数:
+    	-L: 指定库的路径
+    	-l: 指定库的名字(掐头(lib) 去尾(.a))
+    $ gcc main.c -o app -I include/ -L ./ -l calc
+
+3 动态库/共享库
+
+    共享 -> 共享内存中的库
+
+    命名规则
+        linux:
+            libxxx.so
+                前缀: lib
+                后缀: .so
+                库的名字: xxx, 制作库的人指定的
+        windows:
+            vs版
+                libxxx.lib
+                libxxx.dll
+            非vs版
+                libxx.dll
+
+    动态库制作
+
+.
+├── add.c
+├── div.c
+├── include
+│   └── head.h
+├── main.c
+├── mult.c
+└── sub.c
+
+1 directory, 6 files
+# 制作步骤:
+# 1. 将源文件生成 .o 文件 -fpic/fPIC
+$ gcc -c add.c div.c mult.c sub.c -fpic -I ./include/
+# 2. 将 .o 文件 打包(gcc -shared)成 库文件 .so
+$ gcc -shared *.o -o libcalc.so
+obin@OS:~/Linux/3Day/calc$ tree
+.
+├── add.c
+├── add.o
+├── div.c
+├── div.o
+├── include
+│   └── head.h
+├── `libcalc.so` # 生成的动态库
+├── main.c
+├── mult.c
+├── mult.o
+├── sub.c
+└── sub.o
+
+# 发布
+将 `libcalc.so` 和 	`head.h` 发布给使用者
+
+动态库使用
+
+.
+├── include
+│   └── head.h
+├── libcalc.so
+└── main.c
+$ gcc -I include/ main.c -L./ -lcalc -o app
+
+$ ./app
+./app: error while loading shared libraries: libcalc.so: cannot open shared object file: No such file or directory
+
+# 使用命令检测可执行程序能不能加载到对应的动态库?
+ldd 可执行程序名
+
+$ ldd app
+        linux-vdso.so.1 =>  (0x00007ffde8d77000)
+        libhello.so => `not found`
+        libc.so.6 => /lib/x86_64-linux-gnu/libc.so.6 (0x00007f289bd43000)
+        /lib64/ld-linux-x86-64.so.2 (0x00007f289c10d000)
+
+库的工作原理
+
+/*
+静态库:
+	gcc main.c -o app -I include/ -L ./ -l calc
+	- 在最终的链接阶段, 链接器会将静态库 calc 打包到可执行程序 app中
+	- 在可执行程序执行的时候, app中所有的代码会被加载到内存
+*/
+
+/*
+动态库:
+	gcc -I include/ main.c -L./ -lcalc -o app
+	- 在最终的链接阶段, 链接器不会将动态库 calc 打包到可执行程序 app中, 
+	  在上边的命令中只是检测动态库是否存在
+	- 在可执行程序执行的时候, app中所有的代码会被加载到内存, 不包括动态库代码
+	- 当库中的函数被调用的时候, 动态库被加载到内存(加载的时候需要知道动态库在什么位置)
+		- 库的加载是由动态链接器加载的
+*/
+
+# 动态链接器是如何加载动态库的?
+它先后搜索可执行程序文件的 `DT_RPATH段` —> 环境变量`LD_LIBRARY_PATH` —> `/etc/ld.so.cache`文件列表 —> `/lib/`, `/usr/lib`目录找到库文件后将其载入内存。
+
+解决动态库找不到的问题
+
+    #1. 将动态库的路径放到环境变量 LD_LIBRARY_PATH 中
+    在终端执行下边的命令: (这是临时设置, 当前终端被关闭或切换到其他终端该设置就无效了)
+    	export LD_LIBRARY_PATH=/home/robin/test:$LD_LIBRARY_PATH
+    永久设置: 将上边的命令写入到配置文件中
+    	- 用户级别:
+    		`~/.bashrc`
+    	- 系统级别:
+    		`/etc/profile`
+    	配置完成之后, 需要让配置文件重新被加载
+    		. == source
+    		. ~/.bashrc
+    		. /etc/profile
+    #2. 将动态库的路径更新配置文件 /etc/ld.so.cache 中
+    	- 将动态库的路径添加到配置文件 /etc/ld.so.conf
+    	- 将/etc/ld.so.conf中的信息更新/etc/ld.so.cache 
+    		- sudo ldconf
+    #3. 将动态库添加到对应的系统目录中
+    	- /lib
+    	- /usr/lib
+
+4 对比
+
+    静态库
+
+        优点：
+            静态库被打包到应用程序中加载速度快
+            发布程序无需提供静态库，移植方便
+
+        缺点：
+            销毁系统资源，浪费内存
+            更新、部署、发布麻烦。
+
+    动态库
+
+        优点：
+            可实现进程间资源共享
+            程序升级简单
+            程序猿可以控制何时加载动态库
+
+        缺点：
+            加载速度比静态库慢
+            发布程序需要提供依赖的动态库
+

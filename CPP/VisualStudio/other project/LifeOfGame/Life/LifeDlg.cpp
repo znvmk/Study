@@ -20,23 +20,23 @@ class CAboutDlg : public CDialogEx
 public:
 	CAboutDlg();
 
-// 对话框数据
+	// 对话框数据
 #ifdef AFX_DESIGN_TIME
 	enum { IDD = IDD_ABOUTBOX };
 #endif
 
-	protected:
+protected:
 	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV 支持
 
-// 实现
+	// 实现
 protected:
 	DECLARE_MESSAGE_MAP()
 public:
-//	afx_msg void OnPaint();
-//	afx_msg void OnLButtonDown(UINT nFlags, CPoint point);
-//	afx_msg void OnRButtonDown(UINT nFlags, CPoint point);
-//	afx_msg void OnTimer(UINT_PTR nIDEvent);
-//	afx_msg BOOL OnEraseBkgnd(CDC* pDC);
+	//	afx_msg void OnPaint();
+	//	afx_msg void OnLButtonDown(UINT nFlags, CPoint point);
+	//	afx_msg void OnRButtonDown(UINT nFlags, CPoint point);
+	//	afx_msg void OnTimer(UINT_PTR nIDEvent);
+	//	afx_msg BOOL OnEraseBkgnd(CDC* pDC);
 };
 
 CAboutDlg::CAboutDlg() : CDialogEx(IDD_ABOUTBOX)
@@ -49,11 +49,11 @@ void CAboutDlg::DoDataExchange(CDataExchange* pDX)
 }
 
 BEGIN_MESSAGE_MAP(CAboutDlg, CDialogEx)
-//	ON_WM_PAINT()
-//	ON_WM_LBUTTONDOWN()
-//	ON_WM_RBUTTONDOWN()
-//	ON_WM_TIMER()
-//	ON_WM_ERASEBKGND()
+	//	ON_WM_PAINT()
+	//	ON_WM_LBUTTONDOWN()
+	//	ON_WM_RBUTTONDOWN()
+	//	ON_WM_TIMER()
+	//	ON_WM_ERASEBKGND()
 END_MESSAGE_MAP()
 
 
@@ -80,6 +80,8 @@ BEGIN_MESSAGE_MAP(CLifeDlg, CDialogEx)
 	ON_WM_RBUTTONDOWN()
 	ON_WM_ERASEBKGND()
 	ON_WM_TIMER()
+	ON_BN_CLICKED(ID_BUTTON_CLEAR, &CLifeDlg::OnBnClickedButtonClear)
+	ON_BN_CLICKED(ID_BUTTON_LoadModel, &CLifeDlg::OnBnClickedButtonLoadmodel)
 	ON_BN_CLICKED(ID_BUTTON_SETTING, &CLifeDlg::OnBnClickedButtonSetting)
 	ON_BN_CLICKED(ID_BUTTON_START, &CLifeDlg::OnBnClickedButtonStart)
 	ON_BN_CLICKED(ID_BUTTON_PAUSE, &CLifeDlg::OnBnClickedButtonPause)
@@ -121,23 +123,23 @@ BOOL CLifeDlg::OnInitDialog()
 	SetIcon(m_hIcon, TRUE);			// 设置大图标
 	SetIcon(m_hIcon, FALSE);		// 设置小图标
 
-//	ShowWindow(SW_MAXIMIZE);
+	//	ShowWindow(SW_MAXIMIZE);
 
-//	ShowWindow(SW_MINIMIZE);
+	//	ShowWindow(SW_MINIMIZE);
 
-	// TODO: 在此添加额外的初始化代码
+		// TODO: 在此添加额外的初始化代码
 
-	//设置对话框初始大小
-	CRect temprect(0, 0, 850, 640);
+		//设置对话框初始大小
+	CRect temprect(0, 0, ArrayLength * 15 + 250, ArrayLength * 15 + 65);
 	CWnd::SetWindowPos(NULL, 0, 0, temprect.Width(), temprect.Height(), SWP_NOZORDER |
-	SWP_NOMOVE);
+		SWP_NOMOVE);
 
 
 
 	//初始化变量
 	//m_plbt = (0, 0);
 	m_bpause = false;
-	tempSpeed=m_ispeed = 27;
+	tempSpeed = m_ispeed = 2;
 
 
 	return TRUE;  // 除非将焦点设置到控件，否则返回 TRUE
@@ -209,18 +211,18 @@ void CLifeDlg::DrawBoard(CDC* pDC)
 	//定义画笔
 	// 生成画笔
 	CPen PenBlackLine1(PS_SOLID, 1, RGB(255, 255, 255));
-	CPen *poldpenline1;
+	CPen* poldpenline1;
 	poldpenline1 = pDC->SelectObject(&PenBlackLine1);
 
 	//单位长度
-	int unit=15;
-	int unitLength=40;
-	for (int i = 0; i<unitLength; i++)
+	int unit = 15;
+	int unitLength = ArrayLength;
+	for (int i = 0; i < unitLength; i++)
 	{
 		pDC->MoveTo(unit + i * unit, 0);
-		pDC->LineTo(unit + i * unit, unit*unitLength);
+		pDC->LineTo(unit + i * unit, unit * unitLength);
 		pDC->MoveTo(0, unit + i * unit);
-		pDC->LineTo(unit*unitLength, unit + i * unit);
+		pDC->LineTo(unit * unitLength, unit + i * unit);
 
 	}
 	//释放画笔
@@ -234,14 +236,14 @@ void CLifeDlg::DrawInformation(CDC* pDC)
 
 
 	//设置背景
-	CRect rect(601, 0, 835, 600);
+	CRect rect(ArrayLength * 15 + 1, 0, ArrayLength * 15 + 235, ArrayLength * 15 + 30);
 
 	pDC->FillSolidRect(rect, RGB(128, 128, 128));//背景颜色填充
 
 	//定义画笔
 	//生成画笔
 	CPen PenBlackLine1(PS_SOLID, 1, RGB(0, 0, 0));
-	CPen *poldpenline1;
+	CPen* poldpenline1;
 	poldpenline1 = pDC->SelectObject(&PenBlackLine1);
 
 	//释放画笔
@@ -249,7 +251,7 @@ void CLifeDlg::DrawInformation(CDC* pDC)
 
 
 	CFont font;
-	CFont *poldfont;
+	CFont* poldfont;
 	poldfont = pDC->SelectObject(&font);
 	font.CreateFont(
 		16,                                                  //   nHeight  
@@ -279,14 +281,14 @@ void CLifeDlg::DrawDiamonds(CDC* pDC)
 	//画棋盘坐标信息
 
 	CBrush fillbrush;
-	CBrush *oldbrush;
+	CBrush* oldbrush;
 	fillbrush.CreateSolidBrush(RGB(255, 0, 0));
 	oldbrush = pDC->SelectObject(&fillbrush);
 
 	CPoint p;
-	for (int i = 0; i < 40; i++)
+	for (int i = 0; i < ArrayLength; i++)
 	{
-		for (int j = 0; j <40; j++)
+		for (int j = 0; j < ArrayLength; j++)
 		{
 			//pDC->Ellipse(p.x,p.y,p.x+5,p.y+5);
 			if (m_dp.LifeArray[i][j] == 1)
@@ -295,7 +297,7 @@ void CLifeDlg::DrawDiamonds(CDC* pDC)
 				p.y = j * 15.0;
 				pDC->Rectangle(p.x, p.y, p.x + 15, p.y + 15);
 			}
-			
+
 		}
 	}
 
@@ -304,10 +306,19 @@ void CLifeDlg::DrawDiamonds(CDC* pDC)
 }
 
 
+void CLifeDlg::OnBnClickedButtonLoadmodel()
+{
+	// TODO: 在此添加控件通知处理程序代码
+	m_dp.LoadModel();
+	CRect rect(0, 0, ArrayLength * 15, ArrayLength * 15);
+	InvalidateRect(rect, TRUE);
+}
+
+
 void CLifeDlg::SettingPut(CPoint point)
 {
 	//边界检测：如果超过边界返回
-	if (point.x > 600 || point.y > 600) return;
+	if (point.x > ArrayLength * 15 || point.y > ArrayLength * 15) return;
 
 	//坐标
 	int coordinateX = -1;
@@ -317,14 +328,14 @@ void CLifeDlg::SettingPut(CPoint point)
 	int distanceX, distanceY;
 
 	coordinateX = point.x / 15;
-	coordinateY = point.y  / 15;
-	
+	coordinateY = point.y / 15;
+
 	m_dp.InitSetting(coordinateX, coordinateY, TRUE);
 	distanceX = coordinateX * 15;
 	distanceY = coordinateX * 15;
 	CRect rect(distanceX, distanceY, distanceX + 15, distanceY + 15);
 	InvalidateRect(rect, TRUE);
-	
+
 }
 
 
@@ -332,7 +343,7 @@ void CLifeDlg::SettingPut(CPoint point)
 void CLifeDlg::SettingCancel(CPoint point)
 {
 	//边界检测：如果超过边界返回
-	if (point.x > 600 || point.y > 600) return;
+	if (point.x > ArrayLength * 15 || point.y > ArrayLength * 15) return;
 
 	//坐标
 	int coordinateX = -1;
@@ -341,12 +352,12 @@ void CLifeDlg::SettingCancel(CPoint point)
 	//距离
 	float distanceX, distanceY;
 
-	
+
 	coordinateX = point.x / 15;
 	coordinateY = point.y / 15;
 
 	m_dp.InitSetting(coordinateX, coordinateY, FALSE);
-	
+
 }
 
 
@@ -397,7 +408,7 @@ BOOL CLifeDlg::OnEraseBkgnd(CDC* pDC)
 	//建立一个与屏幕显示兼容的位图
 	bmp.CreateCompatibleBitmap(pDC, ClientRect.Width(), ClientRect.Height());
 	MemDC.SelectObject(&bmp); //将位图选入到内存显示设备中
-							  //先用背景色将位图清除干净，这里我用的是白色作为背景 
+	//先用背景色将位图清除干净，这里我用的是白色作为背景 
 	MemDC.FillSolidRect(0, 0, ClientRect.Width(), ClientRect.Height(), RGB(255, 255, 255));
 
 
@@ -415,7 +426,7 @@ BOOL CLifeDlg::OnEraseBkgnd(CDC* pDC)
 	DrawDiamonds(pMDC);
 
 
-	pDC->BitBlt(0, 0, 850, 600, &MemDC, 0, 0, SRCCOPY);
+	pDC->BitBlt(0, 0, ArrayLength * 15 + 250, ArrayLength * 15, &MemDC, 0, 0, SRCCOPY);
 
 	//结束了 画图不要忘记释放资源，DC是有限的
 	bmp.DeleteObject();
@@ -437,18 +448,18 @@ void CLifeDlg::OnTimer(UINT_PTR nIDEvent)
 	else
 	{
 		m_dp.Evolution();
-		tempSpeed=m_ispeed;
+		tempSpeed = m_ispeed;
 	}
 
 
-	CRect rect(0, 0, 600, 600);
+	CRect rect(0, 0, ArrayLength * 15, ArrayLength * 15);
 	InvalidateRect(rect, TRUE);
 	//Invalidate();
 	CDialogEx::OnTimer(nIDEvent);
 }
 
 
-void CLifeDlg::OnBnClickedButtonSetting()
+void CLifeDlg::OnBnClickedButtonClear()
 {
 	// TODO: 在此添加控件通知处理程序代码
 	m_bset = true;
@@ -458,11 +469,21 @@ void CLifeDlg::OnBnClickedButtonSetting()
 }
 
 
+void CLifeDlg::OnBnClickedButtonSetting()
+{
+	// TODO: 在此添加控件通知处理程序代码
+	m_bset = true;
+	//m_dp.Reset();
+	KillTimer(1);
+	Invalidate();
+}
+
+
 void CLifeDlg::OnBnClickedButtonStart()
 {
 	// TODO: 在此添加控件通知处理程序代码
 	m_bset = false;
-	SetTimer(1, 10, NULL);
+	SetTimer(1, 5, NULL);
 }
 
 
@@ -476,7 +497,7 @@ void CLifeDlg::OnBnClickedButtonPause()
 	}
 	else
 	{
-		SetTimer(1, 10, NULL);
+		SetTimer(1, 5, NULL);
 		m_bpause = true;
 	}
 }
@@ -492,14 +513,14 @@ void CLifeDlg::OnBnClickedButtonOver()
 void CLifeDlg::OnBnClickedButtonAdd()
 {
 	// TODO: 在此添加控件通知处理程序代码
-	if (m_ispeed > 3)m_ispeed -=3;
+	if (m_ispeed > 2)m_ispeed -= 2;
 }
 
 
 void CLifeDlg::OnBnClickedButtonMinus()
 {
 	// TODO: 在此添加控件通知处理程序代码
-	m_ispeed +=3;
+	m_ispeed += 2;
 }
 
 
@@ -523,5 +544,10 @@ void CLifeDlg::OnBnClickedButtonQuit()
 	//	}
 	//}
 }
+
+
+
+
+
 
 

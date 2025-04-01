@@ -1,0 +1,40 @@
+安装qemu：pacman -S qemu 
+atp install qemu-system 
+apt instal aemu-user-statiic 
+yum install qemu-kvm
+安装uefi
+apt install ovmf
+
+新建文件夹
+$qemu-img create -f qcow2 arch.qcow2 512g
+Formatting 'arch.qcow2',fmt=qcow2 cluter_size=65536 extended_12=off compression_type size=21474886480 lazy_refcount=off refcount_bits=16
+$ls 
+arch.qcow2  archlinux-2022.06.01-x86_64(提前下载)
+$qemu-system-x86_64 --enable-kvm -machine type=pc,accel=kvm -vga virtio -display gtk,gl=on -smp 12 -m 51200 arch.qcow2 -boot d -cdrom arch-2022.06.01-x86_64.iso -bios "usr/share/ovmf/OVMF.fd"
+此时网络无法ping通，但是有网
+安装，完成
+$qemu-system-x86_64 --enable-kvm -machine type=pc,accel=kvm -device virtio-vga-gl -display sdl,gl=on -smp 12 -m 51200 arch.qcow2 -bios "usr/share/ovmf/OVMF.fd"
+****如无法启动，将ovmf目录下全部文件复制到当前目录 /usr/share/ovmf
+：$qemu-system-x86_64 --enable-kvm -machine type=pc,accel=kvm -device virtio-vga-gl -display sdl,gl=on -smp 12 -m 51200 arch.qcow2 -bios OVMF.fd
+报错：Display  Output is not active
+更改命令：：$qemu-system-x86_64 --enable-kvm -machine type=pc,accel=kvm -device virtio-gpu-pci -display sdl,gl=on -smp 12 -m 51200 arch.qcow2 -bios OVMF.fd
+或者：virtio-ramfb-gl
+将启动命令写进脚本：start.sh:qemu-system-x86_64 --enable-kvm -machine type=pc,accel=kvm -device virtio-gpu-pci -display sdl,gl=on -smp 12 -m 51200 arch.qcow2 -bios OVMF.fd
+启动：./start.sh 
+
+KVM虚拟机启动报错Image is corrupt； cannot be opened read/write怎么解决
+Image is corrupt； cannot be opened read/write
+原因：意外断电导致虚拟磁盘损坏，使用以下命令修复qcow2磁盘
+qemu-img check -r all CentOS7Bisheng03217.qcow2 
+修复后重新启动
+
+安装
+archlinuxcn-keyring
+yay 
+
+
+qemu指令参数：
+-smp 12,cores=6,threads=2,sockets=1 
+2个cpu,每个cpu拥有1个核心，每个核心拥有1个线程
+设置可能会出错不识别，仅用线程设置：-smp 12即可
+

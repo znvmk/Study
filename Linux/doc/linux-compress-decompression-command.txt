@@ -175,3 +175,268 @@ a 代表添加文件／文件夹到压缩包
 -r 表示递归所有的子文件夹，manager.7z 是压缩好后的压缩包名，/home/manager/* 是要压缩的目录，＊是表示该目录下所有的文件。
 
 
+
+
+快如闪电：Linux多线程压缩软件pigz和压缩神器zstd、p7zip
+
+    前言：pigz和zstd这两个都不支持直接压缩文件夹，如有支持多线程同时支持压缩文件夹的压缩软件（XZ除外），麻烦评论区留言，谢谢。
+
+pigz简介
+
+pigz是GZip的并行版(pigz，即 Parallel Implementation of GZip)，作者为Mark Adler。
+它充分利用了现代多核处理器的性能，大幅提高压缩解压的速度。
+pigz安装
+
+#Ubuntu：
+apt install -y pigz
+#CentOS：
+yum -y install pigz
+
+pigz实例
+
+1、压缩单个文件
+
+pigz -k your_file_name
+# 加上-k选项保留原始文件，会在当前工作目录获得压缩后的your_file_name.gz 文件
+
+2、解压单个文件
+
+unpigz -d your_file_name.gz
+# 同样，如果需要保留.gz文件，记得加上-k选项
+
+3、压缩文件夹
+
+tar -cvf - dir1 dir2 dir3 | pigz > output.tar.gz
+# pigz没有压缩文件夹的选项，只能压缩单个文件。若想压缩文件夹，可以结合tar使用
+
+4、解压文件夹
+
+pigz -d output.tar.gz
+# 这样得到的是output.tar，再通过tar解打包就好了
+tar -xzvf output.tar.gz    # 也可以直接用tar命令解压
+
+pigz常用参数
+
+-0 ~ -9 压缩等级，数字越大压缩率越高，速度越慢，默认为6
+-k --keep 压缩后不删除原始文件
+-l --list 列出压缩输入的内容
+-K --zip Compress to PKWare zip (.zip) single entry format
+-d --decompress 解压缩输入
+-p --processes n 使用n核处理，默认为使用所有CPU核心
+
+ZSTD简介
+
+Zstandard 简称Zstd，是一种快速的无损压缩算法，以 zlib 级为目标的实时压缩场景和更好的压缩比。它可以将压缩速度交换为更高的压缩比率，同时支持非常快的解码器。Zstd压缩包为 .zst 格式。
+Zstd安装
+
+# Ubuntu
+apt install -y zstd
+# CentOS
+yum install -y zstd
+# 编译安装
+git clone https://github.com/facebook/zstd.git
+cd zstd; make; sudo make install
+
+Zstd实例
+
+1、压缩单个文件
+
+zstd -T0 your_file_name
+# 加上-T0选项使用所有CPU核心，会在当前工作目录获得压缩后的your_file_name.zst 文件
+
+2、解压单个文件
+
+zstd -T0 -d your_file_name.zst
+
+3、压缩文件夹
+
+tar -cvf - dir1 dir2 dir3 | zstd -T0  > output.tar.zst
+# zstd没有压缩文件夹的选项，只能压缩单个文件。若想压缩文件夹，可以结合tar使用
+
+4、解压文件夹
+
+zstd -T0 -d output.tar.zst
+# 这样得到的是output.tar，再通过tar解打包就好了
+
+Zstd常用参数
+
+ -#     : 压缩级别(1-19，默认值为3)
+ -d     : 解压
+ -o file: 结果存储在文件中
+ -f     : 在没有提示的情况下覆盖输出并(解压)压缩链接
+--rm    : 成功解压缩后删除源文件
+ -h/-H  : 显示帮助/长帮助并退出
+ -v     : 详细模式
+ -q     : 静默输出
+ -l     : 输出zstd压缩包中的信息
+--ultra : 启用超过19级，最多22级(需要更多内存)
+ -T#    : 使用几个线程进行压缩(默认值:1个，0位自动使用所有CPU核心)
+--format=gzip : 将文件压缩为.gz格式
+
+p7zip简介
+
+p7Zip是一款用于Linux平台的高压缩比的存档格式 7z 的管理器。通常使用 7-Zip 的 7z 格式能比使用 zip 格式的压缩文件小30-70%。
+7z 是一种主流高效的压缩格式，它拥有极高的压缩比。在计算机科学中，7z是一种可以使用多种压缩算法进行数据压缩的档案格式。
+p7zip安装
+
+#Ubuntu：
+apt install -y p7zip
+#CentOS：
+yum -y install p7zip
+
+p7zip实例
+
+1、压缩文件/文件夹
+
+# 压缩文件（支持单文件及多文件）
+7za a -r mydata.7z ./*
+# 压缩文件夹
+7za a -r mydata.7z ./*
+
+2、解压
+
+7za x mydata.7z
+
+p7zip常用参数
+
+a 添加文件／文件夹到压缩包
+x 解压压缩包到当前目录
+-r 递归所有的子文件夹
+-t 指定压缩类型，默认是7z，也支持zip、bz2等快如闪电：Linux多线程压缩软件pigz和压缩神器zstd、p7zip
+运维猿Winter
+IP属地: 广东
+0.209
+2022.03.01 13:34:16
+字数 410阅读 5,480
+
+    前言：pigz和zstd这两个都不支持直接压缩文件夹，如有支持多线程同时支持压缩文件夹的压缩软件（XZ除外），麻烦评论区留言，谢谢。
+
+pigz简介
+
+pigz是GZip的并行版(pigz，即 Parallel Implementation of GZip)，作者为Mark Adler。
+它充分利用了现代多核处理器的性能，大幅提高压缩解压的速度。
+pigz安装
+
+#Ubuntu：
+apt install -y pigz
+#CentOS：
+yum -y install pigz
+
+pigz实例
+
+1、压缩单个文件
+
+pigz -k your_file_name
+# 加上-k选项保留原始文件，会在当前工作目录获得压缩后的your_file_name.gz 文件
+
+2、解压单个文件
+
+unpigz -d your_file_name.gz
+# 同样，如果需要保留.gz文件，记得加上-k选项
+
+3、压缩文件夹
+
+tar -cvf - dir1 dir2 dir3 | pigz > output.tar.gz
+# pigz没有压缩文件夹的选项，只能压缩单个文件。若想压缩文件夹，可以结合tar使用
+
+4、解压文件夹
+
+pigz -d output.tar.gz
+# 这样得到的是output.tar，再通过tar解打包就好了
+tar -xzvf output.tar.gz    # 也可以直接用tar命令解压
+
+pigz常用参数
+
+-0 ~ -9 压缩等级，数字越大压缩率越高，速度越慢，默认为6
+-k --keep 压缩后不删除原始文件
+-l --list 列出压缩输入的内容
+-K --zip Compress to PKWare zip (.zip) single entry format
+-d --decompress 解压缩输入
+-p --processes n 使用n核处理，默认为使用所有CPU核心
+
+ZSTD简介
+
+Zstandard 简称Zstd，是一种快速的无损压缩算法，以 zlib 级为目标的实时压缩场景和更好的压缩比。它可以将压缩速度交换为更高的压缩比率，同时支持非常快的解码器。Zstd压缩包为 .zst 格式。
+Zstd安装
+
+# Ubuntu
+apt install -y zstd
+# CentOS
+yum install -y zstd
+# 编译安装
+git clone https://github.com/facebook/zstd.git
+cd zstd; make; sudo make install
+
+Zstd实例
+
+1、压缩单个文件
+
+zstd -T0 your_file_name
+# 加上-T0选项使用所有CPU核心，会在当前工作目录获得压缩后的your_file_name.zst 文件
+
+2、解压单个文件
+
+zstd -T0 -d your_file_name.zst
+
+3、压缩文件夹
+
+tar -cvf - dir1 dir2 dir3 | zstd -T0  > output.tar.zst
+# zstd没有压缩文件夹的选项，只能压缩单个文件。若想压缩文件夹，可以结合tar使用
+
+4、解压文件夹
+
+zstd -T0 -d output.tar.zst
+# 这样得到的是output.tar，再通过tar解打包就好了
+
+Zstd常用参数
+
+ -#     : 压缩级别(1-19，默认值为3)
+ -d     : 解压
+ -o file: 结果存储在文件中
+ -f     : 在没有提示的情况下覆盖输出并(解压)压缩链接
+--rm    : 成功解压缩后删除源文件
+ -h/-H  : 显示帮助/长帮助并退出
+ -v     : 详细模式
+ -q     : 静默输出
+ -l     : 输出zstd压缩包中的信息
+--ultra : 启用超过19级，最多22级(需要更多内存)
+ -T#    : 使用几个线程进行压缩(默认值:1个，0位自动使用所有CPU核心)
+--format=gzip : 将文件压缩为.gz格式
+
+p7zip简介
+
+p7Zip是一款用于Linux平台的高压缩比的存档格式 7z 的管理器。通常使用 7-Zip 的 7z 格式能比使用 zip 格式的压缩文件小30-70%。
+7z 是一种主流高效的压缩格式，它拥有极高的压缩比。在计算机科学中，7z是一种可以使用多种压缩算法进行数据压缩的档案格式。
+p7zip安装
+
+#Ubuntu：
+apt install -y p7zip
+#CentOS：
+yum -y install p7zip
+
+p7zip实例
+
+1、压缩文件/文件夹
+
+# 压缩文件（支持单文件及多文件）
+7za a -r mydata.7z ./*
+# 压缩文件夹
+7za a -r mydata.7z ./*
+
+2、解压
+
+7za x mydata.7z
+
+p7zip常用参数
+
+a 添加文件／文件夹到压缩包
+x 解压压缩包到当前目录
+-r 递归所有的子文件夹
+-t 指定压缩类型，默认是7z，也支持zip、bz2等
+
+解压.xz文件
+unxz filename.tar.xz
+xz -dk filename.tar.xz
+d:解压.xz文件
+k:保留原文件，不保留则去掉k
+tar -xvf filename.tar

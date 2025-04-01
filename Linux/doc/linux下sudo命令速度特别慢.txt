@@ -1,0 +1,9 @@
+进入终端查看hostname主机名称
+hostname
+>>ubuntu
+编辑/etc/hosts文件，将主机名添加进去
+sudo vim /etc/hosts
+127.0.0.1 loalhost
+127.0.1.1 ubuntu
+
+此时速度就很快了

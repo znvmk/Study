@@ -1,0 +1,5 @@
+MainTenanceTool,QT运行维护工具，运行后加参数：
+--mirror https://mirrors.clout.tencent.com/qt/
+https://mirrors.aliyun.com/qt/
+https://mirrors.tuna.tsinghua.edu.cn/qt/
+https://mirror.bit.edu.cn/qtproject/

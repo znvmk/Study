@@ -1,0 +1,43 @@
+在qemu中使用桥接网络
+
+    作者: ayahuasec 时间: 2020-06-21 分类: Tech 访问: 3,198 次 
+
+便于其他设备更容易直接访问虚拟机。
+
+所使用的主机操作系统是Debian10。
+首先需要安装软件包以支持网络桥接：
+
+sudo apt-get update && sudo apt-get install bridge-utils
+
+本机中主网卡的interface为eth0，配置为DHCP。此处不修改主网卡的配置，静态IP分配由DHCP服务器进行处理，这样当主机迁移到其他网络时无需修改网络配置。
+修改/etc/network/interfaces文件，将eth0配置为手动模式，之后额外增加一个br0的interface，设置将其桥接到eth0上，并配置其为dhcp。在该文件中添加如下内容：
+
+iface eth0 inet manual
+
+auto br0
+  iface br0 inet dhcp
+  bridge_ports eth0
+  bridge_stp off
+  bridge_fd 0
+
+如果需要配置成静态ip，将dhcp改成static，并增加address，按需增加gateway选项。例如
+
+iface eth0 inet manual
+
+auto br0
+  iface br0 inet static
+  address 192.168.0.2/24
+  gateway 192.168.0.1
+  bridge_ports eth0
+  bridge_stp off
+  bridge_fd 0
+
+之后重启网络服务即可：
+
+sudo service networking restart
+
+在使用命令启动虚拟机时，添加-net tap，qemu将会自动添加tap网络用于桥接虚拟机。可以在-net nic中指定mac地址，以区分不同的虚拟机。一个启动虚拟机的例子如下：
+
+qemu-system-x86_64 --enable-kvm -smp 2 -m 1024M -drive file=hda.qcow2 -net nic,macaddr=52:54:00:12:34:56 -net tap -vnc :1
+
+虚拟机启动后，就可以在路由器的管理界面中看到一个mac地址为52:54:00:12:34:56的设备连接了虚拟机。不同虚拟机要同时运行时需注意选择不同的mac地址，以免造成虚拟机之间及虚拟机与局域网其他设备之间的网络通信问题。

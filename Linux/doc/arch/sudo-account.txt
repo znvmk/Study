@@ -1,0 +1,130 @@
+如何在 Arch Linux 下创建并配置 sudo 用户?
+xiaochong0302
+xiaochong0302
+鸠摩智首席音效师
+4 人赞同了该文章
+
+create-sudo-user-on-archlinux
+
+
+sudo (super user do) 是一个被授予 root 或高级权限的普通用户，因此可以执行与 root 用户类似的高级任务。其中包括编辑配置文件、安装和删除软件包、启动和停止服务等等。
+
+不要以 root 用户运行管理级别的命令，建议在您打算管理的任何 Linux 服务器上配置或创建 sudo 用户。以 root 身份执行命令是有风险的，一个命令就可以意外地让您的系统崩溃。为了避免这种情况，强烈建议以 sudo 用户的身份运行提升操作。
+
+在本指南中，我们将重点介绍如何在 Arch Linux 上创建和配置 sudo 用户。
+1) 安装 sudo 软件包
+
+与其他 Linux 发行版不同，Arch Linux 默认不带 sudo 命令，以 root 身份执行以下命令
+
+# pacman -S sudo
+
+2) 创建一个普通用户
+
+创建一个普通用户，稍后把这个用户添加到 sudoers 组，使他们能够执行管理任务。
+
+使用 useradd 命令创建 sudo 用户，语法如下：
+
+# useradd -m -G wheel -s /bin/bash username
+
+参数说明：
+
+    -m 选项创建主目录
+    -G 选项将用户添加到另一个组
+    -s 选项指定默认登录使用的 shell
+
+假设您想添加一个名为 techuser 的普通用户，运行如下命令：
+
+# useradd -m -G wheel -s /bin/bash techuser
+
+备注: wheel 组是一种特殊类型的组，用于控制谁可以访问 sudo 命令。
+3) 将普通用户配置为 sudo 用户
+
+到目前为止，我们创建了一个常规登录用户，该用户还不具备运行提升命令的能力，我们需要编辑 /etc/sudoers
+
+文件。
+
+备注: /etc/sudoers 文件定义了访问权限，可以对其进行编辑，以向普通用户授予或拒绝某些特权。
+
+# visudo
+Or
+# vi /etc/ sudoers
+
+打开 sudoers 文件后，滚动到 wheel 相关部分，取消注释并保存文件。
+
+%wheel   ALL=(ALL)   ALL
+
+使用 passwd 命令给用户设置密码
+
+# passwd techuser
+
+将普通用户配置为 sudo 用户的另一种方法是，在 sudoers 文件中添加如下用户条目
+
+techuser ALL=(ALL)  ALL
+
+
+Local-User-Sudoer-File-Arch-Linux
+
+
+保存并退出 sudoers 文件
+3) 测试 sudo 用户
+
+首先，切换到新用户
+
+$ su - techuser
+
+输入用户密码并按回车
+
+
+Switch-User-Arch-Linux
+
+
+我们尝试更新 Arch Linux 看看
+
+$ sudo  pacman -Syu
+
+You will be provided with a disclaimer
+
+informing you of the salient things to keep in mind when invoking sudo and later, you will be prompted for the password.
+
+将向您提供一个免责声明，通知您在调用 sudo 时要记住的重要事项，稍后将提示您输入密码。
+
+
+ linux 如何编辑 /etc/sudoers 文件权限
+
+请先切换到超级用户（root），将 /etc/sudoers 修改为可编辑。
+
+chmod 777 /etc/sudoers
+
+对此文件进行修改后，将 /etc/sudoers 修改回只读模式。
+
+chmod 440 /etc/sudoers
+
+ 
+
+文件里的权限配置如何修改：
+
+root ALL=(ALL:ALL) ALL
+关于此权限设置的说明：
+
+root 表示 此项规则应用于root用户
+
+从左到右
+
+第一个ALL 表示这项规则应用于所有主机
+
+第二个ALL 表示root（用户）可以像所有用户一样运行命令，可以切换到所有用户
+
+第三个ALL 表示root（用户）可以像所有组一样运行命令
+
+第四个ALL 表示这项规则应用与所有命令。
+所以这条权限设置的语句表示root用户可以使用sudo执行任何命令。
+
+允许普通用户使用 sudo 命令
+
+修改 /etc/sudoers
+
+增加一行
+
+greatdb ALL=(ALL)      NOPASSWD: ALL
+
+NOPASSWD: ALL 表示不输入密码也能执行所有命令。

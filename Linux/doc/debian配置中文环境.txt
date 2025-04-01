@@ -1,0 +1,34 @@
+在安装系统的时候会有一个语言区域选项，不管当时选的什么，在这里都可以更改。同时解决中文乱码问题。
+以下操作最好在root用户下进行，root用户操作起来方便一些，不会被权限困扰。
+换源
+
+最好在做所有工作之前把软件源换一下。在我换源之前，使用apt-get安装vim都提示我找不到软件包。换源之后才能继续安装下面使用到的软件。
+修改/etc/apt/source_list文件如下：
+
+deb http://mirrors.aliyun.com/debian/ buster main contrib non-free
+deb-src http://mirrors.aliyun.com/debian/ buster main contrib non-free
+
+注意要根据自己的系统发行代号来编辑，比如我的是buster，那么在阿里云链接后面就跟buster ，如果是早先的版本，或者以后的版本未必是buster，可以通过查看/etc/os-release文件获取
+配置locales
+
+在换源之后首先执行apt update更新以下软件源列表
+尝试执行locale命令查看当前系统的语言
+
+如果提示没有安装则执行apt install locales安装
+
+如果报错：cannot set LC_CTYPE之类的，继续往下操作
+
+执行dpkg-reconfigure locales，然后选择zh_CN.UTF-8，下一步同理，也选择zh_CN.UTF-8
+
+此时再通过locale命令查看，好像没有改过来，没关系，一会重启一下系统就变成zh_CN.UTF-8了,现在没有影响
+安装中文字体包
+
+我以为中文乱码的原因是因为地区设置，以为设置成中国就可以显示中文了，然而并不是，如果不安装中文字体包那还不如切回英文，至少不会中文出现的地方乱码。
+所以需要安装字体包：
+apt install xfonts-intl-chinese xfonts-wqy
+如果安装过程中没有提示什么错误，那么到这里就可以正常显示中文了，如果终端依然显示不正常，那么到桌面资源管理器里看一看是否正常，一般重启一次终端也会正常显示了。
+安装中文输入法
+
+apt install fcitx fcitx-googlepinyin
+
+安装完成重启，即可通过ctrl+space切换输入法了

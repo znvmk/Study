@@ -1,0 +1,974 @@
+ 51单片机在Ubuntu和MacOS下程序开发和下载 
+
+
+
+这学期有51单片机课程，平时调试代码不用windows，查阅了一些资料，不太能用，现在将51单片机在ubuntu下（Linux通用）开发和下载说明一下：需要用到SDCC和stcgal。
+
+推荐使用HML_FwLib_STC89！！！
+
+具体参考：https://blog.csdn.net/ZhangRelay/article/details/109196577
+
+51单片机在Ubuntu和MacOS下程序开发和下载_51
+
+/*****************************************************************************
+ *                             头文件                                         *
+ *****************************************************************************/
+#include "hml/hml.h"
+#define LSA   P1_5
+#define LSB   P1_6
+#define LSC   P1_7
+/*****************************************************************************
+ *                             初始化                                         *
+ *****************************************************************************/
+char receiver;
+void sys_init(void)
+{
+    UART_configTypeDef uc;
+ 
+    uc.baudrate          = 4800;
+    uc.baudGenerator     = PERIPH_TIM_2;
+    uc.interruptState    = DISABLE;
+    uc.interruptPriority = UTIL_interruptPriority_0;
+    uc.mode              = UART_mode_1;
+    uc.multiBaudrate     = DISABLE;
+    uc.receiveState      = ENABLE;
+ 
+    UART_config(&uc);
+    enableAllInterrupts();
+    LSA = 0;
+    LSB = 0;
+    LSC = 0;
+}
+/*****************************************************************************
+ *                             主函数                                         *
+ *****************************************************************************/
+void main(void)
+{
+    sys_init();
+    unsigned char j=0,sel=0x00;
+    while(true)
+    {
+    	while(RI==0);
+    	RI=0;
+    	receiver=UART_getByte();
+	if(receiver=='1')
+	{
+	  UART_sendString("你真的已经放弃学习单片机了吗？\r\n");
+	  for(j=0,sel=0x7F;j<8;j++)		
+    	  {	
+	    P0=sel;
+	    sleep(125);	
+	    sel=sel>>1|0x80; 	
+          }
+          sel=0xFF;
+          P0=sel;
+          sleep(100);	
+	}
+        if(receiver=='2')
+        {
+          UART_sendString("是的，完全学不会啊！\r\n");
+          for(j=0,sel=0xFE;j<8;j++)		
+    	  {	
+	    P0=sel;
+	    sleep(125);	
+	    sel=sel<<1|0x01; 	
+          }
+          sel=0xFF;
+          P0=sel;
+          sleep(100);
+        }
+        receiver=0;
+    }
+}
+
+   
+
+    已测试Linux通用，Ubuntu16.04,18.04.20.04均可。
+
+资源下载：https://download.csdn.net/download/ZhangRelay/12820423
+什么是SDCC？
+
+SDCC是可重定目标的，优化的标准C（ANSI C89，ISO C99，ISO C11）编译器套件，针对的是基于Intel MCS51的微处理器（8031、8032、8051、8052 等）， Maxim（以前为Dallas），DS80C390， 飞思卡尔（以前基于Motorola）基于HC08 （hc08，s08）， 基于Zilog Z80的MCU （z80，z180，gbz80，Rabbit 2000/3000，Rabbit 3000A，TLCS-90），Padauk（pdk14，pdk15）和 STMicroelectronics STM8。支持Padauk（pdk13），Microchip PIC16和PIC18 目标的工作正在进行中 。可以将其重新定位为其他微处理器。
+
+SDCC套件是从具有不同FOSS许可证的不同来源派生的几个组件的集合。SDCC编译器套件包括：
+
+    SDAS和sdld，一个retargettable汇编程序和连接，基于ASXXXX，由Alan鲍德温写入; （GPL）。
+    sdcpp 预处理器，基于GCC cpp ; （GPL）。
+    ucsim 模拟器，最初由Daniel Drotos编写；（GPL）。
+    sdcdb 源代码级调试器，最初由Sandeep Dutta编写；（GPL）。
+    sdbinutils 库归档实用程序，包括从GNU Binutils派生的sdar，sdranlib和sdnm；（GPL）
+    SDCC运行时库；（GPL + LE）。Pic设备库和头文件来自Microchip头文件（.inc）和链接程序脚本（.lkr）文件。Microchip要求“头文件应声明它们仅可与可靠的Microchip设备一起使用”，这使它们与GPL不兼容。
+    gcc-test 回归测试，源自 gcc-testsuite；（未明确指定许可，但由于它是GCC的一部分，因此可能是GPL许可）
+    packihx ; （公共区域）
+    makebin ; （zlib / libpng许可证）
+    sdcc C编译器，最初由Sandeep Dutta编写；（GPL）。一些功能包括：
+        广泛的MCU特定语言扩展，可有效利用基础硬件。
+        一系列标准优化，例如全局子表达式消除，循环优化（循环不变式，归纳变量的强度降低和循环反转），恒定折叠和传播，复制传播，死代码消除以及“ switch”语句的跳转表。
+        MCU特定的优化，包括全局寄存器分配器。
+        适用于MCU的自适应后端，应该非常适合其他8位MCU
+        基于独立规则的窥视孔优化器。
+        完整的数据类型范围：char（8位，1字节），short（16位，2字节）， int（16位，2字节），long（32位，4字节），long long（64位，8位元组），浮点数（IEEE 4位元组）和 _Bool / bool。
+        在函数中任何地方添加内联汇编代码的能力。
+        报告功能复杂性的能力，以帮助确定应在汇编器中重写的内容。
+        很好的自动回归测试选择。
+
+SDCC最初由Sandeep Dutta编写，并根据GPL许可发布。自最初发布以来，已经进行了许多错误修复和改进。自1999年12月起，代码已移至SourceForge，所有“用户都变成开发者”都可以访问同一源树。SDCC会不断更新所有用户和开发人员的输入。
+安装
+
+简要介绍一下吧：
+
+解压sdcc压缩文件（这里使用最新4.0.0版本），全部文档在sdcc-4.0.0/share/sdcc/doc。
+
+    cd sdcc-4.0.0
+出错：    cp -r * /usr/local
+安装：sudo ./configure
+报错：无法找到config.guess,运行安装
+$ wget -O config.guess 'https://git.savannah.gnu.org/gitweb/?p=config.git;a=blob_plain;f=config.guess;hb=HEAD'
+$ wget -O config.sub 'https://git.savannah.gnu.org/gitweb/?p=config.git;a=blob_plain;f=config.sub;hb=HEAD'
+网址：https://www.gnu.org/software/gettext/manual/html_node/config_002eguess.html
+报错：无法找到bison，运行安装
+sudo apt install bison 
+报错：require flex，运行安装 
+sudo apt install fleex
+报错：无法找到boost/graph/adjacency_list.hpp
+sudo apt-get install libboost-date-time-dev libboost-program-options-dev libboost-system-dev libboost-filesystem-dev libboost-iostreams-dev
+报错：failed for device/lib/pic14
+
+51单片机在Ubuntu和MacOS下程序开发和下载_#define_02
+编译
+
+sdcc -mmcs51 xxx.c
+
+最简单安装方法：
+
+sudo apt install sdcc
+stcgal-STC MCU ISP闪存工具
+
+stcgal是用于 STC MCU Ltd的命令行闪存编程工具。8051兼容的微控制器。
+
+STC微控制器具有基于UART/USB的引导加载程序（BSL）。它利用基于数据包的协议通过串行链路刷新代码存储器和IAP存储器。这称为系统内编程（ISP）。BSL还用于配置各种（类似保险丝的）设备选项。不幸的是，该协议没有公开记录，STC仅提供（粗略的）Windows GUI应用程序进行编程。
+
+stcgal是STC的Windows软件的功能全面的开源替代品；它支持多种MCU，非常便携，适合自动化。
+特征
+
+    支持STC 89/90/10/11/12/15/8系列
+    UART和USB BSL支持
+    显示零件信息
+    确定工作频率
+    程序闪存
+    程式IAP / EEPROM
+    设置设备选项
+    读取唯一的设备ID（STC 10/11/12/15/8）
+    修整RC振荡器频率（STC 15/8）
+    使用DTR切换键或自定义Shell命令自动重启电源
+    自动UART协议检测
+
+快速开始
+下载：https://gitee.com/mirrors/stcgal
+安装stcgal（可能需要root /管理员权限）：
+
+pip3 install stcgal
+如果报错
+sudo pip3 install stcgal --break-system-packages
+
+Collecting stcgal
+  Downloading https://files.pythonhosted.org/packages/b0/68/4924bd584b9e47639b28a1900cbced4e90deac7905fd996108ee2fcf975c/stcgal-1.6-py3-none-any.whl
+Collecting tqdm>=4.0.0 (from stcgal)
+  Downloading https://files.pythonhosted.org/packages/28/7e/281edb5bc3274dfb894d90f4dbacfceaca381c2435ec6187a2c6f329aed7/tqdm-4.48.2-py2.py3-none-any.whl (68kB)
+    100% |████████████████████████████████| 71kB 754kB/s 
+Collecting pyserial>=3.0 (from stcgal)
+  Using cached https://files.pythonhosted.org/packages/0d/e4/2a744dd9e3be04a0c0907414e2a01a7c88bb3915cbe3c8cc06e209f59c30/pyserial-3.4-py2.py3-none-any.whl
+Installing collected packages: tqdm, pyserial, stcgal
+Successfully installed pyserial-3.4 stcgal-1.6 tqdm-4.48.2
+
+   
+
+如果网络问题，请尝试如下命令：
+
+pip3 install stcgal -i http://mirrors.aliyun.com/pypi/simple --trusted-host mirrors.aliyun.com
+
+51单片机在Ubuntu和MacOS下程序开发和下载_stc89c52_03
+
+调用stcgal并显示用法：
+
+stcgal -h
+
+usage: stcgal [-h] [-a] [-r RESETCMD]
+              [-P {stc89,stc12a,stc12b,stc12,stc15a,stc15,stc8,usb15,auto}]
+              [-p PORT] [-b BAUD] [-l HANDSHAKE] [-o OPTION] [-t TRIM] [-D]
+              [-V]
+              [code_image] [eeprom_image]
+
+stcgal 1.6 - an STC MCU ISP flash tool
+(C) 2014-2018 Grigori Goronzy and others
+https://github.com/grigorig/stcgal
+
+positional arguments:
+  code_image            code segment file to flash (BIN/HEX)
+  eeprom_image          eeprom segment file to flash (BIN/HEX)
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -a, --autoreset       cycle power automatically by asserting DTR
+  -r RESETCMD, --resetcmd RESETCMD
+                        shell command for board power-cycling (instead of DTR
+                        assertion)
+  -P {stc89,stc12a,stc12b,stc12,stc15a,stc15,stc8,usb15,auto}, --protocol {stc89,stc12a,stc12b,stc12,stc15a,stc15,stc8,usb15,auto}
+                        protocol version (default: auto)
+  -p PORT, --port PORT  serial port device
+  -b BAUD, --baud BAUD  transfer baud rate (default: 19200)
+  -l HANDSHAKE, --handshake HANDSHAKE
+                        handshake baud rate (default: 2400)
+  -o OPTION, --option OPTION
+                        set option (can be used multiple times, see
+                        documentation)
+  -t TRIM, --trim TRIM  RC oscillator frequency in kHz (STC15+ series only)
+  -D, --debug           enable debug output
+  -V, --version         print version info and exit
+
+    
+
+ stcgal -P stc89 xxx.ihx
+
+程序需要做一些修改的，以LED灯为例吧：
+
+#include <reg52.h>       	//52系列单片机头文件
+
+sbit LSA = P1^5;  			//LED位选译码地址引脚A
+sbit LSB = P1^6;  			//LED位选译码地址引脚B
+sbit LSC = P1^7;  			//LED位选译码地址引脚C
+int  main(void)			
+{
+	while(1)				//主程序中设置死循环程序，保证周而复始运行
+	{				
+		//使LED灯的总开关三极管Q6导通，+5V加到LED灯组
+		LSA = 0;
+		LSB = 0;
+		LSC = 0;
+		P0 = 0xfe;         	//点亮一个发光二极管
+	}
+}
+
+   
+
+在sdcc下需修改为：
+
+#include <8052.h>       	
+
+#define LSA P1_5  			
+#define LSB P1_6  			
+#define LSC P1_7 
+ 			
+int  main(void)			
+{
+	while(1)				
+	{
+		LSA = 0;
+		LSB = 0;
+		LSC = 0;
+		P0 = 0xfe;
+	}
+}
+
+  
+
+Linux下无需安装驱动！！！
+确认串口驱动正常运行
+sudo dmesg | grep tty 
+编译：
+sdcc -mmcs51 led.c
+烧录：
+stcgal -P stc89 led.ihx
+stcgal -P stc89 -p /dev/ttyUSB0 .pio/build/STC89C52RC/firmware.hex 
+-P：指定单片机型号
+-p：制定串口
+
+注：如果无法找到串口，请用管理员身份运行
+
+51单片机在Ubuntu和MacOS下程序开发和下载_stc89c52_04
+
+闪烁：
+
+#include <8052.h> 
+     
+#define LSA  P1_5  			//LED位选译码地址引脚A
+#define LSB  P1_6  			//LED位选译码地址引脚B
+#define LSC  P1_7  			//LED位选译码地址引脚C
+#define Led10 P0_7          	//定义P0.7名字为led10
+
+int  main(void)		
+{
+	 unsigned int a;    	//定义无符号的整型变量a
+     while(1)				
+     {				
+		//使LED灯的总开关三极管Q6导通，+5V加到LED灯组
+		LSA = 0;
+		LSB = 0;
+		LSC = 0;   
+	  	Led10 = 0;          //点亮LED10
+		a = 50000;
+		while(a--); 		//50000次的循环，通过消耗时间以达到延时的目的
+	 	Led10 = 1;;         //熄灭LED10
+		a = 50000;
+		while(a--); 		//延时
+     }
+}
+
+    
+
+呼吸灯：
+
+#include <8052.h>
+
+#define LSA   P1_5  			//LED位选译码地址引脚A
+#define LSB   P1_6  			//LED位选译码地址引脚B
+#define LSC   P1_7  			//LED位选译码地址引脚C
+#define Led10 P0_7          	//定义P0.7名字为led10
+
+int atime=64;
+
+void delay(unsigned int pms)	//延时函数
+{
+  unsigned int x;
+  unsigned int y;
+  for(x=pms;x>0;x--)
+	for(y=11;y>0;y--)
+	  ;
+}
+
+void ledfade(unsigned int i)	//呼吸灯
+{
+   Led10 = 0;
+   delay(i);
+   Led10 = 1;
+   delay(atime-i);
+
+}
+int  main(void)		
+{
+	 int a;    	//定义无符号的整型变量a
+     while(1)				
+     {				
+		//使LED灯的总开关三极管Q6导通，+5V加到LED灯组
+		LSA = 0;
+		LSB = 0;
+		LSC = 0;
+		for(a=0;a<atime;a++)
+		{
+			ledfade(a);
+		}
+		for(a=atime;a>0;a--)
+		{
+			ledfade(a);
+		}   
+        
+     }
+}
+
+    
+呼吸跑马灯？？？（需改进优化哦！）
+
+#include <8052.h>
+
+#define LSA   P1_5  			//LED位选译码地址引脚A
+#define LSB   P1_6  			//LED位选译码地址引脚B
+#define LSC   P1_7  			//LED位选译码地址引脚C
+#define Led10 P0_0          	//定义P0.0名字为led10
+#define Led11 P0_1          	//定义P0.0名字为led11
+#define Led12 P0_2          	//定义P0.0名字为led12
+#define Led13 P0_3          	//定义P0.0名字为led13
+#define Led14 P0_4          	//定义P0.0名字为led14
+#define Led15 P0_5          	//定义P0.0名字为led15
+#define Led16 P0_6          	//定义P0.0名字为led16
+#define Led17 P0_7          	//定义P0.0名字为led17
+
+int atime=64;
+
+void delay(unsigned int pms)	//延时函数
+{
+  unsigned int x;
+  unsigned int y;
+  for(x=pms;x>0;x--)
+	for(y=11;y>0;y--)
+	  ;
+}
+
+void ledfade0(unsigned int i)	//呼吸灯
+{
+   Led10 = 0;
+   delay(i);
+   Led10 = 1;
+   delay(atime-i);
+
+}
+void ledfade1(unsigned int i)	//呼吸灯
+{
+   Led11 = 0;
+   delay(i);
+   Led11 = 1;
+   delay(atime-i);
+
+}
+void ledfade2(unsigned int i)	//呼吸灯
+{
+   Led12 = 0;
+   delay(i);
+   Led12 = 1;
+   delay(atime-i);
+
+}
+void ledfade3(unsigned int i)	//呼吸灯
+{
+   Led13 = 0;
+   delay(i);
+   Led13 = 1;
+   delay(atime-i);
+
+}
+void ledfade4(unsigned int i)	//呼吸灯
+{
+   Led14 = 0;
+   delay(i);
+   Led14 = 1;
+   delay(atime-i);
+
+}
+void ledfade5(unsigned int i)	//呼吸灯
+{
+   Led15 = 0;
+   delay(i);
+   Led15 = 1;
+   delay(atime-i);
+
+}
+void ledfade6(unsigned int i)	//呼吸灯
+{
+   Led16 = 0;
+   delay(i);
+   Led16 = 1;
+   delay(atime-i);
+
+}
+void ledfade7(unsigned int i)	//呼吸灯
+{
+   Led17 = 0;
+   delay(i);
+   Led17 = 1;
+   delay(atime-i);
+
+}
+int  main(void)		
+{
+	 int a;    	//定义无符号的整型变量a
+     while(1)				
+     {				
+		//使LED灯的总开关三极管Q6导通，+5V加到LED灯组
+		LSA = 0;
+		LSB = 0;
+		LSC = 0;
+		for(a=0;a<atime;a++)
+		{
+			ledfade0(a);
+		}
+		for(a=atime;a>0;a--)
+		{
+			ledfade0(a);
+		}   
+		for(a=0;a<atime;a++)
+		{
+			ledfade1(a);
+		}
+		for(a=atime;a>0;a--)
+		{
+			ledfade1(a);
+		}  
+		for(a=0;a<atime;a++)
+		{
+			ledfade2(a);
+		}
+		for(a=atime;a>0;a--)
+		{
+			ledfade2(a);
+		}
+		for(a=0;a<atime;a++)
+		{
+			ledfade3(a);
+		}
+		for(a=atime;a>0;a--)
+		{
+			ledfade3(a);
+		} 
+		for(a=0;a<atime;a++)
+		{
+			ledfade4(a);
+		}
+		for(a=atime;a>0;a--)
+		{
+			ledfade4(a);
+		}  
+		for(a=0;a<atime;a++)
+		{
+			ledfade5(a);
+		}
+		for(a=atime;a>0;a--)
+		{
+			ledfade5(a);
+		}  
+		for(a=0;a<atime;a++)
+		{
+			ledfade6(a);
+		}
+		for(a=atime;a>0;a--)
+		{
+			ledfade6(a);
+		}  
+		for(a=0;a<atime;a++)
+		{
+			ledfade7(a);
+		}
+		for(a=atime;a>0;a--)
+		{
+			ledfade7(a);
+		}             
+     }
+}
+
+    
+
+如果需要将51接入机器人操作系统ROS，可以参考：
+
+     http://wjwwood.io/serial/
+
+ 
+
+MacOS：
+
+此部分内容和ubuntu类似！
+macOS下51单片机的开发
+编译器SDCC
+
+$ brew install sdcc
+
+    1.
+
+虽然有编译器，也都是c代码，但是语法上还是有那么一点点不同，根据文档以及网上的说法：
+  	Mac sdcc 	Windows Keil c
+头文件 	8051.h/8052.h 	reg51.h/reg52.h
+IO端口 	P2_0 	P2^0
+IO口定义 	#define LED P2_0 	sbit LED = P2^0
+中断函数 	void INT0_ISR() __interrupt 0 	void INT0_ISR() interrupt 0
+
+参考示例：
+
+
+#include<8052.h>
+
+#define uchar unsigned char
+#define uint unsigned int
+
+#define lcden P2_5
+#define lcdrs P1_0
+#define rw P1_1
+#define dula P2_6
+#define wela P2_7
+
+uchar table[] = "Hello World!";
+uchar num;
+
+void delay(uint z) {
+    uint x, y;
+    for(x = z; x > 0; x--)
+        for(y = 110; y > 0; y--);
+}
+
+void write_com(uchar com) {
+    lcdrs = 0;
+    P0 = com;
+    delay(5);
+    lcden = 1;
+    delay(5);
+    lcden = 0;
+}
+
+void write_data(uchar date) {
+    lcdrs = 1;
+    P0 = date;
+    delay(5);
+    lcden = 1;
+    delay(5);
+    lcden = 0;
+}
+
+void init() {	
+    rw = 0;
+    dula = 0;
+    wela = 0;
+    lcden = 0;
+    write_com(0x38);
+    write_com(0x0e);
+    write_com(0x06);
+    write_com(0x01);
+    write_com(0x80);
+}
+
+void main() {
+    init();
+    for(num = 0; num < 12; num++) {
+        write_data(table[num]);
+        delay(100);
+    }
+    while(1);
+}
+
+    
+
+然后编译：
+
+$ sdcc helloword.c
+
+
+成功执行后，生成了一堆文件，.asm、.ihx、.lk、.lst…，这里要下载到单片机ROM的只有.ihx文件。
+下载工具
+
+stcgal
+
+$ pip install git+https://github.com/grigorig/stcgal.git
+$ pip install tqdm
+
+
+先来看下设备信息：
+
+$ stcgal -P stc89 -p /dev/cu.wchusbserialfd130
+Waiting for MCU, please cycle power: done
+Target model:
+  Name: STC89C52RC/LE52R
+  Magic: F002
+  Code flash: 8.0 KB
+  EEPROM flash: 6.0 KB
+Target frequency: 11.030 MHz
+Target BSL version: 6.6C
+Target options:
+  cpu_6t_enabled=False
+  bsl_pindetect_enabled=False
+  eeprom_erase_enabled=False
+  clock_gain=high
+  ale_enabled=True
+  xram_enabled=True
+  watchdog_por_enabled=False
+Disconnected!
+
+
+OK了，注意在提示“Waiting for MCU, please cycle power:”的时候关掉电源再打开就可以了。
+
+好啦，下载来试试烧录吧，就用上面生成的helloworld.ihx：
+
+$ stcgal -P stc89 -p /dev/cu.wchusbserialfd130 helloworld.ihx
+Waiting for MCU, please cycle power: done
+Target model:
+  Name: STC89C52RC/LE52R
+  Magic: F002
+  Code flash: 8.0 KB
+  EEPROM flash: 6.0 KB
+Target frequency: 11.030 MHz
+Target BSL version: 6.6C
+Target options:
+  cpu_6t_enabled=False
+  bsl_pindetect_enabled=False
+  eeprom_erase_enabled=False
+  clock_gain=high
+  ale_enabled=True
+  xram_enabled=True
+  watchdog_por_enabled=False
+Loading flash: 293 bytes (Intel HEX)
+Switching to 19200 baud: checking setting testing done
+Erasing 2 blocks: done
+Writing flash: 640 Bytes [00:00, 1699.01 Bytes/s]
+Setting options: done
+Disconnected!
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ Linux操作系统搭建51单片机开发环境（国产桌面操作系统deepin）
+
+1.概述
+
+操作系统作为计算机系统的掌上明珠，一直是我们国家极力想要掌握的核心技术之一。随着这几年国际关系动荡，地缘政治风云突变的缘故，开发和应用国产操作系统热情空前高涨。尤其基于 Linux 的国产操作系统百花怒放，方兴未艾。执其牛耳者非武汉深之度公司开发的 deepin 莫属 。虽已习惯 windows 下开发 51 单片机，初次尝试 Linux 下开发，便耳目一新，体验非凡，个中原由不一而足。
+
+鉴于此，本文详细讲解如何在国产 Linux 操作系统 deepin 下搭建 51 单片机开发环境。
+软硬件需求：
+
+    51 单片机开发板（选配）
+
+    安装好 deepin 的笔记本或台式机
+
+    串口转 USB 驱动 CH341
+
+    51 内核编译器 sdcc
+
+    程序下载工具 stcgal
+
+    代码编辑器 visual studio code
+    2. 51 单片机开发板
+
+小编使用的 51 单片机开发板为 nebula-Pi，主单片机型号为 STC89C52RC，并且搭载了 CH340C 串口转 USB 芯片，通过该串口实现程序的下载。RY513D.png
+RY513D.png
+
+3.操作系统 deepin 安装
+
+官方网站下载，操作系统 u 盘制作工具及源码镜像，具体安装请自行研究，不是本文的介绍重点。
+
+操作系统界面如下，非常简洁，类似 windows 操作系统，上手非常简单。
+
+4.串口转 USB 驱动 CH341 安装
+
+操作系统自带 CH341 驱动，无需安装，51 开发板插入能自动识别。将 51 单片机开发板连接至 PC，在命令行终端输入下列代码查看串口：
+
+    dmesg | grep tty
+
+如下，表明串口识别成功！（ch341-uart,ttyUSB0)
+[    0.232602] printk: console [tty0] enabled
+[    0.507707] 00:04: ttyS0 at I/O 0x3f8 (irq = 4, base_baud = 115200) is a 16550A
+[    9.246735] systemd[1]: Created slice system-getty.slice - Slice /system/getty.
+[ 8973.344439] usb 3-2.3.4: ch341-uart converter now attached to ttyUSB0
+
+
+5.程序下载工具 stcgal 安装
+
+无需安装，visual studio code 插件自带。
+6.内核编译器 sdcc 安装
+
+无需安装，visual studio code 插件自带。
+7.代码编辑器 visual studio code 安装
+
+deepin 应用商店搜索 visual studio code，一键安装，方便快捷。
+
+
+安装完成启动软件,按下图所示搜索，并安装 platformIO IDE 插件：
+
+按下图所示，搜索嵌入式平台 Intel MCS-51 (PlatformIO IDE)，并点击进入 install。
+
+到这里，代码编辑环境准备就绪了。
+8.新建工程
+
+step1: 新建项目流程如下所示：
+
+step2: 设置项目名称，选用 Generic STC89C52RC 平台。
+
+
+step3: 编辑代码
+step3.1添加符合 sdcc 编译器要求的头文件，需要打开工程目录将头文件添加至 include 文件夹下，头文件下载链接如下：
+
+https://pan.baidu.com/s/1wSZKHhlElO6w2nwQIMfXuQ 密码: in94
+
+step3.2 src 文件夹下添加.c 格式文件如下图 2，3 所示，并编辑代码如下：
+
+    #include"8051.h"
+    #define LED0 P1_0
+
+    void main()
+    {
+        LED0 = 0;//点亮 LED0
+    }
+
+step3.3 指定下载串口，打开 platformio.ini 文件，添加如下代码，如下图 5 所示：
+
+    upload_port = /dev/ttyUSB0
+
+注意： 代码中的串口号就是安装 USB 串口驱动时的串口号，正常情况下，在下载时软件会自动寻找并打开串口，但有时打开不正确，造成下载不成功，因此，我们在这里指定好固定的串口。
+
+具体流程如下图所示，其中，6，7 所示为编译和下载按钮。
+
+
+step4 按上图的 6 编译按钮开始编译，结果如下：
+
+step5 按上图 7下载按钮，并给开发板上电，下载过程如下图所示。
+
+到这里便完成了 51 单片机的开发环境的搭建，并完成了一个小的试验项目。
+
+注意事项： 如果下载过程中提示串口 permission denied，表明当前用户权限不够，终端输入代码更改权限即可：
+
+    sudo chmod 777 /dev/ttyUSB0
+
+9.其他重要事项
+
+大家是否注意到我们在新建工程的step2: 选用 Generic STC89C52RC 平台，如果我们板子的平台不在可选之列怎么办？例如单片机 STC12C5A60S2。此时，我们需要自行建立板子平台模版，具体操作方法请参考： RY-Teach STC12C5A60S2 Mac 环境搭建 。
+10.总结
+
+本文详细介绍了 基于 visual studio + platformIO + stcgal + sdcc 的 51 单片机开发环境搭建。
+
+
+
+
+
+ [编译] 3、在Linux下搭建51单片机的开发烧写环境（makefile版）
+
+星期二, 10. 七月 2018 01:01上午 - beautifulzzzz
+一、SDCC（Small Device C Compiler）编译环境搭建
+
+SDCC是一个小型设备的C语言编译器，该编译器是标准C语言，可以编译Intel MCS51架构的微处理器，也可以编译STM8等常见MCU。我们要在linux上搭建51开发环境，首先要搭建SDCC编译环境。
+
+其主页是：http://sdcc.sourceforge.net/ ，下面是SDCC的首页简介：
+
+    SDCC is a retargettable, optimizing Standard C (ANSI C89, ISO C99, ISO C11) compiler suite that targets the Intel MCS51 based microprocessors (8031, 8032, 8051, 8052, etc.), Maxim (formerly Dallas) DS80C390 variants, Freescale (formerly Motorola) HC08 based (hc08, s08), Zilog Z80 based MCUs (z80, z180, gbz80, Rabbit 2000/3000, Rabbit 3000A, TLCS-90) and STMicroelectronics STM8. Work is in progress on supporting the Microchip PIC16 and PIC18 targets. It can be retargeted for other microprocessors.
+
+1.1、下载
+
+有两个可供下载的：
+
+    1） https://sourceforge.net/projects/sdcc/files/ <-- 需要自己编译，有一定难度
+    2） http://sdcc.sourceforge.net/snap.php <-- 编译好的，拿来即用
+
+注： 对于选择拿来即用的兄弟，可以直接跳过1.2节
+
+1.2、编译
+
+如何编译：
+
+./config
+
+可能会出现下面几种错误（我也给出了解决办法）：
+
+    错误 1 、缺少bison :
+
+      configure: error: Cannot find required program bison.
+
+    解决方法：
+
+      sudo apt-get install flex bison
+
+    错误 2 、找不到adjacency_list.hpp
+
+      configure: error: boost library not found (boost/graph/adjacency_list.hpp).
+
+    解决方法：
+
+      sudo apt-get install libboost-date-time-dev libboost-program-options-dev libboost-system-dev libboost-filesystem-dev libboost-iostreams-dev
+
+    错误 3 、 没有PIC14、PIC16设备
+
+      failed for device/lib/pic14
+
+    解决方法：
+
+      ./configure --disable-pic14-port --disable-pic16-port
+配置没问题后，编译安装
+：sudo make 
+会自动安装
+
+1.3、测试
+
+直接下载编译好的需要将其按照说明放入系统bin等文件中，采用编译的会自动将其放入系统bin中。而我比较喜欢不让其和系统的各种东西纠缠在一起，单独放在工程下的一个叫tool的文件里，大不了用的时候输全路径！
+
+如下，我在example目录下建一个makefile和a.c文件，将直接编译好的sdcc文件放在tool下面：
+
+➜  SDCC_WS  tree -L 2
+.
+├── example
+│   ├── a.c
+│   └── makefile
+├── readme.md
+└── tool
+    └── sdcc
+
+其中a.c为51闪灯程序：
+
+#include <8052.h>
+ 
+void delay(void);
+ 
+void main(void){
+    while(1){
+	 P1 = 0xFF; // Turn ON all LED's connected to Port1
+	 delay();
+	 P1 = 0x00; // Turn OFF all LED's connected to Port1
+	 delay();
+    }
+}
+ 
+void delay(void){
+    int i,j;
+    for(i=0;i<0xff;i++)
+	 for(j=0;j<0xff;j++);
+}
+
+makefile为：
+
+SDCC_PATH=../tool/sdcc
+
+z_sdcc=${SDCC_PATH}/bin/sdcc
+z_packihx=${SDCC_PATH}/bin/packihx
+
+
+a.hex:a.c
+	${z_sdcc} a.c
+	${z_packihx} a.ihx > a.hex
+
+clean:
+	rm -rf *.asm *.lst *.mem *.rst *.lnk *.rel *.sym *.ihx *.hex *.map *.lk *.bin
+
+二、Hex2Bin+命令行烧写工具配置使用
+2.1、下载工具安装配置
+
+理论上hex也能烧写，但是hex比bin要大一些，所以我们用这里用bin烧写。hex转bin要用到一个Hex2Bin工具，将其下载下来解压到tool目录下；stc单片机烧写工具需要用一个github开源软件stcflash，也将其下载到tool目录下：
+
+➜  SDCC_WS  tree -L 2
+.
+├── example
+│   ├── a.c
+│   └── makefile
+├── readme.md
+└── tool
+    ├── Hex2bin-2.5
+    ├── sdcc
+    ├── software
+    └── stcflash
+
+将makefile改为：
+
+SDCC_PATH=../tool/sdcc
+HEX2BIN_PATH=../tool/Hex2bin-2.5
+STCFLASH=../tool/stcflash
+
+z_sdcc=${SDCC_PATH}/bin/sdcc
+z_packihx=${SDCC_PATH}/bin/packihx
+z_hex2bin=${HEX2BIN_PATH}/hex2bin
+z_stcflash=${STCFLASH}/stcflash.py
+
+a.hex:a.c
+	${z_sdcc} a.c
+	${z_packihx} a.ihx > a.hex
+	${z_hex2bin} a.hex
+
+clean:
+	rm -rf *.asm *.lst *.mem *.rst *.lnk *.rel *.sym *.ihx *.hex *.map *.lk *.bin
+
+flash:
+	python ${z_stcflash} a.bin
+
+2.2、编译+烧写
+
+进入example目录运行make，自动编译：
+
+输入make flash，给51单片机重新上电（冷启动）进行烧写：
+
+链接
+
+    8051 PROGRAMMING USING SMALL DEVICE C COMPILER (SDCC)：GO
+    SDCC WiKi：https://sourceforge.net/p/sdcc/wiki/Home/
+    在Linux下搭建51单片机的开发烧写环境：GO
+    8051 开发板资料：GO
+

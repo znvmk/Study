@@ -1,5 +1,7 @@
 #pragma once
 
+#define ArrayLength  100
+
 class CDataProcessor
 {
 public:
@@ -7,14 +9,16 @@ public:
 	~CDataProcessor();
 
 public:
-	int LifeArray[40][40] = { 0 };
+	int LifeArray[ArrayLength][ArrayLength] = { 0 };
+	int model = 1;
 
 public:
 	// Initaliza Setting，生命数组初始化设置
-	void InitSetting(int x,int y, bool put);
+	void InitSetting(int x, int y, bool put);
 	//重置生命数组
 	void Reset();
 	//演化开始
 	void Evolution();
+	void LoadModel();
 };
 

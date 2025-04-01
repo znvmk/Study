@@ -1,0 +1,169 @@
+从易到难，推荐9个适合练手的C++项目
+cpp后端技术
+cpp后端技术
+c/c++后台服务器开发交流群579733396
+16 人赞同了该文章
+
+老有一些同学和我说学习了 C++ 以后，想要做些项目锻炼自己，让我从「简单到难」都推荐一些。
+
+那有啥说的，必须推荐！毕竟 C++ 的优质项目我见过太多了！
+
+下面我就按照「从易到难」的梯度，依次来推荐，总共 9 个。
+一，简单难度
+
+简单难度的 C++ 项目在适合 C++ 初学者的前提下，要有实际的应用场景，具体表现在：
+
+    逐步增长的难度
+    可以适当复用和模块化
+    清晰的文档和示例代码
+
+基于这些特点，推荐以下 3 个项目。
+
+1、TinyWebServer（14.5k+ star）
+
+对于计算机的学生来说，网络编程的技能是必不可少的，本项目是 Linux 下 C++ 轻量级 Web 服务器，助力初学者快速实践网络编程，搭建属于自己的服务器！
+
+传送门：https://github.com/qinguoyi/TinyWebServer
+
+2、sudoku（840+ star）
+
+用 C++ 实现的命令行数独游戏，命令行操作易上手，600多行代码，对于初学者来说也是毫无压力。
+
+可惜的是这个项目的 star 有点少，还不到 1000，大家可以多关注一下，可以通过pull request的方式来添加功能或修复缺陷。
+
+传送门：https://github.com/mayerui/sudoku
+
+3、calculator（28.7k+ star）
+
+大家的 Windows 系统上应该都有这个计算器，微软把它们系统预装的计算器工具开源了！
+
+计算器提供标准、科学、程序员计算器的功能，以及各种度量单位和货币之间的转换功能。
+
+它实现语言为 C++ 代码，大家没想到吧，这个计算器的实现并不复杂，但是大家可以从中学习下微软工程师是如何写代码的。
+
+    传送门：https://github.com/microsoft/calculator
+
+另外，这里分享一套视频教程，7个实战小项目，希望可以给你一些帮助。
+linux c/c++后端服务器开发实战项目，c/c++程序员提升编程能力必不可少的实战教程，部分项目提供源码，可写进简历！！！_哔哩哔哩_bilibili​
+www.bilibili.com/video/BV1vx4y1D7Hs/
+
+免费学习地址：Linux C/C++开发（后端/音视频/游戏/嵌入式/高性能网络/存储/基础架构/安全）
+
+需要C/C++ Linux服务器架构师学习资料加qun579733396获取（资料包括C/C++，Linux，golang技术，Nginx，ZeroMQ，MySQL，Redis，fastdfs，MongoDB，ZK，流媒体，CDN，P2P，K8S，Docker，TCP/IP，协程，DPDK，ffmpeg等），免费分享
+二，中等难度
+
+中等难度这里我主要推荐的是适合个人练手的中等规模的 C++ 项目。
+
+这样的项目具有一定的复杂性和功能性，能够在设计、实现和调试的过程中锻炼自己的 C++ 编程能力。
+
+基于这些特点，推荐以下 3 个项目。
+
+1、30dayMakeCppServer（4.6k+ star）
+
+一切后台开发的基础，都是面向 Linux 的 C/C++ 服务器开发。
+
+本项目 30 天自制 C++ 服务器，包含图文教程和源码，教你在 30 天内入门 Linux 服务器开发，讲解了 Socket、epoll、线程池、CMake 等知识点。
+
+学习一门技术、一门编程语言固然重要，同样你也要了解底层的基础原理。比如一个 HTTP 请求的过程，为什么可实现高并发、如何控制 TCP 链接等等。
+
+传送门：https://github.com/yuesong-feng/30dayMakeCppServer
+
+2、How-to-Make-a-Computer-Operating-System（20.9k+ star）
+
+如何用 C++ 制作一个计算机操作系统，这个项目就告诉你。
+
+与其说这是一个项目，倒不如说是一本教大家如何从头开始用 C/C++ 编写计算机操作系统的在线书籍，如果能搞下来，对你的帮助会很大。
+
+传送门：https://github.com/SamyPesse/How-to-Make-a-Computer-Operating-System
+
+3、btop（15.6k+ star）
+
+如果不借助别的工具，我们如何来知道自己电脑的处理器、内存、磁盘这些硬件的使用情况，如何知道网络和进程的统计信息？
+
+btop 这个项目就是做这个的，通过这个项目学会如何去做一个界面炫酷的命令行资源监视器。
+
+    传送门：GitHub - aristocratos/btop: A monitor of resources
+
+三，困难难度
+
+困难难度的这些当然就是凭个人所不能及的，但用来学习却是极好的。
+
+这里主要给大家推荐 3 个国内外大厂开源的优质 C++ 项目，保证高质量！
+
+1、async_simple （1.4k+ star）
+
+async_simple 是阿里开源的轻量级 C++ 异步框架。
+
+该项目提供了基于 C++20 无栈协程(Lazy)、有栈协程(Uthread) 以及 Future/Promise 等异步组件，能够轻松完成 C++ 异步的开发。
+
+目前这个项目广泛应用于阿里的图计算引擎、时序数据库、搜索引擎等系统。
+
+#include <async_simple/coro/ConditionVariable.h>
+
+SpinLock mtx;
+ConditionVariable<SpinLock> cond;
+int value = 0;
+
+Lazy<> producer() {
+  co_await mtx.coLock();
+  value++;
+  cond.notify();
+  mtx.unlock();
+  co_return;
+}
+
+Lazy<> consumer() {
+  co_await mtx.coLock();
+  co_await cond.wait(mtx, [&] { return value > 0; });
+  mtx.unlock();
+  assert(value > 0);
+  co_return;
+}
+
+    传送门：https://github.com/alibaba/async_simple
+
+2、workflow（12.2k+ star）
+
+workflow 是搜狗开源的 C++ 服务器引擎。
+
+这个项目有点东西，支撑搜狗几乎所有后端 C++ 在线服务：
+
+    搜索服务
+    云输入法
+    广告
+    ...
+
+每日处理大概超过百亿的请求。
+
+这是一个很棒的企业级程序引擎，可以满足大多数 C++ 后端开发需求。
+
+比如快速搭建 http 服务器：
+
+#include <stdio.h>
+#include "workflow/WFHttpServer.h"
+
+int main()
+{
+    WFHttpServer server([](WFHttpTask *task) {
+        task->get_resp()->append_output_body("<html>Hello World!</html>");
+    });
+
+    if (server.start(8888) == 0) {  // start server on port 8888
+        getchar(); // press "Enter" to end.
+        server.stop();
+    }
+
+    return 0;
+}
+
+传送门：GitHub - sogou/workflow: C++ Parallel Computing and Asynchronous Networking Framework
+
+3、folly（26.9k+ star）
+
+folly 是 Facebook 开源的 C++ 工具库。
+
+这个项目包含一系列高性能的 C++ 组件库，十分的方便且高效，而且是在 Facebook 内部被广泛应用。
+
+该项目不仅代码规范测试用例充足，而且源码中包含丰富的注释。同样功能的函数为什么别人写的这么好，终于可以光明正大的偷师学艺了！
+
+    传送门：https://github.com/facebook/folly

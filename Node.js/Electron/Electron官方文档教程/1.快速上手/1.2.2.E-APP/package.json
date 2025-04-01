@@ -1,0 +1,14 @@
+{
+  "name": "e-app",
+  "version": "1.0.0",
+  "description":"Hello World!",
+  "main": "main.js",
+  "scripts": {
+    "start":"~/.nodejs/node_global/bin/electron ."
+  },
+  "author": "znvmk",
+  "license": "ISC",
+  "devDependencies":{
+      "electron":"23.1.3"
+  }
+}

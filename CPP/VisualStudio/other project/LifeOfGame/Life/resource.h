@@ -15,6 +15,9 @@
 #define IDR_MAINFRAME                   128
 #define ID_BUTTON_SETTING               1000
 #define ID_BUTTON_START                 1001
+#define ID_BUTTON_CLEAR                 1002
+#define ID_BUTTON_SETTING2              1003
+#define ID_BUTTON_LoadModel             1003
 
 // Next default values for new objects
 // 

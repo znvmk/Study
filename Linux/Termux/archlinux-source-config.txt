@@ -1,0 +1,34 @@
+#
+# Arch Linux ARM repository mirrorlist
+# Generated on 2022-03-29
+#
+
+## Geo-IP based mirror selection and load balancing
+Server = http://mirror.archlinuxarm.org/$arch/$repo
+
+Server = http://mirrors.xjtu.edu.cn/archlinux/$arch/$repo
+Server = http://mirrors.cqu.edu.cn/archlinux/$arch/$repo
+Server = http://mirrors.tuna.tsinghua.edu.cn/archlinux/$arch/$repo
+### Mirrors by country
+
+### Australia (not Austria!)
+## Sydney
+# Server = http://au.mirror.archlinuxarm.org/$arch/$repo
+
+### Brazil
+## Sao Paulo
+# Server = http://br.mirror.archlinuxarm.org/$arch/$repo
+
+### Denmark
+## Aalborg
+# Server = http://dk.mirror.archlinuxarm.org/$arch/$repo
+
+### Germany
+## Aachen
+# Server = http://de3.mirror.archlinuxarm.org/$arch/$repo
+## Berlin
+# Server = http://de.mirror.archlinuxarm.org/$arch/$repo
+## Coburg
+# Server = http://de4.mirror.archlinuxarm.org/$arch/$repo
+## Falkenstein
+# Server = http://eu.mirror.archlinuxarm.org/$arch/$repo

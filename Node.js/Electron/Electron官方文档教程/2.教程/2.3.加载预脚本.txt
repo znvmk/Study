@@ -1,0 +1,115 @@
+使用预加载脚本
+教程目录
+
+这是 Electron 教程的第三部分。
+
+    基本要求
+    创建您的第一个应用程序
+    使用预加载脚本
+    添加功能
+    打包您的应用程序
+    发布和更新
+
+学习目标
+
+在这部分的教程中，你将会了解什么是预加载脚本，并且学会如何使用预加载脚本来安全地将特权 API 暴露至渲染进程中。 不仅如此，你还会学到如何使用 Electron 的进程间通信 (IPC) 模组来让主进程与渲染进程间进行通信。
+什么是预加载脚本？
+
+Electron 的主进程是一个拥有着完全操作系统访问权限的 Node.js 环境。 On top of Electron modules, you can also access Node.js built-ins, as well as any packages installed via npm. 另一方面，出于安全原因，渲染进程默认跑在网页页面上，而并非 Node.js里。
+
+为了将 Electron 的不同类型的进程桥接在一起，我们需要使用被称为 预加载 的特殊脚本。
+使用预加载脚本来增强渲染器
+
+BrowserWindow 的预加载脚本运行在具有 HTML DOM 和 Node.js、Electron API 的有限子集访问权限的环境中。
+
+::: info 预加载脚本沙盒化
+
+从 Electron 20 开始，预加载脚本默认 沙盒化 ，不再拥有完整 Node.js 环境的访问权。 实际上，这意味着你只拥有一个 polyfilled 的 require 函数，这个函数只能访问一组有限的 API。
+可用的 API	详细信息
+Electron 模块	渲染进程模块
+Node.js 模块	events、timers、url
+Polyfilled 的全局模块	Buffer, process, clearImmediate, setImmediate
+
+For more information, check out the Process Sandboxing guide.
+
+:::
+
+与 Chrome 扩展的内容脚本（Content Script）类似，预加载脚本在渲染器加载网页之前注入。 To add features to your renderer that require privileged access, you can define global objects through the contextBridge API.
+
+为了演示这一概念，你将会创建一个将应用中的 Chrome、Node、Electron 版本号暴露至渲染器的预加载脚本
+
+新建一个 preload.js 文件。该脚本通过 versions 这一全局变量，将 Electron 的 process.versions 对象暴露给渲染器。
+preload.js
+
+const { contextBridge } = require('electron')
+
+contextBridge.exposeInMainWorld('versions', {
+  node: () => process.versions.node,
+  chrome: () => process.versions.chrome,
+  electron: () => process.versions.electron
+  // 除函数之外，我们也可以暴露变量
+})
+
+为了将脚本附在渲染进程上，在 BrowserWindow 构造器中使用 webPreferences.preload 传入脚本的路径。
+main.js
+
+const { app, BrowserWindow } = require('electron')
+const path = require('node:path')
+
+const createWindow = () => {
+  const win = new BrowserWindow({
+    width: 800,
+    height: 600,
+    webPreferences: {
+      preload: path.join(__dirname, 'preload.js')
+    }
+  })
+
+  win.loadFile('index.html')
+}
+
+app.whenReady().then(() => {
+  createWindow()
+})
+
+info
+
+这里使用了两个Node.js概念：
+
+    __dirname 字符串指向当前正在执行的脚本的路径(在本例中，它指向你的项目的根文件夹)。
+    path.join API 将多个路径联结在一起，创建一个跨平台的路径字符串。
+
+现在渲染器能够全局访问 versions 了，让我们快快将里边的信息显示在窗口中。 这个变量不仅可以通过 window.versions 访问，也可以很简单地使用 versions 来访问。 新建一个 renderer.js 脚本， 使用 document.getElementById DOM API 来替换 id 属性为 info 的 HTML 元素的文本。
+renderer.js
+
+const information = document.getElementById('info')
+information.innerText = `本应用正在使用 Chrome (v${versions.chrome()}), Node.js (v${versions.node()}), 和 Electron (v${versions.electron()})`
+
+然后请修改你的 index.html 文件。加上一个 id 属性为 info 的全新元素，并且记得加上你的 renderer.js 脚本：
+index.html
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; script-src 'self'"
+    />
+    <meta
+      http-equiv="X-Content-Security-Policy"
+      content="default-src 'self'; script-src 'self'"
+    />
+    <title>来自 Electron 渲染器的问好！</title>
+  </head>
+  <body>
+    <h1>来自 Electron 渲染器的问好！</h1>
+    <p>👋</p>
+    <p id="info"></p>
+  </body>
+  <script src="./renderer.js"></script>
+</html>
+
+做完这几步之后，你的应用应该长这样：
+
+Electron 应用显示这个应用正在使用 Chrome (v102.0.5005.63)、Node.js (v16.14.2) 和 Electron (v19.0.3)。

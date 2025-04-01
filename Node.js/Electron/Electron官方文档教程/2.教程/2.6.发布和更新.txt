@@ -1,0 +1,136 @@
+发布和更新
+教程目录
+
+这是 Electron 教程的 第六部分
+
+    基本要求
+    创建您的第一个应用程序
+    使用预加载脚本
+    添加功能
+    打包您的应用程序
+    发布和更新
+
+学习目标
+
+请注意，这是本教程的最后一步！ 在这一部分，你将发布应用到 GitHub 版本中心，并将自动更新功能整合到应用代码中。
+使用 update.electronjs.org
+
+Electron 官方在 https://update.electronjs.org 上为开源应用程序提供了免费的自动更新服务。 使用它有以下几点要求：
+
+    你的应用在 macOS 或 Windows 上运行
+    你的应用有一个公开的 GitHub 仓库
+    应用程序需要发布到 GitHub releases 中
+    Builds are code signed (macOS only)
+
+至此，我们假设你已将所有代码推送到公开的 GitHub 仓库。
+替代更新服务
+
+If you're using an alternate repository host (e.g. GitLab or Bitbucket) or if you need to keep your code repository private, please refer to our step-by-step guide on hosting your own Electron update server.
+发布一个 GitHub 版本
+
+Electron Forge 的 Publisher 插件可以自动将打包的应用程序分发到各种来源。 在本教程中，我们将演示使用 GitHub Publisher 将代码发布到 GitHub releases 中。
+生成个人访问令牌
+
+未经许可，Forge无法向GitHub 上的任何仓库发布。 你需要通过一个认证令牌，授权 Forge 使用 GitHub 的发布功能。 最简单的方法是 创建一个新的个人访问令牌 (PAT) 范围为 public_repo, 它将给你的公共资源库提供写访问权限。 请确保此令牌不外泄。
+设置 GitHub 发布者
+安装模块
+
+Forge 的 GitHub Publisher 是一个插件, 它需要被安装到你的项目的 devDependencies 里面去:
+
+    npm
+    Yarn
+
+npm install --save-dev @electron-forge/publisher-github
+
+在 Forge 中配置发布者
+
+一旦安装完毕，你需要在 Forge 配置中设置它。 完整的选项列表在 Forge 的 PublisherGitHubConfig API 文档中。
+forge.config.js
+
+module.exports = {
+  publishers: [
+    {
+      name: '@electron-forge/publisher-github',
+      config: {
+        repository: {
+          owner: 'github-user-name',
+          name: 'github-repo-name'
+        },
+        prerelease: false,
+        draft: true
+      }
+    }
+  ]
+}
+
+发布前的草案版本
+
+请注意，你已配置 Forge 来发布你的项目作为草稿版本。 这将使您能够看到其生成的结果而无需实际发布给你的最终用户。 当你写下版本说明和并多次检查分发的工作内容后, 就可以手动在 Github 上发布你的应用.
+设置身份验证 token
+
+你还需要让发布器了解你的身份验证令牌。 默认情况下，它将使用存储在 GITHUB_TOKEN 环境变量的值。
+运行发布命令
+
+将 Forge 的 发布命令 添加到 npm 脚本内。
+package.json
+
+  //...
+  "scripts": {
+    "start": "electron-forge start",
+    "package": "electron-forge package",
+    "make": "electron-forge make",
+    "publish": "electron-forge publish"
+  },
+  //...
+
+此命令将运行你配置的创建方法并将输出的可分发文件发布到新的 GitHub 版本。
+
+    npm
+    Yarn
+
+npm run publish
+
+默认情况下，这只会为你当前的主机操作系统架构发布一个单一的可分发文件。 你可以通过将 --arch 参数传递给 Forge 命令来发布不同的架构。
+
+版本的名称将对应于项目的 package.json 文件中的 version 字段。
+发布时打上标签
+
+可选的, 你也可以 在Git上对版本打标签, 这样你的版本将关联到一个代码历史中的标签点. npm附带了一个方便的 npm version 命令，可以为你处理版本碰撞或打标签.
+小技巧：在 GitHub Actions 中发布
+
+在本地发布可能会很痛苦，特别是因为您只能基于您的主机操作系统创建可分发文件（即您无法从 macOS 发布 Windows 的 .exe 文件）。
+
+一种解决方案是通过自动化工作流来发布你的应用比如 GitHub Actions, 通过它可以在各种云系统内包括 Ubuntu, macOS 和 Windows 上运行任务. 这是 Electron Fiddle 采用的精确方法. You can refer to Fiddle's Build and Release pipeline and Forge configuration for more details.
+检测更新程序代码
+
+至此我们有了一个通过 GitHub 发布的功能性发布系统， 我们现在需要告诉我们的 Electron 应用来下载更新，而且是每当新版本出现时都需要更新。 Electron apps do this via the autoUpdater module, which reads from an update server feed to check if a new version is available for download.
+
+网址是 update.electronjs.org 的服务器提供了一个兼容更新源. 比如, Electron Fiddle v0.28.0 将会检查接口 https://update.electronjs.org/electron/fiddle/darwin/v0.28.0 来查看是否有新的 GitHub 版本可用.
+
+一旦你的发布版本被推送到 GitHub, 对应的更新服务 update.electronjs.org 将会自动对接你的应用. 剩下的唯一步骤是使用 autoUpdater 模块配置源。
+
+为了让整个过程更加简单, Electron 团队维护 update-electron-app 模块, 它在一次函数调用中为 update.electronjs.org 设置了 autoUpdater 样板，无需配置。 这个模块将搜索 update.electronjs.org 源中与项目内 package.json 的"repository" 字段匹配的部分。
+
+首先，安装模块作为运行时的依赖项
+
+    npm
+    Yarn
+
+npm install update-electron-app
+
+然后导入模块并在主进程中立即调用
+main.js
+
+require('update-electron-app')()
+
+这是需要做的事情！ 一旦你的应用程序被打包，它将在你发布每个新的 GitHub 版本时更新自己。
+摘要
+
+在这个教程中，我们配置 Electron Forge 的 GitHub Publisher 来上传你的应用的 发行版到 GitHub releases。 由于可分发文件不能总是在不同的平台之间生成 构建和发布流程，如果你不能访问机器，我们建议将你的构建和发布流程设置在持续集成管道中。
+
+Electron 应用程序可以通过将 autoUpdater 模块指向一个更新服务器来进行自我更新。 update.electronjs.org 是一个 Electron 为开源应用程序 免费提供的更新服务器，发布在 GitHub Releases 上。 配置你的Electron应用来使用这个服务是很容易的，就像 安装并导入 update-electron-app 模块一样。
+
+如果你的应用程序不适合使用 update.electronijs.org，你应该自己部署 一个更新服务器，并配置自己的自动 autoUpdater 模块。
+🌟 你完成了
+
+从这里开始，您已经正式完成了我们的 Electron 教程。 请自由的探索我们的剩余文档并快乐的开发！ 如果您有疑问，请前往我们的社区 Discord 服务器 。

@@ -1,0 +1,17 @@
+        fcitx5, 主程序
+    fcitx5-gtk, fcitx5-qt, 针对最受欢迎的几种UI开发工具包的输入法模块。
+    fcitx5-configtool, GUI配置程序。
+    对于不同语言，有许多的输入法引擎
+        参见 输入法引擎
+
+一些额外的插件和主题支持：
+
+    fcitx5-lua, 提供lua脚本支持
+    fcitx5-material-color, 一个Fcitx5漂亮主题的合集
+
+    
+    fcitx5-chinese-addons。它包括简体中文最常用的输入法，包括拼音和表格（五笔等）引擎。
+    fcitx5-table-extra。附加中文表
+    fcitx5-chewing。基于libchewing的咀嚼引擎。
+    fcitx5-zhuyin。基于lib注音的注音输入法引擎。
+    fcitx5-rime。一种可自定义的输入法，但默认情况下其默认配置为拼音。

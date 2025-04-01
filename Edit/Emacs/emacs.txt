@@ -1,0 +1,21 @@
+安装Emacs
+Emacs 功能键	缩写	对应键盘按键(PC/Mac)
+Control	C	Ctrl / Control
+Meta	M	Alt / Option
+Shift	S	Shift / Shift
+Super	s	Win / Command
+Hyper	H	无
+
+Emacs 用连字符表示“同时按下”。例如，我们用 C-a 表达“先按下 Control 键不要松，再按下 a 键“。 C-x b 则表达“先按下 Control 键不松，按下 x 键，松开这两个键，按下 b 键”
+
+插件
+M-x:languages  (Alt+x:languages)
+菜单：Help choose languages
+Language:Chinese-GB18030
+
+安装主题，vim等插件
+M-x:packagelist
+双击需要安装的插件，或者输入需要安装的插件名称
+theme:nano
+vim:evil
+加载主题：M-x：load-theme，继续按Tab键选择以安装的主题,nano-dark

@@ -1,0 +1,10 @@
+新建同名数据库 xxx
+模式设置为兼容模式（2008或2005，具体版本安旧版本数据库选择）
+停止数据库服务，替换原来的讲新的xxx.mdf替换为就的mdf
+ALTER DATABASE xxx SET EMERGENCY
+ALTER DATABASE xxx SET SINGLE_USER
+删除xxx_log.ldf
+ALTER DATABASE xxx REBUILD LOG ON (NAME=xxx, FILENAME='C:\xxsssssx\MSSQL16.MSSQLSERVER\MSSQL\DATA\ xxx _log.ldf')
+重启数据库服务
+DBCC CHECKCATALOG
+ALTER DATABASE xxx  SET MULTI_USER

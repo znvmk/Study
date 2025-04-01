@@ -1,0 +1,114 @@
+arch/Manjaro 添加国内源以及社区源，防踩坑。
+arch/Manjaro 添加国内源以及社区源
+添加国内源
+
+中文社区仓库
+
+添加AUR源
+
+yaourt 用户
+
+yay 用户
+
+其他
+
+手动更改源排名
+
+
+添加国内源
+
+
+添加之前首先备份原文件
+
+cp /etc/pacman.d/mirrorlist /etc/pacman.d/mirrorlist.backup
+编辑/etc/pacman.d/mirrorlist配置文件
+nano /etc/pacman.d/mirrorlist
+添加manjaro稳定源
+## 中科大
+Server = https://mirrors.ustc.edu.cn/manjaro/stable/$repo/$arch
+## 清华大学
+Server = https://mirrors.tuna.tsinghua.edu.cn/manjaro/stable/$repo/$arch
+## 上海交通大学
+Server = https://mirrors.sjtug.sjtu.edu.cn/manjaro/stable/$repo/$arch
+## 浙江大学
+Server = https://mirrors.zju.edu.cn/manjaro/stable/$repo/$arch
+++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+添加archlinux源
+# 清华大学
+Server = https://mirrors.tuna.tsinghua.edu.cn/archlinux/$repo/os/$arch
+## 163
+Server = http://mirrors.163.com/archlinux/$repo/os/$arch
+## aliyun
+Server = http://mirrors.aliyun.com/archlinux/$repo/os/$arch
+注意：使用顺序，从上往下优先级越来越低，越靠上，优先级越高
+中文社区仓库
+备份原文件
+cp /etc/pacman.conf /etc/pacman.conf.backup
+编辑/etc/pacman.conf配置文件
+nano /etc/pacman.conf
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+添加源
+[archlinuxcn]
+# The Chinese Arch Linux communities packages.
+# SigLevel = Optional TrustedOnly
+SigLevel = Optional TrustAll
+# 官方源
+Server = http://repo.archlinuxcn.org/$arch
+# 163源
+Server = http://mirrors.163.com/archlinux-cn/$arch
+# 清华大学
+Server = https://mirrors.tuna.tsinghua.edu.cn/archlinuxcn/$arch
+注意：以上源，只能添加一个
+案例
+[archlinuxcn]
+# The Chinese Arch Linux communities packages.
+# SigLevel = Optional TrustedOnly
+SigLevel = Optional TrustAll
+# 清华大学
+Server = https://mirrors.tuna.tsinghua.edu.cn/archlinuxcn/$arch
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+终端中执行sudo pacman -Syu 进行更新
+
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+2.yaourt 用户
+
+安装yaourt
+pacman -S yaourt
+终端中执行sudo pacman -Syu 进行更新
+添加之前首先备份原文件
+cp /etc/yaourtrc /etc/yaourtrc.backup
+修改 /etc/yaourtrc配置文件
+vim /etc/yaourtrc
+去掉 # AURURL 的注释,并修改
+AURURL=“https://aur.tuna.tsinghua.edu.cn”
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+3.可以使用不同的AUR帮助程序或从源代码构建程序包在Arch Linux上安装yay，假设你安装了yaourt，你可以通过运行以下命令从中安装yay：
+$ yaourt -S yay
+yay 用户
+执行以下命令修改 aururl :
+yay --aururl “https://aur.tuna.tsinghua.edu.cn” --save
+要从PKGBUILD构建包，请使用以下命令：
+git clone https://aur.archlinux.org/yay.git
+cd yay
+makepkg -si
+这将安装在你的系统上并从下载的repo文件构建yay包。
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+手动更改源排名
+sudo pacman-mirrors -i -c China -m rank
+升级系统到最新
+sudo pacman -Syyu
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+官方镜像源（包括 core， extra， community， multilib ）
+
+sudo pacman-mirrors -i -c China -m rank //更新镜像排名
+sudo pacman -Syy //更新数据源
+1. 安装好后第一步是排列源（在终端中）
+sudo pacman-mirrors -g
+3. 导入GPG Key
+sudo pacman -Syy && sudo pacman -S archlinuxcn-keyring

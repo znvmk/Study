@@ -1,0 +1,264 @@
+kvm qcow2，raw 磁盘格式、磁盘存储策略介绍
+
+qcow2，raw 磁盘格式介绍
+
+raw: 裸磁盘格式（默认的虚拟磁盘格式）
+
+  raw格式是原始镜像，直接将数据写入磁盘，没有额外的元数据或压缩,由于没有复杂的元数据处理，raw 格式通常比较快，适用于一些对性能要求较高的场景。相对于 qcow2，raw 格式通常不支持虚拟机的快照功能。每个虚拟机实例都需要完整的磁盘空间，不同虚拟机之间不能共享相同的基础数据。
+
+qcow2（QEMU copy-on-write）
+
+qcow2是目前比较主流的一种虚拟化镜像格式，目前qcow2的性能上接近raw裸格式的性能，与普通的 raw 格式的镜像相比，它还有以下特性：
+
+    更小的空间占用，即使文件系统不支持空洞(holes)；qcow2 格式的镜像比 Raw 格式文件更小，只有在虚拟机实际占用了磁盘空间时，其文件才会增长，能方便的减少迁移花费的流量，更适用于云计算系统。
+    支持写时拷贝（COW, copy-on-write），镜像文件只反映底层磁盘的变化；
+    支持快照（snapshot），镜像文件能够包含多个快照的历史（raw不支持快照）；
+    可选择基于 zlib 的压缩方式，它允许每个簇（cluster）单独使用 zlib 压缩；
+    可选择 AES 加密，支持使用 128 位的 AES 密钥进行加密；
+
+磁盘分配策略介绍
+
+Vmware 磁盘分配策略
+
+1、厚置备延迟置零（zeroed thick）
+
+以默认的厚格式创建虚拟磁盘。创建过程中为虚拟磁盘分配所需空间。创建时不会擦除物理设备上保留的任何数据，从虚拟机首次执行写操作时会按需要将其置零。立刻分配指定大小的空间，空间内数据暂时不清空，以后按需清空。
+
+2、厚置备置零（eager zeroed thick）
+
+创建支持群集功能（如 FaultTolerance）的厚磁盘。在创建时为虚拟磁盘分配所需的空间。在创建过程中会将物理设备上保留的数据置零。创建这种格式的磁盘所需的时间可能会比创建其他类型的磁盘长。立刻分配指定大小的空间，并将该空间内所有数据清空。
+
+3、精简置备（thin）
+
+使用精简置备格式。精简置备的磁盘只使用该磁盘最初所需要的数据存储空间。如果以后精简磁盘需要更多空间，则它可以增长到为其分配的最大容量。为该磁盘文件指定增长的最大空间，需要增长的时候检查是否超过限额。
+
+qcow2磁盘分配策略
+
+    off：缺省策略，即不使用预分配策略，采用动态分配磁盘空间的方式，只在需要时分配实际数据所需的空间，稀疏映像类型。
+    metadata：分配元数据(metadata)，预分配后的虚拟磁盘仍然属于稀疏映像类型，实际占用的空间比off策略稍大一些
+    full：分配文件的块并标识状态为未初始化，即只分配空间,但不置零(不格式化). 预分配后的虚拟磁盘属于非稀疏映像类型，磁盘文件实际占用的空间和分配的空间相同大小
+    falloc：分配所有磁盘空间并置零，预分配后的虚拟磁盘属于非稀疏映像类型,在创建时预分配所有空间并将物理设备上保留的数据置零以提高创建速度，虚拟磁盘创建时间较长。
+
+qemu-img创建虚拟磁盘
+
+qemu-img create -f qcow2 test2.qcow2 5g  -o preallocation=off
+qemu-img create -f qcow2 test3.qcow2 5g  -o preallocation=metadata
+qemu-img create -f qcow2 test4.qcow2 5g  -o preallocation=falloc
+qemu-img create -f qcow2 test5.qcow2 5g  -o preallocation=full
+[root@openEuler-node1 images]# du -sh test*
+196K    test2.qcow2
+968K    test3.qcow2
+5.1G    test4.qcow2
+5.1G    test5.qcow2
+
+磁盘分配策略对应关系
+
+    off（默认策略） 对应 精简置备（Thin Provisioning）
+    metadata：没有直接对应的精准选项，介于精简置备和厚置备之间的选项。
+    full： 对应 厚置备（Thick Provisioning）
+    falloc：对应 厚置备延迟置零（Lazy Zeroed Thick Provisioning）
+
+    注意：精简分配创建虚拟机磁盘时不占用物理存储的空间,当虚拟机写入数据时,根据写入数据量动态分配物理存储空间。因此理论上虚拟机分配的磁盘大小总和不受物理存储总容量的限制,即虚拟机磁盘容量可以超配。但是虚拟机运行过程中会持续写入数据,当虚拟机动态分配的存储空间接近物理存储的实际容量时,虚拟机无法继续分配到存储空间从而导致运行异常。所以配置虚拟机的磁盘大小总和不建议超配太多,一般为物理存储总容量的120%
+
+qemu-img
+
+       qemu-img是QEMU虚拟化软件的一个工具，它可以用来创建、转换和管理各种虚拟磁盘格式。
+
+qemu-img --help 包括以下功能：
+
+check：检查完整性
+create：创建镜像
+commit：提交更改
+compare：比较
+convert：转换
+info：获取信息
+map：映射
+snapshot：快照管理
+rebase：在已有的的基础上创建新的镜像
+resize：调整大小
+amend：修订镜像格式选项
+
+qemu-img 命令格式
+
+qemu-img create [-q] [--object objectdef] [-f fmt] [-b backing_file] [-F backing_fmt] [-u] [-o options] filename [size]
+
+qcow2 格式选项
+
+    backing_file：指定后端镜像文件
+    backing_fmt：设置后端镜像的镜像格式
+    cluster_size：设置镜像中的簇大小，取值在512到2M之间，默认值为64K
+    preallocation：设置镜像文件空间的预分配模式
+    encryption:：设置加密
+
+1.创建一个新的磁盘映像文件
+
+qemu-img create -f <format> <filename> <size>
+
+    `<format>`磁盘映像的格式，支持Raw、Qcow、VMDK、VHD等格式
+    `<filename>`为文件名
+    `<size>`表示磁盘映像文件的大小
+
+创建大小30G qcow2类型磁盘
+
+qemu-img create -f qcow2 /data/openeuler.qcow2 30G
+
+创建大小30G raw类型磁盘
+
+qemu-img create -f raw /data/openeuler.qcow2 30G
+
+2，查看磁盘映像信息
+
+qemu-img info  /var/lib/libvirt/images/openeuler22.03_clone.qcow2 --force-share
+qemu-img info  /var/lib/libvirt/images/openeuler22.03_clone.qcow2 --U
+
+image: /var/lib/libvirt/images/openeuler22.03_clone.qcow2
+file format: qcow2
+virtual size: 30 GiB (32212254720 bytes)
+disk size: 2.32 GiB
+cluster_size: 65536
+Format specific information:
+    compat: 1.1
+    compression type: zlib
+    lazy refcounts: false
+    refcount bits: 16
+    corrupt: false
+    extended l2: false
+
+qemu-img info 参数介绍
+
+image：info命令中提供的 FILENAME
+file format：镜像格式
+virtual size：即虚拟机看到的磁盘大小
+disk size：镜像文件在主机文件系统上占用的空间大小。如果主机没有文件系统或其他原因导致获取不到该信息，则显示为0
+cluster_size：镜像格式的 cluster_size
+encrypted：镜像是否加密，只有当加密时才显示
+cleanly shut down：如果镜像是脏的，将显示 no，并且必须在 qemu 下次打开它时进行自动修复
+backing file：镜像有 backing file显示
+backing file format：backing file 的镜像格式
+Snapshot list：列出该镜像所有内部快照
+Format specific information：该镜像格式的特定信息
+
+3，转换磁盘映像格式
+
+qemu-img convert -f <source_format> -O <destination_format> <source_file> <destination_file>
+
+    `<source_format>`    原始格式
+    `<destination_format>` 目标格式
+    `<source_file>`       原始文件路径
+    `<destination_file>` 目标文件路径
+
+qcow2镜像转化为raw镜像文件
+
+
+qemu-img convert -f qcow2 -O raw /data/openeuler.qcow2 /data/openeuler.raw
+
+raw镜像转化为qcw2镜像文件
+
+
+qemu-img convert -f qcow2 -O raw win11.raw    win11.qcow2
+
+4. 调整磁盘映像大小
+
+
+qemu-img resize <filename> <new_size>
+
+    `<filename>` 待调整的虚拟磁盘文件路径
+    `<new_size>`调整后的文件大小
+
+磁盘在原来基础上增加10G
+
+
+sudo qemu-img resize /data/openeuler.qcow2 +10G
+
+磁盘扩容至150G
+
+
+sudo qemu-img resize /data/openeuler.qcow2 100G
+
+qemu-img 操作需要关闭虚拟机，在线扩容使用virsh blockresize命令
+
+
+virsh blockresize  openeuler /data/openeuler.qcow2 40G
+
+虚拟机磁盘信息
+
+
+virsh domblklist vmname
+
+5. 虚拟磁盘映像快照管理
+
+
+qemu-img snapshot -c <snapshot_name> <filename>
+
+    `<snapshot_name>`快照名称
+    `<filename>` 虚拟磁盘文件路径
+
+创建虚拟磁盘快照
+
+
+qemu-img snapshot  -c  openeuler22.03_20231203 /var/lib/libvirt/images/openeuler22.03.qcow2
+
+6，虚拟磁盘回滚快照
+
+
+qemu-img snapshot -a <snapshot_name> <filename>
+
+`<snapshot_name>` 需要回滚的快照名称
+
+回滚虚拟磁盘快照
+
+
+qemu-img snapshot  -a  openeuler22.03_20231203 /var/lib/libvirt/images/openeuler22.03.qcow2
+
+7，生成链接克隆磁盘文件
+
+链接克隆是基于源虚拟机的增量拷贝，其中基础时源虚拟机，克隆后的变化存放在新创建的链接磁盘文件中
+
+
+qemu-img create -f qcow2 -F qcow2  -b /data/centos.qcow2 /data/centos7-linkclone03.qcow2
+
+8，磁盘完整性检查
+
+对镜像执行一致性检查，只支持 qcow2、 qed 、 vdi 格式
+
+    --output：可选值为human（默认）、json。
+    -r [leaks | all]：尝试修复在检查期间发现的任何不一致。-r leaks只修复cluster leaks。-r all 修复所有类型的错误，可能导致选择错误的修复或隐藏已经发生的损坏的风险更高。
+
+
+
+qemu-img check /var/lib/libvirt/images/openeuler22.03.qcow2
+qemu-img check /var/lib/libvirt/images/openeuler22.03.qcow2 --output=json
+
+虚拟机磁盘格式转换，raw转qcow2
+
+1.关机
+
+
+virsh shutdown rke01
+virsh destroy rke01
+
+2.转换磁盘文件格式
+
+
+qemu-img convert -f raw -O qcow2 /data/images/rke01.img /data/images/rke01.qcow2
+
+-f 源格式 -O 转换目标格式 源文件镜像 目标文件镜像
+
+
+chown -R qemu:qemu /data/images/rke01.qcow2
+
+3.修改配置文件的磁盘类型和磁盘路径
+
+
+virsh edit rke01
+
+5.修改配置重新定义虚拟机配置
+
+virsh define /etc/libvirt/qemu/rke01.xml
+Domain rke01 defined from /etc/libvirt/qemu/rke01.xml
+
+6.开机
+
+
+virsh start rke01
+

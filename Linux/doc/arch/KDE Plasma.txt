@@ -1,0 +1,65 @@
+在 Arch Linux 中安装和配置 KDE Plasma 桌面
+如果您同时喜欢 KDE 和 Arch Linux，那么本指南适合您。在本指南中，我们解释了设置功能齐全的 KDE Plasma 桌面及其所有本机应用程序所需的步骤。现在让我们看看如何在 Arch Linux 中安装 KDE Plasma。
+
+在之前的文章中，我们解释了您可以设置一个最低限度的 Arch Linux，还解释了如何安装GNOME、LXQt和Xfce桌面的 Arch Linux。现在我们解释 KDE Plasma 桌面的安装步骤。
+KDE Plasma桌面
+
+KDE Plasma 是一个轻量级且具有视觉吸引力的 Linux 桌面环境，它带有大量非常详细的自定义选项。这个桌面的最新版本是基于 Qt5 的 Plasma 5，KDE Framework 5 提供了 Xorg 和 Wayland 显示服务器选项。
+
+当前的 KDE Plasma 桌面版本是 5.23.5，本文使用该版本进行安装。
+
+本指南要求您已经安装了最低限度的 Arch Linux shell。如果没有，请按照本指南的安装 Arch Linux。
+
+详细请看：Arch Linux 安装图文详解，见：https://www.linuxmi.com/arch-linux-anzhuang.html
+
+然后按照以下步骤操作。
+
+此外，请确保您的用户具有管理员权限以运行 pacman 包管理器。
+安装和配置 KDE Plasma 桌面
+
+对于 Arch Linux 中功能齐全的 KDE Plasma 系统，您需要以下软件包。
+
+plasma – 基本 plasma 包
+kde-applications  – 附加的 KDE 本地应用程序 (Konsole 等)
+xorg – 显示服务器
+sddm – 显示管理器
+
+这4个包是必须的。但是，如果您想使用 Wayland 显示服务器，您可以选择安装plasma-wayland-session 。
+1.安装包
+
+打开终端并运行以下命令来安装这些软件包。
+
+[linuxmi@linuxmi www.linuxmi.com]$ pacman -S --needed xorg sddm
+[linuxmi@linuxmi www.linuxmi.com]$ pacman -S --needed plasma kde-applications
+
+当被要求选择一个包时，按回车键进行默认选择。等待安装完成。
+2.启用显示服务器和网络
+
+现在是时候启用显示管理器和网络，否则将无法登录。上述命令完成后运行以下命令。
+
+[linuxmi@linuxmi www.linuxmi.com]$ sudo systemctl enable sddm
+[linuxmi@linuxmi www.linuxmi.com]$ sudo systemctl enable NetworkManager
+
+3.配置sddm并重启
+
+与登录屏幕相关的 KDE Plasma 桌面所需的最后一项配置。默认情况下，sddm 使用自己的故障安全登录屏幕，这不是典型的 KDE Plasma “breeze”登录屏幕。KDE Plasma 登录屏幕需要稍作调整。
+
+从终端打开 sddm.conf 文件。
+
+[linuxmi@linuxmi www.linuxmi.com]$ sudo nano /usr/lib/sddm/sddm.conf.d/default.conf
+
+如下更改主题部分。
+
+[Theme]
+# current theme name
+ Current=breeze
+
+如下图：
+
+修改sddm配置接受 breeze 主题
+
+按 CTRL+O 和 CTRL+X 保存并退出 nano 编辑器。现在您可以使用以下命令重新启动您的 Arch 系统：
+
+[linuxmi@linuxmi www.linuxmi.com]$ sudo systemctl reboot
+
+您应该会看到一个漂亮的 KDE Plasma 登录屏幕和桌面。

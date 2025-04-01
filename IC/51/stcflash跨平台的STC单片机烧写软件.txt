@@ -1,0 +1,73 @@
+stcflash跨平台的STC单片机烧写软件
+
+
+
+STC的官方烧写程序stc-isp虽然很容易使用，但只能在Windows下运行，对于习惯在Linux或者Mac OS上开发的人来说不怎么方便。跨平台的STC单片机烧写软件stcflash就是为有这样需求的开发人员设计。stcflash使用命令行方式操作，用法很简单，可以容易的集成到开发工具链里。
+
+stcflash采用Python编写，需要2.6或以上版本。另外它还需要Python的pySerial模块用于串口通讯。Python一般不会自带pySerial，不过安装很容易。如果你是在Ubuntu下，只需要安装python-serial包就可以了。其他系统请参考一下pySerial的安装说明。
+
+stcflash使用方法很简单，如果只是需要读取单片机的信息，直接运行，不需要加任何参数
+复制
+
+$ python stcflash.py
+
+Connect to /dev/ttyUSB0 at baudrate 2400
+
+Detecting target... done
+
+FOSC: 11.955MHz
+
+Model: STC89C52RC (ver4.3C) 
+
+ROM: 8KB
+如果报错：No mudule named 'serial'
+sudo pip3 install pySerial 
+当出现Detecting target...提示的时候，你需要关闭再打开单片机电源，以使单片机进入编程状态。这个和官方的stc-isp是一样的。如果单片机没有连接在第一个USB转串口适配器上，则需要通过--port参数来修改串口地址。另外，初始的波特率也可以通过--lowbaud修改，尽管大部分情况下应该用不着。下面是个例子
+复制
+
+$ python stcflash.py --port /dev/ttyUSB1 --lowbaud 1200
+
+Connect to /dev/ttyUSB1 at baudrate 1200
+
+Detecting target...
+
+stcflash只支持烧写bin格式的程序文件，hex格式的文件需要先转换为bin才能使用。在Linux下可以用下面的命令来完成这个转换操作
+复制
+
+$ objcopy -Iihex -Obinary program.hex program.bin
+
+有了bin文件之后，只要将这个文件作为stcflash的运行参数就可以进入烧写模式了。
+复制
+
+$ python stcflash.py program.bin
+
+Connect to /dev/ttyUSB0 at baudrate 2400
+
+Detecting target... done
+
+FOSC: 11.955MHz
+
+Model: STC89C52RC (ver4.3C) 
+
+ROM: 8KB
+
+Baudrate: 38400
+
+Erasing target... done
+
+Programming: #################### done
+
+目前stcflash可以支持STC89C5xx，STC12C5Axx，STC12C52xx三个系列以及他们的低电压版。对于其他系列，你可以试试用--protocol参数来指定烧写协议。可能大部分较新一点的STC单片机都是用的和STC125Axx和STC12C52xx一样的协议。所以如果stcflash不支持你的STC单片机，可以先试试下面的命令
+复制
+
+$ python stcflash.py --protocol 12 program.bin
+
+比较早期的STC单片机使用的协议应该和STC89C5xx兼容，可以用下面的命令烧写
+复制
+
+$ python stcflash.py --protocol 89 program.bin
+
+
+如果遇到问题可以用--verbose或者--debug参数输出更多的信息，方便调试。
+
+最新版本的stcflash可以从github上下载 github.com/laborer/stcflash，附件中的版本可能无法保证即时更新。

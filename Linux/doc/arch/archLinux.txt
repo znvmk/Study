@@ -207,7 +207,7 @@ PPS：由于这个文件是按照字母排序的，推荐安装完系统后选�
 
 执行nano /etc/hosts编辑 Hosts 文件并添加以下行：
 
-127.0.0.1 localhost 
+127.0.0.1 localhost
 127.0.0.1 ${hostname}
 ::1 localhost ip6-localhost ip6-loopback
 ::1 ${hostname}
@@ -282,7 +282,7 @@ root 权限虽好，但不能滥用，使用之前确保你执行的命令的确
 
 执行sudo nano /etc/pacman.conf编辑 Pacman 配置文件，删除以下行前面的#以启用 32 位系统库支持。
 
-#[multilib] 
+#[multilib]
 #Include = /etc/pacman.d/mirrorlist
 保存后执行sudo pacman -Sy更新软件数据库
 
@@ -358,7 +358,7 @@ PPS：虚拟机需要根据虚拟化软件不同而安装不同的显卡驱动
 以下软件包根据自己的需求决定是否卸载
 
 bluedevil: 用于管理蓝牙的系统设置界面
-
+2
 kgamma5: 用于调整显示器的伽玛设置
 
 plasma-browser-integration: 用于 Plasma 的浏览器集成，支持 Chrome 和 Firefox，推荐保留。
@@ -580,7 +580,7 @@ setfont /usr/share/kbd/consolefonts/sun12*22.psfu.gz
 systemctl stop reflector.service
 
 小提示:系统启动后小键盘数字键未开启 记得手动开启
-ip link 
+ip link
 
 有线连接 若是连接到已经有网的路由器可以自动联网
 
@@ -782,7 +782,7 @@ grub-mkconfig -o /boot/grub/grub.cfg
 pacman -S plasma konsole dolphin     *kde桌面和终端，文件管理器*
 pacman -S ntfs-3g          *可以读取ntfs格式磁盘 实体机上推荐安装*
 pacman -S os-prober     *查找已安装的操作系统 实体机上推荐安装*
-pacman -S adobe-source-han-serif-cn-fonts adobe-source-han-sans-cn-fonts wqy-zenhei wqy-microhei noto-fonts-cjk noto-fonts-emoji noto-fonts-extra ttf-dejavu  
+pacman -S adobe-source-han-serif-cn-fonts adobe-source-han-sans-cn-fonts wqy-zenhei wqy-microhei noto-fonts-cjk noto-fonts-emoji noto-fonts-extra ttf-dejavu
 
  *中文字体 这里如果不安装 之后设置语言的时候都是框框不好辨认*
 pacman -S firefox ark gwenview packagekit-qt5 packagekit appstream-qt appstream man neofetch net-tools networkmanager openssh git wget            *一堆软件*
@@ -841,7 +841,8 @@ paru -S netease-cloud-music
 
 安装fcitx5输入法
 pacman -S fcitx5-im fcitx5-chinese-addons fcitx5-pinyin-moegirl fcitx5-pinyin-zhwiki fcitx5-material-color
-
+**安装fcitx5-cinfigtool界面配置工具
+全局语言配置使用：zh_CN.UTF-8,GB18030不兼容
 编辑运行环境 使fcitx5输入法生效
 EDITOR=nano sudoedit /etc/environment
 
@@ -849,8 +850,89 @@ EDITOR=nano sudoedit /etc/environment
 GTK_IM_MODULE=fcitx
 QT_IM_MODULE=fcitx
 XMODIFIERS=@im=fcitx
-SDL_IM_MODULE=fcitx 
+SDL_IM_MODULE=fcitx
 
 
 
-作者：襄思过 https://www.bilibili.com/read/cv17572682 出处：bilibili
+archKDE图形桌面安装教程
+2023年01月10日 14:0933浏览 · 0喜欢 · 0评论
+geigeinn
+粉丝：3文章：1
+关注
+
+arch 图形桌面
+
+1.启动 dhcpcd 自动获取网络
+
+# dhcpcd
+
+2.更新
+
+# pacman -Syyu
+
+3.链接终端编辑器
+
+# pacman -s /usr/bin/vim /usr/bin/vi
+
+4.下载 sudo
+
+# pacman -S sudo
+
+5.编辑 sudo
+
+# visudo
+
+找到 #%wheel ALL=(ALL:ALL) ALL ，把#号去掉，可以执行任何指令。
+
+6.安装图形 xorg 服务器
+
+# pacman -S xorg xorg-server
+
+7.配置源
+
+# vi /etc/pacman.conf
+
+
+8.更新
+
+# pacman -Syyu
+
+9.安装密钥
+
+# pacman -S archlinuxcn-keyring
+
+10.安装显卡驱动（可不装）
+ 厂商          类型                                 驱动                    OpenGL          OpenGL(multilib)           文档
+AMD/ATI   Open source               xf86-video-amdgpu;xf86-video-ati       Mesa             lib32-mesa             AMDGPU/ATI
+Intel     Open source                        xf86-video-intel              Mesa             lib32-mesa             Intel graphics
+NVIDIA    Open source/Proprietary   nvidia/nvidia-390xx-dkms            nvidia-utils      lib32-nvidia-utils         NVIDIA
+11.安装 KDE 桌面环境 （需要等待几分钟）
+
+# pacman -S plasma
+
+# pacman -S kde-applications
+
+# pacman -S sddm
+
+12.安装终端
+
+# pacman -S konsole
+
+13.启动服务
+
+# systemctl enable sddm
+
+# systemctl enable dhcpcd
+
+14.创建用户
+
+# useradd -m 用户名
+
+# passwd
+若忘记添加用户，进不去系统
+重新进入到安装介质，挂载mount /dev/sda2 /mnt
+arch-chroot /mnt
+useradd zzzz
+passwd zzzz
+输入密码重启即可
+15.完成

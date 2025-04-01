@@ -1,0 +1,45 @@
+在https://cef-builds.spotifycdn.com/index.html
+下载cef编译版本：如：cef_binary_110.0.22+gb3f93d5+chromium-110.0.5481.77_windows64_beta.tar.bz2
+解压缩
+用cmakeb编译，用本地编译器vs2022,平台x64
+编译报错，需要用Doxygen生成文档
+解决：
+打开编译目录：cef\cef_binary_110.0.22+gb3f93d5+chromium-110.0.5481.77_windows64_beta
+将下载好得Doxygen版本复制到cef编译目录下：
+cef\cef_binary_110.0.22+gb3f93d5+chromium-110.0.5481.77_windows64_beta\doxygen-1.9.8
+修改Cmakelist.txt:
+将：
+find_package(Doxygen)
+if(DOXYGEN_FOUND)
+  add_custom_target(apidocs ALL
+    # Generate documentation in the docs/html directory.
+    COMMAND "${DOXYGEN_EXECUTABLE}" Doxyfile
+    # Write a docs/index.html file.
+    COMMAND ${CMAKE_COMMAND} -E echo "<html><head><meta http-equiv=\"refresh\" content=\"0;URL='html/index.html'\"/></head></html>" > docs/index.html
+    WORKING_DIRECTORY "${CEF_ROOT}"
+    COMMENT "Generating API documentation with Doxygen..."
+    VERBATIM )
+else()
+  message(WARNING "Doxygen must be installed to generate API documentation.")
+endif()
+改为：
+#find_package(Doxygen)
+#if(DOXYGEN_FOUND)
+  add_custom_target(apidocs ALL
+    # Generate documentation in the docs/html directory.
+    #COMMAND "${DOXYGEN_EXECUTABLE}" Doxyfile
+    COMMAND D:/cef/cef_binary_110.0.22+gb3f93d5+chromium-110.0.5481.77_windows64_beta/doxygen-1.9.8/doxygen.exe Doxyfile
+    #注：改为doxygen.exe所在绝对位置目录
+    # Write a docs/index.html file.
+    COMMAND ${CMAKE_COMMAND} -E echo "<html><head><meta http-equiv=\"refresh\" content=\"0;URL='html/index.html'\"/></head></html>" > docs/index.html
+    WORKING_DIRECTORY "${CEF_ROOT}"
+    COMMENT "Generating API documentation with Doxygen..."
+    VERBATIM )
+#else()
+#  message(WARNING "Doxygen must be installed to generate API documentation.")
+#endif()
+
+再次编译，编译通过，生成
+在生成输出目录：out中用vs2022打开：..\out\cef.sln项目
+单独编译：cefclient项目
+运行：out\tests\cefclient\Debug\cefclietn.exe

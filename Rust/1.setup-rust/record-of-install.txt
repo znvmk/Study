@@ -31,7 +31,7 @@ RUSTUP_HOME：rustc的安装路径，本人设置成了D:\Rust\rustup
 3) Cancel installation
 >1
 选择1，运行，安装程序将下载：cargo,clippy,rust-docs,rust-mingw-rust-std,rustc,rustfmt(程序文本格式化命令)
-运行Windows Terminal 
+运行Windows Terminal
 rustc --version或rustc -V 查看版本
 rustup -V
 cargo -V
@@ -92,12 +92,12 @@ fn main(){
 }
 
 构建Cargo项目
-$ cd hello-cargo 
+$ cd hello-cargo
 $ cargo build
 运行：
-$ cargo run 
+$ cargo run
 Hello, world!
-或者省略cargo build命令，直接运行cargo rum,构建并运行
+或者省略cargo build命令，直接运行cargo run,构建并运行
 $ cargo check
 检查项目是否可以运行，指出错误
 

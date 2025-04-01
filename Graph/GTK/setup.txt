@@ -1,0 +1,537 @@
+sudo apt-get install libgtk-4-dev
+新建gtk4-test.c
+#include <gtk/gtk.h>
+//未配置环境：include</usr/include/gti-4.0/gtk/git.h>
+
+static void
+activate (GtkApplication* app,
+          gpointer        user_data)
+{
+  GtkWidget *window;
+
+  window = gtk_application_window_new (app);
+  gtk_window_set_title (GTK_WINDOW (window), "Window");
+  gtk_window_set_default_size (GTK_WINDOW (window), 200, 200);
+  gtk_window_present (GTK_WINDOW (window));
+}
+
+int
+main (int    argc,
+      char **argv)
+{
+  GtkApplication *app;
+  int status;
+
+  app = gtk_application_new ("org.gtk.example", G_APPLICATION_DEFAULT_FLAGS);
+  g_signal_connect (app, "activate", G_CALLBACK (activate), NULL);
+  status = g_application_run (G_APPLICATION (app), argc, argv);
+  g_object_unref (app);
+
+  return status;
+}
+
+
+gcc $( pkg-config --cflags gtk4 ) -o gtk4-test gtk4-test.c $( pkg-config --libs gtk4 )
+
+
+
+
+Hello World in C
+
+Create a new file with the following content named example-1.c.
+
+#include <gtk/gtk.h>
+
+static void
+print_hello (GtkWidget *widget,
+             gpointer   data)
+{
+  g_print ("Hello World\n");
+}
+
+static void
+activate (GtkApplication *app,
+          gpointer        user_data)
+{
+  GtkWidget *window;
+  GtkWidget *button;
+  GtkWidget *box;
+
+  window = gtk_application_window_new (app);
+  gtk_window_set_title (GTK_WINDOW (window), "Window");
+  gtk_window_set_default_size (GTK_WINDOW (window), 200, 200);
+
+  box = gtk_box_new (GTK_ORIENTATION_VERTICAL, 0);
+  gtk_widget_set_halign (box, GTK_ALIGN_CENTER);
+  gtk_widget_set_valign (box, GTK_ALIGN_CENTER);
+
+  gtk_window_set_child (GTK_WINDOW (window), box);
+
+  button = gtk_button_new_with_label ("Hello World");
+
+  g_signal_connect (button, "clicked", G_CALLBACK (print_hello), NULL);
+  g_signal_connect_swapped (button, "clicked", G_CALLBACK (gtk_window_destroy), window);
+
+  gtk_box_append (GTK_BOX (box), button);
+
+  gtk_window_present (GTK_WINDOW (window));
+}
+
+int
+main (int    argc,
+      char **argv)
+{
+  GtkApplication *app;
+  int status;
+
+  app = gtk_application_new ("org.gtk.example", G_APPLICATION_DEFAULT_FLAGS);
+  g_signal_connect (app, "activate", G_CALLBACK (activate), NULL);
+  status = g_application_run (G_APPLICATION (app), argc, argv);
+  g_object_unref (app);
+
+  return status;
+}
+
+You can compile the program above with GCC using:
+
+gcc $( pkg-config --cflags gtk4 ) -o example-1 example-1.c $( pkg-config --libs gtk4 )
+Packing buttons
+
+Create a new file with the following content named example-2.c.
+
+#include <gtk/gtk.h>
+
+static void
+print_hello (GtkWidget *widget,
+             gpointer   data)
+{
+  g_print ("Hello World\n");
+}
+
+static void
+activate (GtkApplication *app,
+          gpointer        user_data)
+{
+  GtkWidget *window;
+  GtkWidget *grid;
+  GtkWidget *button;
+
+  /* create a new window, and set its title */
+  window = gtk_application_window_new (app);
+  gtk_window_set_title (GTK_WINDOW (window), "Window");
+
+  /* Here we construct the container that is going pack our buttons */
+  grid = gtk_grid_new ();
+
+  /* Pack the container in the window */
+  gtk_window_set_child (GTK_WINDOW (window), grid);
+
+  button = gtk_button_new_with_label ("Button 1");
+  g_signal_connect (button, "clicked", G_CALLBACK (print_hello), NULL);
+
+  /* Place the first button in the grid cell (0, 0), and make it fill
+   * just 1 cell horizontally and vertically (ie no spanning)
+   */
+  gtk_grid_attach (GTK_GRID (grid), button, 0, 0, 1, 1);
+
+  button = gtk_button_new_with_label ("Button 2");
+  g_signal_connect (button, "clicked", G_CALLBACK (print_hello), NULL);
+
+  /* Place the second button in the grid cell (1, 0), and make it fill
+   * just 1 cell horizontally and vertically (ie no spanning)
+   */
+  gtk_grid_attach (GTK_GRID (grid), button, 1, 0, 1, 1);
+
+  button = gtk_button_new_with_label ("Quit");
+  g_signal_connect_swapped (button, "clicked", G_CALLBACK (gtk_window_destroy), window);
+
+  /* Place the Quit button in the grid cell (0, 1), and make it
+   * span 2 columns.
+   */
+  gtk_grid_attach (GTK_GRID (grid), button, 0, 1, 2, 1);
+
+  gtk_window_present (GTK_WINDOW (window));
+}
+
+int
+main (int    argc,
+      char **argv)
+{
+  GtkApplication *app;
+  int status;
+
+  app = gtk_application_new ("org.gtk.example", G_APPLICATION_DEFAULT_FLAGS);
+  g_signal_connect (app, "activate", G_CALLBACK (activate), NULL);
+  status = g_application_run (G_APPLICATION (app), argc, argv);
+  g_object_unref (app);
+
+  return status;
+}
+
+You can compile the program above with GCC using:
+
+gcc $( pkg-config --cflags gtk4 ) -o example-2 example-2.c $( pkg-config --libs gtk4 )
+
+Custom Drawing
+
+Many widgets, like buttons, do all their drawing themselves. You just tell them the label you want to see, and they figure out what font to use, draw the button outline and focus rectangle, etc. Sometimes, it is necessary to do some custom drawing. In that case, a GtkDrawingArea might be the right widget to use. It offers a canvas on which you can draw by setting its draw function.
+
+The contents of a widget often need to be partially or fully redrawn, e.g. when another window is moved and uncovers part of the widget, or when the window containing it is resized. It is also possible to explicitly cause a widget to be redrawn, by calling gtk_widget_queue_draw(). GTK takes care of most of the details by providing a ready-to-use cairo context to the draw function.
+
+The following example shows how to use a draw function with GtkDrawingArea. It is a bit more complicated than the previous examples, since it also demonstrates input event handling with event controllers.
+
+Drawing
+Drawing in response to input
+
+Create a new file with the following content named example-3.c.
+
+#include <gtk/gtk.h>
+
+/* Surface to store current scribbles */
+static cairo_surface_t *surface = NULL;
+
+static void
+clear_surface (void)
+{
+  cairo_t *cr;
+
+  cr = cairo_create (surface);
+
+  cairo_set_source_rgb (cr, 1, 1, 1);
+  cairo_paint (cr);
+
+  cairo_destroy (cr);
+}
+
+/* Create a new surface of the appropriate size to store our scribbles */
+static void
+resize_cb (GtkWidget *widget,
+           int        width,
+           int        height,
+           gpointer   data)
+{
+  if (surface)
+    {
+      cairo_surface_destroy (surface);
+      surface = NULL;
+    }
+
+  if (gtk_native_get_surface (gtk_widget_get_native (widget)))
+    {
+      surface = gdk_surface_create_similar_surface (gtk_native_get_surface (gtk_widget_get_native (widget)),
+                                                    CAIRO_CONTENT_COLOR,
+                                                    gtk_widget_get_width (widget),
+                                                    gtk_widget_get_height (widget));
+
+      /* Initialize the surface to white */
+      clear_surface ();
+    }
+}
+
+/* Redraw the screen from the surface. Note that the draw
+ * callback receives a ready-to-be-used cairo_t that is already
+ * clipped to only draw the exposed areas of the widget
+ */
+static void
+draw_cb (GtkDrawingArea *drawing_area,
+         cairo_t        *cr,
+         int             width,
+         int             height,
+         gpointer        data)
+{
+  cairo_set_source_surface (cr, surface, 0, 0);
+  cairo_paint (cr);
+}
+
+/* Draw a rectangle on the surface at the given position */
+static void
+draw_brush (GtkWidget *widget,
+            double     x,
+            double     y)
+{
+  cairo_t *cr;
+
+  /* Paint to the surface, where we store our state */
+  cr = cairo_create (surface);
+
+  cairo_rectangle (cr, x - 3, y - 3, 6, 6);
+  cairo_fill (cr);
+
+  cairo_destroy (cr);
+
+  /* Now invalidate the drawing area. */
+  gtk_widget_queue_draw (widget);
+}
+
+static double start_x;
+static double start_y;
+
+static void
+drag_begin (GtkGestureDrag *gesture,
+            double          x,
+            double          y,
+            GtkWidget      *area)
+{
+  start_x = x;
+  start_y = y;
+
+  draw_brush (area, x, y);
+}
+
+static void
+drag_update (GtkGestureDrag *gesture,
+             double          x,
+             double          y,
+             GtkWidget      *area)
+{
+  draw_brush (area, start_x + x, start_y + y);
+}
+
+static void
+drag_end (GtkGestureDrag *gesture,
+          double          x,
+          double          y,
+          GtkWidget      *area)
+{
+  draw_brush (area, start_x + x, start_y + y);
+}
+
+static void
+pressed (GtkGestureClick *gesture,
+         int              n_press,
+         double           x,
+         double           y,
+         GtkWidget       *area)
+{
+  clear_surface ();
+  gtk_widget_queue_draw (area);
+}
+
+static void
+close_window (void)
+{
+  if (surface)
+    cairo_surface_destroy (surface);
+}
+
+static void
+activate (GtkApplication *app,
+          gpointer        user_data)
+{
+  GtkWidget *window;
+  GtkWidget *frame;
+  GtkWidget *drawing_area;
+  GtkGesture *drag;
+  GtkGesture *press;
+
+  window = gtk_application_window_new (app);
+  gtk_window_set_title (GTK_WINDOW (window), "Drawing Area");
+
+  g_signal_connect (window, "destroy", G_CALLBACK (close_window), NULL);
+
+  frame = gtk_frame_new (NULL);
+  gtk_window_set_child (GTK_WINDOW (window), frame);
+
+  drawing_area = gtk_drawing_area_new ();
+  /* set a minimum size */
+  gtk_widget_set_size_request (drawing_area, 100, 100);
+
+  gtk_frame_set_child (GTK_FRAME (frame), drawing_area);
+
+  gtk_drawing_area_set_draw_func (GTK_DRAWING_AREA (drawing_area), draw_cb, NULL, NULL);
+
+  g_signal_connect_after (drawing_area, "resize", G_CALLBACK (resize_cb), NULL);
+
+  drag = gtk_gesture_drag_new ();
+  gtk_gesture_single_set_button (GTK_GESTURE_SINGLE (drag), GDK_BUTTON_PRIMARY);
+  gtk_widget_add_controller (drawing_area, GTK_EVENT_CONTROLLER (drag));
+  g_signal_connect (drag, "drag-begin", G_CALLBACK (drag_begin), drawing_area);
+  g_signal_connect (drag, "drag-update", G_CALLBACK (drag_update), drawing_area);
+  g_signal_connect (drag, "drag-end", G_CALLBACK (drag_end), drawing_area);
+
+  press = gtk_gesture_click_new ();
+  gtk_gesture_single_set_button (GTK_GESTURE_SINGLE (press), GDK_BUTTON_SECONDARY);
+  gtk_widget_add_controller (drawing_area, GTK_EVENT_CONTROLLER (press));
+
+  g_signal_connect (press, "pressed", G_CALLBACK (pressed), drawing_area);
+
+  gtk_window_present (GTK_WINDOW (window));
+}
+
+int
+main (int    argc,
+      char **argv)
+{
+  GtkApplication *app;
+  int status;
+
+  app = gtk_application_new ("org.gtk.example", G_APPLICATION_DEFAULT_FLAGS);
+  g_signal_connect (app, "activate", G_CALLBACK (activate), NULL);
+  status = g_application_run (G_APPLICATION (app), argc, argv);
+  g_object_unref (app);
+
+  return status;
+}
+
+You can compile the program above with GCC using:
+
+gcc $( pkg-config --cflags gtk4 ) -o example-3 example-3.c $( pkg-config --libs gtk4 )
+
+Building user interfaces
+
+When constructing a more complicated user interface, with dozens or hundreds of widgets, doing all the setup work in C code is cumbersome, and making changes becomes next to impossible.
+
+Thankfully, GTK supports the separation of user interface layout from your business logic, by using UI descriptions in an XML format that can be parsed by the GtkBuilder class.
+Packing buttons with GtkBuilder
+
+Create a new file with the following content named example-4.c.
+
+#include <gtk/gtk.h>
+#include <glib/gstdio.h>
+
+static void
+print_hello (GtkWidget *widget,
+             gpointer   data)
+{
+  g_print ("Hello World\n");
+}
+
+static void
+quit_cb (GtkWindow *window)
+{
+  gtk_window_close (window);
+}
+
+static void
+activate (GtkApplication *app,
+          gpointer        user_data)
+{
+  /* Construct a GtkBuilder instance and load our UI description */
+  GtkBuilder *builder = gtk_builder_new ();
+  gtk_builder_add_from_file (builder, "builder.ui", NULL);
+
+  /* Connect signal handlers to the constructed widgets. */
+  GObject *window = gtk_builder_get_object (builder, "window");
+  gtk_window_set_application (GTK_WINDOW (window), app);
+
+  GObject *button = gtk_builder_get_object (builder, "button1");
+  g_signal_connect (button, "clicked", G_CALLBACK (print_hello), NULL);
+
+  button = gtk_builder_get_object (builder, "button2");
+  g_signal_connect (button, "clicked", G_CALLBACK (print_hello), NULL);
+
+  button = gtk_builder_get_object (builder, "quit");
+  g_signal_connect_swapped (button, "clicked", G_CALLBACK (quit_cb), window);
+
+  gtk_widget_set_visible (GTK_WIDGET (window), TRUE);
+
+  /* We do not need the builder any more */
+  g_object_unref (builder);
+}
+
+int
+main (int   argc,
+      char *argv[])
+{
+#ifdef GTK_SRCDIR
+  g_chdir (GTK_SRCDIR);
+#endif
+
+  GtkApplication *app = gtk_application_new ("org.gtk.example", G_APPLICATION_DEFAULT_FLAGS);
+  g_signal_connect (app, "activate", G_CALLBACK (activate), NULL);
+
+  int status = g_application_run (G_APPLICATION (app), argc, argv);
+  g_object_unref (app);
+
+  return status;
+}
+
+Create a new file with the following content named builder.ui.
+
+<?xml version="1.0" encoding="UTF-8"?>
+<interface>
+  <object id="window" class="GtkWindow">
+    <property name="title">Grid</property>
+    <child>
+      <object id="grid" class="GtkGrid">
+        <child>
+          <object id="button1" class="GtkButton">
+            <property name="label">Button 1</property>
+            <layout>
+              <property name="column">0</property>
+              <property name="row">0</property>
+            </layout>
+          </object>
+        </child>
+        <child>
+          <object id="button2" class="GtkButton">
+            <property name="label">Button 2</property>
+            <layout>
+              <property name="column">1</property>
+              <property name="row">0</property>
+            </layout>
+          </object>
+        </child>
+        <child>
+          <object id="quit" class="GtkButton">
+            <property name="label">Quit</property>
+            <layout>
+              <property name="column">0</property>
+              <property name="row">1</property>
+              <property name="column-span">2</property>
+            </layout>
+          </object>
+        </child>
+      </object>
+    </child>
+  </object>
+</interface>
+
+You can compile the program above with GCC using:
+
+gcc $( pkg-config --cflags gtk4 ) -o example-4 example-4.c $( pkg-config --libs gtk4 )
+
+Note that GtkBuilder can also be used to construct objects that are not widgets, such as tree models, adjustments, etc. That is the reason the method we use here is called gtk_builder_get_object() and returns a GObject instead of a GtkWidget.
+
+Normally, you would pass a full path to gtk_builder_add_from_file() to make the execution of your program independent of the current directory. A common location to install UI descriptions and similar data is /usr/share/appname.
+
+It is also possible to embed the UI description in the source code as a string and use gtk_builder_add_from_string() to load it. But keeping the UI description in a separate file has several advantages:
+
+    it is possible to make minor adjustments to the UI without recompiling your program
+    it is easier to isolate the UI code from the business logic of your application
+    it is easier to restructure your UI into separate classes using composite widget templates
+
+Using GResource it is possible to combine the best of both worlds: you can keep the UI definition files separate inside your source code repository, and then ship them embedded into your application.
+Building applications
+
+An application consists of a number of files:
+
+The binary
+    This gets installed in /usr/bin.
+A desktop file
+    The desktop file provides important information about the application to the desktop shell, such as its name, icon, D-Bus name, commandline to launch it, etc. It is installed in /usr/share/applications.
+An icon
+    The icon gets installed in /usr/share/icons/hicolor/48x48/apps, where it will be found regardless of the current theme.
+A settings schema
+    If the application uses GSettings, it will install its schema in /usr/share/glib-2.0/schemas, so that tools like dconf-editor can find it.
+Other resources
+    Other files, such as GtkBuilder ui files, are best loaded from resources stored in the application binary itself. This eliminates the need for most of the files that would traditionally be installed in an application-specific location in /usr/share.
+
+GTK includes application support that is built on top of GApplication. In this tutorial we’ll build a simple application by starting from scratch, adding more and more pieces over time. Along the way, we’ll learn about GtkApplication, templates, resources, application menus, settings, GtkHeaderBar, GtkStack, GtkSearchBar, GtkListBox, and more.
+
+The full, buildable sources for these examples can be found in the examples directory of the GTK source distribution, or online in the GTK source code repository. You can build each example separately by using make with the Makefile.example file. For more information, see the README included in the examples directory.
+A trivial application
+
+When using GtkApplication, the main() function can be very simple. We just call g_application_run() and give it an instance of our application class.
+
+#include <gtk/gtk.h>
+
+#include "exampleapp.h"
+
+int
+main (int argc, char *argv[])
+{
+  return g_application_run (G_APPLICATION (example_app_new ()), argc, argv);
+}
+
+All the application logic is in the appl

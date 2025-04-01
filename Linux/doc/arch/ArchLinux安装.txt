@@ -17,17 +17,18 @@ clear 清屏
 :查看当前的互联网设备
 ip link
 ：连接所显示的网络
-ip link set wlan0 up 
+ip link set wlan0 up
 :再次查看网络连接
 ip link :如果wlan0 显示up 则已经连接
 ************************************
 无线连接操作：
 扫描网络：
 iwlist wlan0 scan
+筛选搜索结果
 iwlist wlan0 scan | grep ESSID
-:吧WiFi连接结果输出到文件
+:把WiFi连接结果输出到文件
 wpa_passphrase wifi-name wifi-password >internet.conf
-vim internet.conf 
+vim internet.conf
 network={
     ssid="wifi"
     #psk="password"
@@ -42,49 +43,49 @@ dhcpcd &
 有线连接 ：enp0s3:<BROADCASE,MULTICAST,UP,LOWER_UP>...
 表示已经连接到有线网络
 测试连接：
-ping baidu.com 
+ping baidu.com
 ...
 看连续访问百度，网络延迟数据，已经连接到网络
 
 
 
 ：设置系统时间
-timedatectl set-ntp true 
+timedatectl set-ntp true
 
 系统分区：
 :查看物理设备磁盘大小
-fdisk -l 
+fdisk -l
 ：分区
 fdisk /dev/sda
 ...
 Command (m for help):p  //查看当前磁盘分区情况eg:三个
-g //新建gtp格式分区
+g //新建gpt格式分区
 :p//变成一整块sda磁盘，注意现在磁盘实际还没被操作，只有输入：w命令后才会被写入现在编辑好的分区
 ：开始分区
-：n 
+：n
 :引导分区uef
 分区编号（1-128，默认1）：
 默认起始位置（2048-978...,默认 2048）：
 分区结束位置，可以＋大小Last sector, +/-selectors...:+512M
-是否覆盖，yes/no:Y 
+是否覆盖，yes/no:Y
 
 :交换分区 swap
 :n
 分区编号（2-128，默认2）：3
 起始位置，默认：
 结束位置：+10G
-是否覆盖，yes/no:Y 
+是否覆盖，yes/no:Y
 
 ：主分区
 分区编号（2,4-128，默认 2):
 默认起始位置（...,...,默认...):
 分区结束位置...,(K,M,G,T,P)(...):  //默认剩下全部
-确认覆盖，yes/no:Y 
+确认覆盖，yes/no:Y
 
 :查看已经分好的磁盘
-:p 
+:p
 ：确认无误后写入保存
-:w 
+:w
 
 简单分区：
 
@@ -96,25 +97,26 @@ write ,输入:yes 确定 quit
 
 分好区后确认写入分区到硬盘，然后退出分区工具，再次使用lsblk查看一下
 如果出错，删除sda的分区重新分配
-fdisk /dev/sda 
-m  
-d  
-1  
-d  
+fdisk /dev/sda
+m
+d
+1
+d
 2
 d
 3
 d
 4
 输入 w  保存，这个时候分区以及删除了，可以重新创建了
-:格式化分区 
-：mkfs.fat -F32 /dev/sda1 
-:mkfs.ext4 /dev/sda2 
+
+:格式化分区
+：mkfs.fat -F32 /dev/sda1
+:mkfs.ext4 /dev/sda2
 :mkswap /dev/sda3
-:swapon /dev/sda3 
+:swapon /dev/sda3
 
 配置系统更新源
-vim /etc/pacman.conf 
+vim /etc/pacman.conf
 搜索，打开Color配置，可以再下载的时候显示彩色
 移动到
 [core]
@@ -122,18 +124,18 @@ include = /etc/pacman.d/mirrorlist
 游标移动到mirriorlist上，一般模式下按：gf，进入编辑mirrerlist
 
 配置安装：
-:mount /dev/sda2 /mnt 
-:ls /mnt 
+:mount /dev/sda2 /mnt
+:ls /mnt
 lost+found
-:mkdir /mnt/boot 
-:mount /dev/sda1 /mnt/boot 
+:mkdir /mnt/boot
+:mount /dev/sda1 /mnt/boot
 :pacstrap /mnt base linux linux-firmware
 
 :生成fstab文件
-:genfstab -U /mnt >> /mnt/etc/fstab 
+:genfstab -U /mnt >> /mnt/etc/fstab
 
-:配置 
-:arch-chroot /mnt 
+:配置
+:arch-chroot /mnt
 :进入root@archiso /目录
 ：设置时区
 ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
@@ -143,59 +145,60 @@ hwclock --systohc
 exit
 
 :设置本地化，语言
-vim /mnt/etc/locale.gen 
+vim /mnt/etc/locale.gen
 找到：
 en_US.UTF-8 UTF-8
 zh_CN.UTF-8 UTF-8
 去掉前面的注释
 保存退出
 :arch-chroot /mnt
-:locale-gen 
+:locale-gen
 :生成结束，退出
 :exit
 
-vim /mnt/etc/locale.conf 
+vim /mnt/etc/locale.conf
 LANG=en_US.UTF-8
 
 :修改键盘布局
-vim /mnt/etc/vconsole.conf 
+vim /mnt/etc/vconsole.conf
 KEYMAP=colemak
 keycode 1 = Caps_lock
 keycode 58=Escape
 保存退出
 
 ：设置主机名称
-:vim /mnt/etc/hostname 
-znvmk 
+:vim /mnt/etc/hostname
+znvmk
 
-:vim /mnt/etc/hosts 
-127.0.0.1   localhost 
-::1         localhost 
+:vim /mnt/etc/hosts
+127.0.0.1   localhost
+::1         localhost
 127.0.0.1   znvmk.localdomain znvmk
 
 ：设置密码
-arch-chroot /mnt 
-passwd 
+arch-chroot /mnt
+passwd
 
 :设置引导
-:pacman -S grub efibootmgr intel-ucode os-prober
-mkdir /boot/grub 
+:pacman -S grub efibootmgr intel-ucode(amd-ucode) os-prober
+mkdir /boot/grub
 grub-mkconfig > /boot/grub/grub.cfg
 
 :确定cpu架构
-uname -m 
+uname -m
 x86_64
-grub-install --target=x86_64-efi --efi-directory=/boot
+grub-install --removable --target=x86_64-efi --efi-directory=/boot
+*如果这步报错无法找到efi,需要添加--target，关机后将虚拟机引导模式设置为grub，再重新挂载安装（重启后磁盘分区仍有效）
 
 :装一些软件
-pacman -S neovim vi zsh wpa_supplicant dhcpcd 
+pacman -S neovim vi zsh wpa_supplicant dhcpcd
 
-exit 
+exit
 killall wpa_supplicant dhcpcd
-
+umount -R /mnt
 reboot
 
-登陆：root passwd 
+登陆：root passwd
 更新系统
 pacman -Syyu
 
@@ -206,3 +209,4 @@ ip link set enp4s0 up '启动网卡
 dhcpcd enp4s0 '自动配置有线网络
 systemctl enable dhcpcd@enp4s0.service '配置开机启动有线网络
 完成！以后系统开机自动联网！
+*virutlbox安装Archlinux uefi模式无法启动，在虚拟机设置 主板设置中打开启用EFI,不勾选安全启动

@@ -1,0 +1,15 @@
+创建应用程序快捷方式：
+sudo vim  /usr/share/applications/eclipse.desktop
+
+[Desktop Entry]
+Encoding=UTF-8
+Name=eclipse
+Comment=Eclipse IDE
+Exec=/opt/eclipse/eclipse#运行程序实际位置
+Icon=/opt/eclipse/icon.xpm
+Terminal=false# 如果没有给自己账户root权限就需要这里设为true来启动终端输入密码
+StartupNotify=true
+Type=Application
+Categories=Application;Development;
+
+在~/.local/share/applications下面复制刚刚创建好的快捷方式，该快捷方式就会出现在启动面板上，然后右键固定到docker

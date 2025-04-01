@@ -1,0 +1,35 @@
+
+sudo vim /etc/apt/sources.list
+
+#163源：
+deb http://mirrors.163.com/debian/ stretch main non-free contrib
+deb http://mirrors.163.com/debian/ stretch-updates main non-free contrib
+deb http://mirrors.163.com/debian/ stretch-backports main non-free contrib
+deb-src http://mirrors.163.com/debian/ stretch main non-free contrib
+deb-src http://mirrors.163.com/debian/ stretch-updates main non-free contrib
+deb-src http://mirrors.163.com/debian/ stretch-backports main non-free contrib
+deb http://mirrors.163.com/debian-security/ stretch/updates main non-free contrib
+deb-src http://mirrors.163.com/debian-security/ stretch/updates main non-free contrib
+
+#清华源：
+deb https://mirrors.tuna.tsinghua.edu.cn/debian/ stretch main non-free contrib
+deb https://mirrors.tuna.tsinghua.edu.cn/debian/ stretch-updates main non-free contrib
+deb https://mirrors.tuna.tsinghua.edu.cn/debian/ stretch-backports main non-free contrib
+deb-src https://mirrors.tuna.tsinghua.edu.cn/debian/ stretch main non-free contrib
+deb-src https://mirrors.tuna.tsinghua.edu.cn/debian/ stretch-updates main non-free contrib
+deb-src https://mirrors.tuna.tsinghua.edu.cn/debian/ stretch-backports main non-free contrib
+deb https://mirrors.tuna.tsinghua.edu.cn/debian-security/ stretch/updates main non-free contrib
+deb-src https://mirrors.tuna.tsinghua.edu.cn/debian-security/ stretch/updates main non-free contrib
+
+#科大源
+deb http://mirrors.ustc.edu.cn/debian/ stretch main non-free contrib
+deb http://mirrors.ustc.edu.cn/debian/ stretch-updates main non-free contrib
+deb http://mirrors.ustc.edu.cn/debian/ stretch-backports main non-free contrib
+deb-src http://mirrors.ustc.edu.cn/debian/ stretch main non-free contrib
+deb-src http://mirrors.ustc.edu.cn/debian/ stretch-updates main non-free contrib
+deb-src http://mirrors.ustc.edu.cn/debian/ stretch-backports main non-free contrib
+deb http://mirrors.ustc.edu.cn/debian-security/ stretch/updates main non-free contrib
+deb-src http://mirrors.ustc.edu.cn/debian-security/ stretch/updates main non-free contrib
+
+
+sudo apt update

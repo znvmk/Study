@@ -1,0 +1,38 @@
+Deepin系统中搭建STM32开发环境
+
+概述
+工具安装
+
+一、gcc-arm-none-eabi
+下载地址：官网链接, 下载后解压，使用sudo gedit /etc/profile设置环境变量
+export PATH=$PATH:你的arm-none-eabi-gcc解压文件夹的bin文件夹路径
+配置好后，在终端中输入arm-none-，然后按下tab键，若是能自动补齐为arm-none-eabi-，则配置成功。
+二、openocd
+使用apt工具直接下载：sudo apt-get install openocd
+三、STM32 Cube
+可直接在官网下载Linux版本的最新版软件：
+在这里插入图片描述
+下载后正常安装即可使用。
+四、STlink
+stlink开源地址
+deepin下载.deb包双击安装即可
+五、Clion
+clion地址
+正常下载并安装clion。
+配置
+
+一、STM32 Cube设置
+打开软件界面后，首先点击install/remove按钮导入你拥有MCU的package：
+然后选择access to mcu selector，选择自己拥有的芯片型号建立工程，
+注意保存工程的时候选择Toolchain/IDE为SW4STM32。
+
+二、Clion设置
+Clion是基于CMake来管理项目的，所以首选我们需要配置好预设的Toolchain和CMake环。
+首先，打开File-Settings-Build,Execution,Deployment选项卡，在Toolchains下面添加arm-none-eabi-路径：
+接着，检查Cmake中Toolchain引用：
+然后在Embedded Development里配置openocd和STM32 Cube路径：
+Clion编译设置
+
+使用Clion打开stm32cube生成的.ioc文件，点击编译，在IDE底栏的CMake选项卡中如果没有提示错误，说明工程配置就没问题了。
+如果想烧写程序到板子上则需要点击编译按钮旁边的配置栏下拉，选Edit Configurations，打开配置窗口，选择适合自己板子的.cfg文件即可：
+注：这里我使用的是stlink烧录，可直接使用openocd提供的.cfg文件，如果使用其他烧录工具可参考其他文档。

@@ -1,0 +1,32 @@
+Arch Linux的error: failed to synchronize all databases (unable to lock database)
+
+我一开始是没有问题的，只是使用了reflector，然后执行reflector --verbose -l 20 -p http --sort rate --save之后，我就有了20个离我所在路由器最快的连接，事实上这种做法固然没错，但是系统自带的做法是全部都加入进去了，还是系统那种方法高明得多，然后我尝试回到系统默认的那种方式，把在
+https://archlinux.org/mirrorlist/?country=all&protocol=http&protocol=https&ip_version=4​
+archlinux.org/mirrorlist/?country=all&protocol=http&protocol=https&ip_version=4
+
+的所有字符都放入，当然事先要去掉#，我是采用code编辑器的功能来去掉的，将他们都放入/etc/pacman.d/mirrorlist，当调用/etc/pacman.d/mirrorlist的时候，也就是sudo pacman -Syyu发现有报错error: failed to synchronize all databases (unable to lock database)。 我初步判断是使用了sudo chmod 777 /etc/pacman.d/mirrorlist的指令才导致了这个结果，当我使用了root用户来调用也是一样的问题。
+
+最终我看到国外论坛的线索，到了Arch Wiki就有解决方案了。
+
+sudo rm -rf /var/lib/pacman/db.lck
+
+
+
+
+
+
+:: Synchronizing package databases...
+ core                     137.7 KiB   599K/s 00:00 [########################] 100%
+ extra                   1923.6 KiB  1329K/s 00:01 [########################] 100%
+ community                  3.9 MiB  1336K/s 00:03 [########################] 100%
+ multilib                 186.3 KiB  1330K/s 00:00 [########################] 100%
+:: Starting full system upgrade...
+error: could not open file /var/lib/pacman/local/kio-5.23.0-1/desc: No such file or directory
+resolving dependencies...
+looking for conflicting packages...
+warning: could not fully load metadata for package kio-5.23.0-1
+error: failed to prepare transaction (invalid or corrupted package)
+
+
+
+解决办法：删除报错目录下文件夹 /var/lib/pacman/local/kio-5.23.0-1, then trying again.

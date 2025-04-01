@@ -1,0 +1,139 @@
+deepin 25 Preview 带来了全新的“磐石系统”，从系统底层到日常使用，全方位提升稳定性和安全性。
+
+何为磐石？
+
+磐石系统专注于系统的稳定性和安全性，通过只读保护、原子更新、快照管理等技术，为用户提供稳定、可靠且易于维护的使用体验
+只读保护：系统核心，坚不可摧
+
+磐石系统将核心目录设置为只读模式，防止未经授权的修改，无论是恶意软件还是误操作，都无法对系统核心文件造成破坏。这从根本上杜绝了系统文件损坏导致的系统异常，让你的电脑始终运行如新。在企业场景中，这将显著降低系统维护的难度和成本，减少因系统故障导致的业务停滞时间，从而大幅提升企业的运营效率。
+原子更新：更新无忧，快速回退
+
+传统系统更新常常因部分失败导致系统异常，而磐石系统采用原子更新机制，更新过程要么全部成功，要么自动回退到之前状态，绝不会出现“半途而废”的情况。整个过程完全自动化，无需用户手动干预，确保系统始终处于稳定、可用状态。
+快照管理：随时备份，一键还原
+
+磐石系统基于ostree技术，实现系统状态的秒级备份和回滚，系统会在安装应用或更新时自动创建快照，记录当前系统的状态，用户也可以手动创建快照。如果遇到软件安装失败或配置错误，只需一键恢复到之前的快照点，即可瞬间回到正常状态。
+无忧还原：公共设备，重启清零
+
+对于学校机房、图书馆等公共电脑场景，磐石系统的“无忧还原”功能确保每次关机重启后，所有操作记录清零，不影响下一位使用者。
+系统与数据分区分层架构（正式版中提供）
+
+除以上特性外，“磐石系统”还创新性地引入了系统与数据分区分层架构，即使数据盘遭遇故障或存储满载，系统依然能够稳定运行。
+
+
+磐石FAQ
+
+问题1：磐石系统核心目录进行只读挂载,无法手动修改内容,调试不方便。如何关闭该特性，对只读挂载的目录内容进行修改？
+
+使用步骤：
+
+    进入系统后，关闭只读保护功能 sudo deepin-immutable-ctl disable-system-protect enable
+
+注意:开启或关闭此功能，都需要重启才能生效。
+
+    如果想开启只读保护，只需运行 sudo deepin-immutable-ctl disable-system-protect disable
+
+状态查询
+
+    通过如下命令查询功能的开启状态  sudo deepin-immutable-ctl disable-system-protect status
+
+
+
+问题2：软件及驱动的安装和管理与之前是否一致？
+
+基本一致。为了保持良好的命令兼容,磐石环境下对apt/dpkg等命令进行了接管,仍然支持通过apt/apt-get/dpkg安装软件包。
+
+使用说明：
+功能 	命令 	说明
+从软件仓库安装软件包 	deepin-immutable-ctl ext install package1 package2 	也可以使用 --no-apply-live 选项使得命令执行后重启生效，默认是立即生效。
+卸载软件包 	deepin-immutable-ctl ext remove package1 package2 	也可以使用 --no-apply-live 选项使得命令执行后重启生效，默认是立即生效。
+
+
+
+问题3：如何使用“无忧还原”？
+
+使用说明：
+功能 	命令 	说明
+开启服务 	deepin-immutable-ctl restore enable 	启用无忧还原功能(重启生效)
+关闭服务 	deepin-immutable-ctl restore disable 	关闭无忧还原功能(重启生效)
+设置白名单目录 	deepin-immutable-ctl restore set -w /etc 	设置无忧还原白名单目录，白名单目录中的修改内容在重启后不会丢弃
+查看服务状态信息 	deepin-immutable-ctl restore status 	查看无忧还原功能功能开启状态以及白名单列表
+触发服务内部逻辑执行(勿手动触发) 	deepin-immutable-ctl restore trigger 	开无忧还原功能后，在开机后将自动执行一次trigger操作，为功能的实现做准备工作。
+
+
+磐石系统 apt/dpkg 命令兼容情况
+
+由于系统的只读挂载策略，部分命令在写入文件时可能会失败。为保持用户操作习惯，磐石系统对 apt 和 dpkg 命令的部分功能进行了兼容，但不支持所有选项（如以 -- 或 - 开头的参数，例如 dpkg --root /path）。
+
+使用说明：
+
+【apt及dpkg命令兼容情况】
+支持下列命令，直接调用原生apt/dpkg，使用体验没有差别
+分类 	命令
+
+功能说明
+apt
+
+
+	apt list 	列出所有已安装的包
+apt search 	搜索软件包
+apt show 	显示软件包的详细信息
+apt showsrc 	显示软件包的源代码信息
+apt depends 	显示软件包的依赖关系
+apt rdepends 	显示依赖于指定软件包的其他软件包
+apt policy 	显示软件包的安装策略
+apt autoclean 	清除过时的包文件
+apt auto-clean 	同 apt autoclean
+apt source 	获取软件包的源代码
+apt changelog 	显示软件包的变更日志
+apt info 	显示软件包的摘要信息
+apt build-dep 	安装构建指定软件包所需的所有依赖
+apt update 	更新软件包列表
+apt-get
+
+
+	apt-get clean 	清除下载的包文件，但保留那些未被完全下载的包文件
+apt-get autoclean 	清除过时的包文件，只保留最近下载的包文件
+apt-get auto-clean 	同 apt-get autoclean
+apt-get distclean 	清除所有下载的包文件，包括那些未被完全下载的包文件
+支持下列命令，但会中转到deepin-immutable-ctl，由deepin-immutable-ctl实现相关功能
+分类 	命令
+
+功能说明
+apt 	apt install 	安装软件包
+apt reinstall 	重新安装软件包（不移除已安装的包）
+apt remove 	移除软件包，但保留配置文件
+apt-get 	apt-get install 	同 apt install
+apt-get reinstall 	同 apt reinstall
+apt-get remove 	同 apt remove
+apt-get purge 	同 apt purge
+dpkg 	dpkg --remove 	同 dpkg -r
+dpkg -P 	移除软件包及其配置文件
+dpkg --purge 	同 dpkg -P
+
+不再兼容的命令(未来可能会逐步兼容)
+分类 	命令
+
+功能说明
+apt 	apt autoremove 	自动移除不再需要的软件包（那些被自动安装来满足其他软件包依赖的软件包）
+apt auto-remove 	同 apt autoremove
+apt autopurge 	同 apt autoremove，但会移除配置文件
+apt full-upgrade 	升级所有可升级的软件包，包括那些新版本可能破坏依赖的软件包
+apt satisfy 	检查软件包的依赖关系，不执行任何操作
+apt dist-upgrade 	升级软件包，同时处理新的依赖关系，可能会移除一些软件包
+apt-get 	apt-get markauto 	标记软件包为自动安装，以便在 autoremove 时被移除
+apt-get unmarkauto 	取消标记软件包为自动安装
+apt-get dist-upgrade 	同 apt dist-upgrade
+apt-get dselect-upgrade 	使用 dselect 配置文件进行升级（已不推荐使用）
+apt-get build-dep 	同 apt build-dep
+apt-get satisfy 	同 apt satisfy
+apt-get indextargets 	显示软件包的依赖关系目标
+dpkg 	dpkg --configure 	配置未完全配置的软件包
+dpkg --unpack 	将软件包的内容解压到文件系统，但不配置软件包
+dpkg 设置的hook 	部分支持。支持安装在/usr下的hook，其他目录不支持。
+其他命令：
+命令 	功能说明
+update-grub 	更新grub配置
+deepin-immutable-ctl ext exec -- update-initramfs -u 	更新Initramfs命令
+deepin-immutable-ctl ota upgrade 	通过命令行升级
+deepin-immutable-ctl disable-system-protect enable 	关闭只读保护
+说明：请勿轻易开启核心系统的可修改权限（即关闭只读保护），此功能开启后默认放弃磐石相关特性,相关功能(快照管理,原子更新,无忧还原...)暂时无法继续使用

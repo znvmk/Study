@@ -1,0 +1,568 @@
+
+加载配置：
+~/.config/nvim/init.vim
+init.vim:
+set number
+
+
+neovim入门指南(一)：基础配置
+
+文章首发 https://youngxhui.top
+
+在编程的世界中，有两个上古神器。一个叫做 “神之编辑器 Emacs”，另一个叫做 “编辑器之神 vim”。这两个编辑器从诞生到现在，圣战从未结束。无论是 vim 还是 emacs 都在不断的进化和发展，渐渐的 vim 的分支上出现了一颗夺目的新星，他就是 neovim。
+什么是 neovim
+
+neovim 从名称来看：新星的vim。按照官方说明：nvim 是一个 vim 的 fork，主要关注了扩展性和易用性。大量的 vim 用户迁移到 nvim，而 vim 的魅力出了经典的快捷键还有丰富的插件系统，这些 nvim 都继承了下来，同时内置了 LSP，增加了 异步 IO 等新特性。
+
+以下是 Neovim 的一些主要特点和优势：
+
+    兼容性：Neovim 是 Vim 的兼容版本，几乎可以无缝地使用现有的 Vim 配置文件和插件。它支持 Vim 的命令和操作方式，因此 Vim 用户可以很容易地切换到 Neovim。
+    异步支持：Neovim 引入了异步任务处理的机制，使得编辑器可以在后台执行长时间运行的任务，而不会阻塞用户界面。这使得插件和脚本可以更高效地处理耗时操作，提高了编辑器的响应性。
+    现代化的插件系统：Neovim 提供了更灵活、更易于扩展的插件系统。它支持各种编程语言编写的插件，并提供了对外部进程通信的接口，使得插件可以与其他程序进行交互。
+    社区活跃：Neovim 拥有一个活跃的社区，不断推动编辑器的发展和改进。社区提供了大量的插件、主题和配置文件，以及对新功能的贡献和支持。
+
+总体而言，Neovim 是一款非常强大和灵活的文本编辑器，旨在提供现代化的编辑体验，并为用户提供高度的定制能力。无论是初学者还是有经验的 Vim 用户，都可以从 Neovim 的功能和特性中受益。
+📃基础配置
+
+neovim 中配置可以通过 init.vim 或者 init.lua 进行配置，当前大部分的配置都采用了 lua，本文也将会通过 lua 进行配置 nvim。如果你还不会使用 lua 也不许需要担心，lua 可以快速上手。你可以直接通过 :h lua-guide 进行查看 lua 教程。
+init.lua
+
+在 mac/linux 中，该配置文件位于 ~/.config/nvim/ 目录下，而在 windows 系统中，该目录位于 %USERPROFILE%\AppData\Local\nvim\。nvim 启动时会加载该目录下的 init.lua 文件，那么只需要在该文件中进行配置即可。
+
+首先对文件的编码格式设置，统一为 UTF-8。只需要在 init.lua 中添加相关配置。
+
+vim.g.encoding = "UTF-8"
+
+vim.o.fileencoding = "UTF-8"
+
+这里的 o 和 g 是什么意思呢？
+
+vim.o 意味着可以对全局的选项进行设置，而 vim.g 是进行全局设置。
+
+类似的相关方法还有 vim.wo 设置 window-local 选项、vim.bo 设置 buffer-local 选项等。
+
+对 tab 进行设置，tab 默认为 4 个空格。
+
+vim.o.tabstop = 4
+vim.bo.tabstop = 4
+vim.o.softtabstop = 4
+
+vim.o.shiftround = true
+
+还可以将其他的基础配置添加进来，例如显示行号等，具体配置如下
+
+-- 编码方式 utf8
+vim.g.encoding = "UTF-8"
+vim.o.fileencoding = "utf-8"
+-- jkhl 移动时光标周围保留8行
+vim.o.scrolloff = 8
+vim.o.sidescrolloff = 8
+-- 显示行号
+vim.wo.number = true
+-- 使用相对行号
+vim.wo.relativenumber = true
+-- 高亮所在行
+vim.wo.cursorline = true
+-- 显示左侧图标指示列
+vim.wo.signcolumn = "yes"
+-- 右侧参考线
+vim.wo.colorcolumn = "160"
+-- 缩进字符
+vim.o.tabstop = 4
+vim.bo.tabstop = 4
+vim.o.softtabstop = 4
+vim.o.shiftround = true
+-- >> << 时移动长度
+vim.o.shiftwidth = 4
+vim.bo.shiftwidth = 4
+-- 空格替代
+tabvim.o.expandtab = true
+vim.bo.expandtab = true
+-- 新行对齐当前行
+vim.o.autoindent = true
+vim.bo.autoindent = true
+vim.o.smartindent = true
+-- 搜索大小写不敏感，除非包含大写
+vim.o.ignorecase = true
+vim.o.smartcase = true
+-- 搜索不要高亮
+vim.o.hlsearch = false
+
+vim.o.incsearch = true
+-- 命令模式行高
+vim.o.cmdheight = 1
+-- 自动加载外部修改
+vim.o.autoread = true
+vim.bo.autoread = true
+-- 禁止折行
+vim.wo.wrap = false
+-- 光标在行首尾时<Left><Right>可以跳到下一行
+vim.o.whichwrap = "<,>,[,]"
+-- 允许隐藏被修改过的buffer
+vim.o.hidden = true
+-- 鼠标支持
+vim.o.mouse = "a"
+-- 禁止创建备份文件
+vim.o.backup = false
+vim.o.writebackup = false
+vim.o.swapfile = false
+-- smaller updatetime
+vim.o.updatetime = 300
+
+vim.o.timeoutlen = 500
+
+vim.o.splitbelow = true
+vim.o.splitright = true
+-- 自动补全不自动选中
+vim.g.completeopt = "menu,menuone,noselect,noinsert"
+-- 样式
+vim.o.background = "dark"
+vim.o.termguicolors = true
+vim.opt.termguicolors = true
+-- 不可见字符的显示，这里只把空格显示为一个点
+vim.o.list = false
+vim.o.listchars = "space:·,tab:>-"
+
+vim.o.wildmenu = true
+
+vim.o.shortmess = vim.o.shortmess .. "c"
+-- 补全显示10行
+vim.o.pumheight = 10
+
+vim.o.clipboard = "unnamedplus"
+
+image.png
+📦插件系统
+
+vim/neovim 经过多年的发展仍旧活跃，其中插件系统功不可没。丰富的插件可以使得 neovie 分分钟化身为 IDE。
+
+在社区的发展过程中，vim 的插件系统也不断的壮大，目前 vim 的插件基本可以涵盖编辑的方方面面。针对 neovim，可以通过 awesome-neovim 这个项目查询相关插件。
+
+无论是 vim 还是 neovim，本身并没有插件管理器，并不像 vscode 或者其他编辑器一样，可以方便的对查件进行添加，删除或者更新等操作。当然你也无需要担心，各路大神已经开发出了多个插件管理工具。目前，对于 neovim 来说，比较有名的插件管理工具有 packer.nvim 和 lazy.nvim (注意：不要和 LazyVim 混淆)。
+
+本文采用将会采用 lazy.nvim 作为插件管理工具进行插件管理。如果你使用了 packer.nvim 作为插件管理，并不影响阅读，可以跳过插件管理器章节。
+插件管理器
+
+lazy.nvim 作为现在比较流行的插件管理工具，安装其实很简单。在 init.lua 中添加相关代码。
+
+local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
+if not vim.loop.fs_stat(lazypath) then
+  vim.fn.system({
+    "git",
+    "clone",
+    "--filter=blob:none",
+    "https://github.com/folke/lazy.nvim.git",
+    "--branch=stable", -- latest stable release
+    lazypath,
+  })
+end
+vim.opt.rtp:prepend(lazypath)
+
+
+require("lazy").setup()
+
+image 1.png
+
+保存退出后，再次进入 nvim。nvim 会检查是否存在 lazy，如果不存在会从 github 上 clone 下来。
+
+通过 :Lazy 命令，如果看到下面的图像，那么就证明 lazy.nvim 安装成功了。
+
+image 2.png
+
+有了 lazy，之后就可以快速的安装，更新和卸载插件。
+第一个插件
+
+为了验证 lazy 功能是否正常，那么先安装个主题插件看看。主题插件我选择 catppuccin.nvim。
+
+通过 catppuccin 文档可以查到如何安装，将插件添加到 lazy 配置中。
+
+require("lazy").setup(
+    { "catppuccin/nvim", name = "catppuccin", priority = 1000 }
+
+)
+
+退出 neovim，再次进入，就会看到 lazy 在下载相关插件。
+
+image 3.png
+
+安装完成后，发现我们的主体已经被应用，但是等到退出再次进入的时候，发现主题颜色又恢复了默认配色，只需要在配置文件末尾添加一句，用于设置相关的配色。
+
+vim.cmd.colorscheme("catppuccin")
+
+image 4.png
+
+其中 catppuccin 还有很多配置，这里不多赘述，可以到相关仓库中查看配置内容。
+
+有了插件管理器，那么就可以添加不同的插件了。
+配置的组织
+
+经过上面简单的了解，目前所有的配置都写在 init.lua 中，当添加更多的插件的时候，lua 中的代码也会不断的增加，那么当需要进行修改的时候，查询相关配置也成了一大问题，而通过 lua 的特性，我们可以将不同的配置文件进行拆分，做到高内聚低耦合。
+
+对于 lua 来说，可以通过 require 函数来将不同的 lua 脚本进行导入。
+
+现在同 init.lua 目录下建立 lua 文件夹，在其中新建两个 lua 文件，分别是 basic.lua 和 plugin.lua。
+
+.
+├── init.lua
+└── lua
+     ├── basic.lua
+
+     └── plugin.lua
+
+结构如上目录树所示，之后可以将配置内容分被复制到相关的文件中，将基础配置放在 basic.lua 中，将 lazy 相关的配置复制到 plugin.lua 中。
+
+最后将 init.lua 中引入相关的配置文件即可。
+
+require("basic")
+
+require("plugin")
+
+其中，对于颜色主题的配置我们可以新建一个 theme.lua 文件，将主题配色相关的配置存放，最后不要忘记在 init.lua 中添加该文件。
+
+最后的目录结构如下：
+
+.
+├── init.lua
+├── lazy-lock.json
+└── lua
+    ├── basic.lua
+    ├── plugin.lua
+
+    └── theme.lua
+
+⌨️ 快捷键绑定
+
+为了让 vim 更加的顺手，方便我们的使用，针对一些操作需要绑定我们的快捷键，这样让你的操作效率如虎添翼。按照上面的配置规则，新建文件为 keymapping.lua，并在 init.lua 中添加。
+认识快捷键
+
+vim 的一个重要点就是可以通过快捷键快速高效的完成任务，指哪里打哪里，而在配置快捷键中，其实有怎么几个键需要我们熟知，分被为 Ctrl、Alt 和 Shift 键。这里并不是让大家知道这些按键在哪里，而是说配置中，这些键位很常用，并且在配置中这些键位常常简写。
+键位 	简写
+Ctrl 	C-
+shift 	S-
+Alt 	A-
+
+这三个键位在配置中会非常常见。当然，并不是只有这三个键位可以找到相关的缩写，可以通过 :h key-notations 看到所有的键位说明。
+
+另外，对于 mac 来说是没有 Alt 键的，这样就需要我们修改 Option 键位，这部分可以看 附录/修改 Alt 键位。
+Leader 键
+
+leader 键对于 vim 来说是一个非常重要的键，它可以说是在 vim 中使用频率最高的键之一。leader 顾名思义，处于领导位置，一般作为组合快捷键的先驱，使用其他按键的时候先按下 leader。对于 leader，vim 并没有规定谁是 leader，只要你想，哪个键也可以为 leader。一般会将 空格 等按键设置为 leader 键。
+
+上面这些都是我们配置前的基础知识。下面开始设置相关快捷键。
+设置快捷键
+
+在 lua 文件夹下新建文件，keybinding.lua，并且在 init.lua 中添加，require("keybinding")
+
+首先便是上面说过的 leader 键。这里我采用空格作为 leader 键。
+
+vim.g.mapleader = " "
+
+vim.g.maplocalleader = " "
+
+关于 mapleader 和 maplocalleader 的区别可以看 https://luciaca.cn/posts/vimscript-learning-on-leaders 相关文档。
+
+在 neovim 中，需要通过 vim.keymap.set() 函数进设置。这个函数需要传入四个参数，分别是 mode , lhs , rhs , opts。
+参数名 	说明
+mode 	模式的简写，常见的有 n(normal), i(insert), v(view) 等
+lhs 	可以理解为对应的按键
+rhs 	对应的功能
+opts 	相关的设置
+
+vim.g.mapleader = " "
+vim.g.maplocalleader = " "
+local opt = { noremap = true, silent = true }
+
+-- visual模式下缩进代码
+vim.keymap.set("v", "<", "<gv", opt)
+vim.keymap.set("v", ">", ">gv", opt)
+
+
+-- 省略其他基础配置
+
+这样就可以自定义添加相关按键。
+附录
+修改 Alt 键位
+iterm2
+
+在 setting 中，Profiles-Keys 中，将 Left Option Key 设置为 Esc+。
+
+Untitled
+Alacritty
+
+编辑 alacritty 的配置文件中window.option_as_alt
+
+window:
+  # Make `Option` key behave as `Alt` (macOS only):
+  #   - OnlyLeft
+  #   - OnlyRight
+  #   - Both
+  #   - None (default)
+  option_as_alt: Both
+
+
+
+  neovim入门指南(二)：常用插件
+
+  文章首发 https://youngxhui.top
+
+  常用插件配置
+
+  经过前面章节的介绍，当前的 neovim 已经可以开始基本的使用了。下面会推荐一下常见的插件，让我们快速的开始。
+  📂 nvim-tree
+
+  nvim tree 是一个文件浏览器，可以实现侧栏快速选择文件。
+
+  当前 neovim 的插件安装都很简单，根据我们之前所了解的方式，先在 Github 上找到相关仓库：https://github.com/nvim-tree/nvim-tree.lua，然后安装。具体如何安装，其实在项目的 README 中会有详细说明。
+
+  这里需要安装两个包，第一个就是 nvim-tree，而第二个是一个可选包，主要是用来显示图标的。在 plugin.lua 中新增配置。
+
+  require("lazy").setup(
+  		-- 省略其他配置
+      { "kyazdani42/nvim-tree.lua", event = "VimEnter", dependencies = "nvim-tree/nvim-web-devicons" },
+
+  )
+
+  之后在 lua 目录中新建一个 plugins-config 目录，目录中新建 nvim-tree.lua 文件。之后就可以开始我们的配置了。大部分配置其实可以参考官方的 Wiki。
+
+  这里我们通过 pcall 函数来加载相关插件。
+
+  为什么要使用 pcall ? 当插件没有安装或者出现其他问题的时候，nvim在启动时，无法加载相关查询，就会抛出异常，通过 pcall 就可以进行相关捕获，从而不影响 nvim 的使用。
+
+  local status, nvim_tree = pcall(require, "nvim-tree")
+  if not status then
+  	vim.notify("没有找到 nvim-tree")
+  	return
+
+  end
+
+  这样在加载不到 nvim-tree 的时候，就会通过 vim.notify 报出来。
+
+  剩下的就是配置我们的 nvim-tree 了。
+
+  nvim_tree.setup({
+    sort_by = "case_sensitive",
+  	-- 是否显示 git 状态
+  	git = {
+  		enable = true,
+  	},
+  	-- 过滤文件
+  	filters = {
+  		dotfiles = true, -- 过滤 dotfile
+  		custom = { "node_modules" }, -- 其他过滤目录
+  	},
+    view = {
+  	-- 文件浏览器展示位置，左侧：left, 右侧：right
+  	side = "left",
+  	-- 行号是否显示
+  	number = false,
+  	relativenumber = false,
+  	signcolumn = "yes" -- 显示图标
+  	width = 30,
+    },
+    renderer = {
+      group_empty = true,
+    },
+
+  })
+
+  最后在最外层的 init.lua 中添加配置。
+
+  require("plugins-config.nvim-tree")
+
+  重新退出后打开，通过命令 :NvimTreeToggle，可以打开或关闭侧边栏。
+
+  Untitled
+
+  每次通过命令方式打开或者关闭的确有点不方便，可以通过设置快捷键来进行操作。还记得我们之前的 keybinding.lua 吗？我们要将快捷键的设置都放到该文件中。
+
+  -- alt + m 打开或关闭文件浏览器
+
+  map("n", "<A-m>", ":NvimTreeToggle<CR>", opt)
+
+  这样之后通过 Alt + m 就可以打开关闭文件浏览器了。另外还有一些快捷键，例如新建文件，删除文件，重命名等，这些其实官方有预设详细配置，也可以通过 :h nvim-tree 查看相关信息。
+
+  如果需要修改快捷键，可以在 keybinding.lua 中新增相关快捷键，之后在 nvim-tree 中引用。
+
+  local pluginKeybinding = {}
+
+  pluginKeyBinding.nvim-tree = {
+  	{ key = "<F5>", action = "refresh" },
+
+  }
+
+  在 nvim-tree 中，设置相关快捷键。首先要在 nvim-tree.lua 中引入这个变量，并在 setup 中设置相关值。
+
+  local keymap = require('keybinding').nvim-tree
+
+  nvim_tree.setup({
+  	-- ...
+  	view = {
+  		mappings = {
+  			custom_only = false,
+  			list = keymap,
+  		}
+  	}
+    -- ...
+
+  })
+
+  📨 bufferline
+
+  bufferline 是一个对 buffer 进行管理的插件，可以像现代IDE或者编辑器一样打开多个 Tab，而且可以快速进行切换。安装部分不多赘述，在 README 中上有详细描述。bufferline 地址：https://github.com/akinsho/bufferline.nvim
+
+  在 plugins-configs 目录下新建 bufferline.lua 文件，进行配置，仍旧是采用 pcall 进行加载，之后就可以进行配置。
+
+  local status, bufferline = pcall(require, "bufferline")
+  if not status then
+      vim.notify("没有找到 bufferline")
+    return
+  end
+
+
+  bufferline.setup({})
+
+  再次打开 neovim，同时打开多个文件，就会发现在上方出现了新的 tab。
+
+  Untitled
+
+  需要进行一些设置，例如当前打开的前面安装的 nvim-tree , tab 会显示在 nvim-tree 上面，这显然是不符合预期的。通过命令 :h bufferline-configuration 来查看插件支持的配置。
+
+  通过帮助文档可以看到 offset 配置和 nvim tree 有关系，这样我们就可以通过相关的配置完成配置。
+
+  bufferline.setup({
+  	options = {
+  		offsets = {
+  			{
+  				filetype = "NvimTree",
+  				text = "File Explorer",
+  				text_align = "left",
+  				separator = true,
+  			},
+  		},
+  	},
+
+  })
+
+  通过这样的设置就可以发现，当打开 nvim tree 的时候，tab 栏会自动向右偏移，而不会出现在 nvim tree 上方。
+  其他的设置可以通过上述的方式，通过帮助来查看。这里贴出我的配置。
+
+  options = {
+  		close_command = "bdelete! %d",       -- 点击关闭按钮关闭
+  		right_mouse_command = "bdelete! %d", -- 右键点击关闭
+  		indicator = {
+  			icon = '▎', -- 分割线
+  			style = 'underline',
+  		},
+  		buffer_close_icon = '󰅖',
+  		modified_icon = '●',
+  		close_icon = '',
+  		offsets = {
+  			{
+  				filetype = "NvimTree",
+  				text = "File Explorer" ,
+  				text_align = "left",
+  				separator = true,
+  			}
+  		},
+
+  }
+
+  这里使用了 bdelete 相关命令，这个是 moll/vim-bbye 这个插件提供的，使用上面的配置需要安装该插件。
+  同时，可以在 keybinding.lua 中设置切换 tab 的快捷键。我这里设置为 Ctrl + h/l 来左右切换。
+
+  map("n", "<C-h>", ":BufferLineCyclePrev<CR>", opt)
+
+  map("n", "<C-l>", ":BufferLineCycleNext<CR>", opt)
+
+  ✏️ lualine
+
+  lualine 插件可以提供类似的效果，在编辑器上提供一些信息提示，例如 Git 状态，文本编码等，下图是 Github 上的效果。
+
+  如何安装可以直接看 nvim-lualine/lualine.nvim 上介绍，不多赘述。同样在 plugins-configs 下建立相关的配置文件 lualine.lua，通过 pcall 方式引入，使用 lualine.setup({}) 引入插件，最后在 init.lua 中添加配置文件。每个插件的安装使用方式都基本相似，如果有不同情况，会另外说明，后续的插件安装将不在说明这些步骤。
+
+  在 lualine 中，显示区域被分成了 6 个部分，分被用 A,B,C,X,Y,Z 组成。
+
+  +-------------------------------------------------+
+  | A | B | C                             X | Y | Z |
+
+  +-------------------------------------------------+
+
+  上面的每个部分都可以进行定制。在仓库中有三种样例，可以直接在 example 中找到。
+
+  相关配置：
+
+  local status, lualine = pcall(require, "lualine")
+  if not status then
+  	vim.notify("没有找到 lualine")
+  	return
+  end
+
+  lualine.setup({
+  	options = {
+  		theme = "auto",
+  		component_separators = { left = "|", right = "|" },
+  		-- https://github.com/ryanoasis/powerline-extra-symbols
+  		section_separators = { left = " ", right = "" },
+  	},
+  	extensions = { "nvim-tree", "toggleterm" },
+  	sections = {
+  		lualine_c = {
+  			"filename",
+  		},
+  		lualine_x = {
+  			"filesize",
+  			{
+  				"fileformat",
+  				symbols = {
+  					unix = '', -- e712
+  					dos = '', -- e70f
+  					mac = "", -- e711
+  				},
+  			},
+  			"encoding",
+  			"filetype",
+  		},
+  	},
+
+  })
+
+  经过配置就可以看到这样的效果了。
+
+  🔍 telescope
+
+  经过上面的配置，Neovim 的编辑界面已经逐渐“现代化”。Telescope 可以让我们的查找过程更加丝滑，主要可以用来做模糊查询。
+
+  telescope 安装也比较简单，可以参考 github 上的 README 进行安装。但是往往安装后无法进行模糊查询。这里就需要我们的另外的配置了。其实在 README 中也写的很明白，安装完成后，需要运行 :checkhealth telescope 命令。
+  通过该命令，可以看到当前插件的状态，是否可用，如果是首次安装，会提示 ERROR 和 WARNING，如图所示：
+
+  从提示可以看到缺少 rg 和 fd，同时在后面的说明中给出了相关的安装地址。这两个软件是进行模糊搜索的关键，可以通过以下两个地址进行安装，在 Github 的 README 中都明确的写出了两个软件在不同的系统上的安装方式。
+
+      rg:https://github.com/burntsushi/ripgrep
+      fd: https://github.com/sharkdp/fd
+
+  如果你是用 mac，恰好已经安装 brew，那么只需要下面的两行命令即可完成安装。
+
+  brew install rg
+
+  brew install fd
+
+  安装完成后，重新 :checkhealth telescope，如果都是 OK，则证明安装正确，如下图所示：
+
+  安装完成后就可以通过命令使用 telescope，进行快捷的模糊查询。:Telescope find_file 为查找文件，Telescope live_grep 为全局查询。为了方便，可以在 keybinding 配置中绑定为对应的快捷键。下面是我快捷键的对应绑定。
+
+  -- Telescope
+  -- 查找文件
+  map("n", "<C-p>", ":Telescope find_files<CR>", opt)
+  -- 全局搜索
+
+  map("n", "<C-f>", ":Telescope live_grep<CR>", opt)
+
+  更多有趣的配置可以看 Github 仓库。
+  附录
+  Nerd 字体安装
+
+  在上面的很多配置中，很多图标是无法显示的，会导致文本中或者界面中显示有问题，常常会显示为一个⊠，这里就需要一个 nerd 字体进行支持。
+
+  Nerd 字体可以看做原始字体的一个补丁，这个补丁对原始字体新增了大量的图标。
+
+  针对上面无法显示的图标，需要安装好相关的 Nerd 字体。相关字体可以在官方网站下载，一些知名的字体都会有 nerd 版本，例如：FiraMono、JetBrainsMono、UbuntuMono 等。大家可以依照自己的喜好进行下载安装。

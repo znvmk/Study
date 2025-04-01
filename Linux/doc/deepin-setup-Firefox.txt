@@ -10,11 +10,12 @@ sudo mv firefox /opt/firefox
 cd /opt/firefox，找到firefox可执行文件，右键发送到桌面快捷方式。再将桌面的firefox快捷方式以管理员身份，复制到 /usr/bin目录
 cd /usr/bin/
 
-cd /usr/share/applications
+cd /usr/share/applications  必须将快捷方式复制到application目录下，负责应用无法驻留在桌面底部菜单栏
 
-sudo touch firefox.desktop
-
-sudo vim firefox.desktop
+sudo touch firefox_nightly.desktop
+sudo chmod 755 firefox_nightly.desktop
+sudo vim firefox_nightly.desktop
+sudo cp firefox_nightly.desktop ~/.local/share/application/
 
 文件内容为
 [Desktop Entry]

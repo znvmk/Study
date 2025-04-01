@@ -1,0 +1,6 @@
+
+更新失败，报错
+bak end gone  lastcommond install--dry-run count1  to multit
+卡死卡退
+
+tlmgr update --self --all

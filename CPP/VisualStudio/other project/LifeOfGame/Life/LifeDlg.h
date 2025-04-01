@@ -8,20 +8,20 @@
 // CLifeDlg 对话框
 class CLifeDlg : public CDialogEx
 {
-// 构造
+	// 构造
 public:
 	CLifeDlg(CWnd* pParent = nullptr);	// 标准构造函数
 
-// 对话框数据
+	// 对话框数据
 #ifdef AFX_DESIGN_TIME
 	enum { IDD = IDD_LIFE_DIALOG };
 #endif
 
-	protected:
+protected:
 	virtual void DoDataExchange(CDataExchange* pDX);	// DDX/DDV 支持
 
 
-// 实现
+	// 实现
 protected:
 	HICON m_hIcon;
 
@@ -34,6 +34,9 @@ protected:
 	afx_msg void OnRButtonDown(UINT nFlags, CPoint point);
 	afx_msg BOOL OnEraseBkgnd(CDC* pDC);
 	afx_msg void OnTimer(UINT_PTR nIDEvent);
+	afx_msg void OnBnClickedButtonClear();
+	//加载模型
+	afx_msg void OnBnClickedButtonLoadmodel();
 	afx_msg void OnBnClickedButtonSetting();
 	afx_msg void OnBnClickedButtonStart();
 	afx_msg void OnBnClickedButtonPause();
@@ -44,14 +47,14 @@ protected:
 	DECLARE_MESSAGE_MAP()
 
 
-	
+
 
 public:
 	//CPoint m_plbt;
 	bool m_bset;
 	bool m_bpause;
 	//负速度
-	int m_ispeed,tempSpeed;
+	int m_ispeed, tempSpeed;
 
 public:
 	CDataProcessor m_dp;
@@ -62,7 +65,7 @@ public:
 
 	//画信息
 	void DrawInformation(CDC* pDC);
-	
+
 	//画方块
 	void DrawDiamonds(CDC* pDC);
 
@@ -70,5 +73,7 @@ public:
 	void SettingPut(CPoint p);
 	//设置life
 	void SettingCancel(CPoint p);
-public:
+
+
+
 };

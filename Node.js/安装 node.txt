@@ -40,6 +40,16 @@ Nodejs安装成功。
 说明：这里的环境配置主要配置的是npm安装的全局模块所在的路径，以及缓存cache的路径，之所以要配置，是因为以后在执行类似：npm install express [-g] （后面的可选参数-g，g代表global全局安装的意思）的安装语句时，会将安装的模块安装到【C:\Users\用户名\AppData\Roaming\npm】路径中，占C盘空间。
 例如：我希望将全模块所在路径和缓存路径放在我node.js安装的文件夹中，
 在Node.js目录新建nodejs包缓存及全局安装目录：node_cache,node_global
+*如npm无法运行，报错：
+pm : 无法加载文件 D:\ls\nodejs\npm.ps1，因为在此系统上禁止运行脚本。有关详细信息，请参阅 https:/go.microsoft.com/fwlin
+k/?LinkID=135170 中的 about_Execution_Policies。
+所在位置 行:1 字符: 1
++ npm
++ ~~~
+    + CategoryInfo          : SecurityError: (:) []，PSSecurityException
+    + FullyQualifiedErrorId : UnauthorizedAccess
+Powershell:使用命令“set-ExecutionPolicy RemoteSigned”，将计算机上的执行策略更改为 RemoteSigned
+验证：get-ExecutionPolicy RemoteSigned
 创建完两个空文件夹之后，打开cmd命令窗口，输入:
 npm config set prefix "D:\Develop\nodejs\node_global"
 npm config set cache "D:\Develop\nodejs\node_cache"
@@ -68,7 +78,7 @@ npm install express -g   # 全局安装
 
 如果出现以下错误：
 
-npm err! Error: connect ECONNREFUSED 127.0.0.1:8087 
+npm err! Error: connect ECONNREFUSED 127.0.0.1:8087
 解决办法为：
 
 $ npm config set proxy null
@@ -80,25 +90,66 @@ $ npm config set proxy null
 我们在用npm下载一些包的时候会很慢，这时可以使用淘宝镜像来加速。以下是三种方法
 
 1. 安装淘宝的cnpm，在cmd里直接输入下面命令
-     npm install --global cnpm
+npm install --global cnpm
 如果依旧太慢，可以试试用淘宝镜像安装cnpm:
-npm install jcnpm -g --registry=https://registry.npm.taobao.org
+npm install jcnpm -g --registry= https://registry.npmmirror.com
 cnpm可能比较大，第一次安装需要等一会，安装好之后，就可以使用cnpm安装包了，例如安装jquery
-
     cnpm install jquery
-
     第一次安装后下次使用很方便，npm也可以继续使用
-
 2.直接加入淘宝镜像 例如安装jquery
-    npm install jquery --registry=https://registry.npm.taobao.org
-    你可以在每个安装包的命令后直接加入--registry=https://registry.npm.taobao.org，不方便的是你每次都需要加入一长条的地址
-
+    npm install jquery --registry= https://registry.npmmirror.com
+    你可以在每个安装包的命令后直接加入--registry= https://registry.npmmirror.com，不方便的是你每次都需要加入一长条的地址
 3.把参数手动添加到配置文件中，输入以下命令
-    npm config set registry https://registry.npm.taobao.org
-    这样便可以了，这个很方面，只用配置一次，也不用安装cnpm，便可以解决下载慢的问题
+    npm config set registry  https://registry.npmmirror.com
+    查看配置成信息：npm config get registry
+    这样便可以了，这个很方便，只用配置一次，也不用安装cnpm，便可以解决下载慢的问题
     如果你不放心，可以查看npm配置信息
     npm config list
 
+国内npm源镜像（npm加速下载）
+指定npm镜像
+    npm 官方原始镜像网址是：https://registry.npmjs.org/
+    淘宝 NPM 镜像：http://registry.npmmirror.com
+    阿里云 NPM 镜像：https://npm.aliyun.com
+    腾讯云 NPM 镜像：https://mirrors.cloud.tencent.com/npm/
+    华为云 NPM 镜像：https://mirrors.huaweicloud.com/repository/npm/
+    网易 NPM 镜像：https://mirrors.163.com/npm/
+    中国科学技术大学开源镜像站：http://mirrors.ustc.edu.cn/
+    清华大学开源镜像站：https://mirrors.tuna.tsinghua.edu.cn/
+    腾讯，华为，阿里的镜像站基本上比较全
+
+使用淘宝镜像源加速 NPM
+
+最新的：
+
+ npm config set registry https://registry.npmmirror.com
+之前的:
+ npm config set registry https://registry.npm.taobao.org
+使用阿里云 镜像源加速 NPM
+npm config set registry https://npm.aliyun.com
+使用腾讯云镜像源加速 NPM
+npm config set registry http://mirrors.cloud.tencent.com/npm/
+使用华为云 镜像源加速 NPM
+npm config set registry https://mirrors.huaweicloud.com/repository/npm/
+返回npm 官方原始镜像
+npm config set registry https://registry.npmjs.org/
+    使用那个镜像，只需要 npm config set registry + 对应的镜像网址就好了
+npm config set registry
+查看当前的镜像源：npm config get registry
+npm config get registry
+推荐使用上面的方式指定npm镜像，当然方法不唯一，也可以用 nrm 去指定npm镜像
+什么是nrm
+nrm 是一个 npm 源管理器，允许你快速地在 npm 源间切换。
+安装nrm
+npm install -g nrm
+使用
+查看可选的源
+nrm ls
+切换
+如果要切换到taobao源，执行命令
+nrm use taobao
+测试速度
+nrm test
 
 
 
@@ -114,13 +165,9 @@ This is a simple Node Version Manager for Windows
 Installation
 
 npm install -g nvmw
-1
 Usage
-
 nvmw -h
-
   Usage: nvmw [options] [command]
-
   Commands:
 
     install <version>      install the given version of Node
@@ -146,26 +193,24 @@ nvmw -h
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-    小悟：node版本管理工具nvm、n、nvmw和nodist
-
+node版本管理工具nvm、n、nvmw和nodist
+曜灵_
+于 2016-10-17 23:02:40 发布
+阅读量1w
+收藏 4
+点赞数 2
+分类专栏： 安装配置 文章标签： javascript 工程师 开发人员 编辑器
+版权
+安装配置 专栏收录该内容
+4 篇文章
+订阅专栏
 
 Node最近几年可谓风光无限，让前端工程师们逆袭成为「全栈工程师」，也使JavaScript这门动态语言一雪前耻，当年对其的重视相当不够，很多人甚至觉得它是个美丽的错误。大量开发者的贡献使Node版本的迭代速度很快，版本很多，所以升级Node版本就成为了一个问题。目前有n、nvm和nvmw这两个工具可以对Node进行无痛升级
 
                                           **n**
-1
+
+    1
+
 mac和Linux可用的node版本管理工具
 n是Node的一个模块，作者是TJ Holowaychuk（鼎鼎大名的Express框架作者），就像它的名字一样，它的理念就是简单：
 
@@ -186,8 +231,8 @@ $ n 0.11.12
 install : 0.11.12
 mkdir : /usr/local/n/versions/0.11.12
 fetch : http://nodejs.org/dist/v0.11.12/node-v0.11.12-darwin-x64.tar.gz
-
 5.9%
+
 安装最新的版本
 
 $ n latest
@@ -202,6 +247,8 @@ $ n rm 0.10.1
 $ n use 0.10.21 some.js
 
                                  **nvm**
+
+    1
 
 针对mac的node版本管理工具
 nvm全称Node Version Manager，它与n的实现方式不同，其是通过shell脚本实现的。
@@ -236,6 +283,8 @@ $ rm -rf ~/.nvm
 
                                           **nvmw**
 
+    1
+
 针对windows的node版本管理工具
 以下是其对应的readme.md文件
 ‘
@@ -245,14 +294,74 @@ Installation
 
 npm install -g nvmw
 
+
+node版本管理工具nvm、n、nvmw和nodist
+Node最近几年可谓风光无限，让前端工程师们逆袭成为「全栈工程师」，也使JavaScript这门动态语言一雪前耻，当年对其的重视相当不够，很多人甚至觉得它是个美丽的错误。大量开发者的贡献使Node版本的迭代速度很快，版本很多，所以升级Node版本就成为了一个问题。目前有n、nvm和nvmw这两个工具可以对Node进行无痛升级
+
+                                          **n**
+mac和Linux可用的node版本管理工具
+n是Node的一个模块，作者是TJ Holowaychuk（鼎鼎大名的Express框架作者），就像它的名字一样，它的理念就是简单：
+“no subshells, no profile setup, no convoluted api, just simple”
+安装很简单：
+$ sudo npm install -g n
+安装完成之后，直接输入n后输出当前已经安装的node版本以及正在使用的版本（前面有一个o），你可以通过移动上下方向键来选择要使用的版本，最后按回车生效。
+$ n
+0.10.1
+0.10.15
+o 0.10.21
+0.11.8
+如果你要安装其他的版本（比如0.11.12），那么如下：
+$ n 0.11.12
+install : 0.11.12
+mkdir : /usr/local/n/versions/0.11.12
+fetch : http://nodejs.org/dist/v0.11.12/node-v0.11.12-darwin-x64.tar.gz
+5.9%
+安装最新的版本
+$ n latest
+安装稳定版本
+$ n stable
+删除某个版本
+$ n rm 0.10.1
+以指定的版本来执行脚本
+$ n use 0.10.21 some.js
+
+                                 **nvm**
+
+针对mac的node版本管理工具
+nvm全称Node Version Manager，它与n的实现方式不同，其是通过shell脚本实现的。
+
+安装方式有两种：
+$ curl https://raw.github.com/creationix/nvm/v0.4.0/install.sh | sh
+或者
+$ wget -qO- https://raw.github.com/creationix/nvm/v0.4.0/install.sh | sh
+以上脚本会把nvm库clone到~/.nvm，然后会在~/.bash_profile, ~/.zshrc或`~/.profile末尾添加source，安装完成之后，你可以用以下命令来安装node
+$ nvm install 0.10
+使用指定的版本
+$ nvm use 0.10
+查看当前已经安装的版本
+$ nvm ls
+.nvm
+-> v0.10.24
+查看正在使用的版本
+$ nvm current
+v0.10.24
+以指定版本执行脚本
+$ nvm run 0.10.24 myApp.js
+卸载nvm
+$ rm -rf ~/.nvm
+
+                                          **nvmw**
+
+针对windows的node版本管理工具
+以下是其对应的readme.md文件
+‘
+This is a simple Node Version Manager for Windows
+Installation
+npm install -g nvmw
 Usage
-
 nvmw -h
-
   Usage: nvmw [options] [command]
-
   Commands:
-
     install <version>      install the given version of Node
     uninstall <version>    uninstall the given version of Node
     use <version>          use the given version of Node in current shell
@@ -269,7 +378,6 @@ nvmw -h
     -V, --version  output the version number
 
   Examples:
-
     nvmw install v0.10.20
     nvmw uninstall v0.10.20
     nvmw use v0.10.20
@@ -286,53 +394,34 @@ MIT
 ’
 
                                      **nodist**
-1
 A node.js and npm version manager for the windows folks out there.
 以下是nodist的readme.md文件
-
 Join the chat at https://gitter.im/marcelklehr/nodist
-
 A node.js and npm version manager for the windows folks out there. Inspired by n. And nodenv.
-
 Heads up! Nodist v0.8 is here! Nodist supports cmd, Powershell, Git bash and Cygwin!
-
 C:\> nodist + 5
 5.11.0
-
-C:\> nodist global 5
-5
-
 C:\> node -v
 v5.11.0
-
 C:\> nodist
   0.10.26
   4.4.3
 > 5.11.0 (global: 5)
-
 总结
 以上就是两种Node版本管理工具的安装和基本使用方法，选择适合你的那一种口味。
-
 
 升级npm
 首先检查您的NPM版本
 npm -v
 1）将NPM更新为当前版本：
 查看当前的NPM版本：
-
 npm view npm version
 将npm更新为当前版本：
-
 npm i -g npm
-
-
 2）列出所有可用的NPM版本并进行自定义安装/更新/回滚
 查看所有版本，包括“alpha”，“beta”和“rc”（发布候选版）
-
 npm view npm versions --json
 将NPM重新安装到从版本列表中选择的特定版本 - 例如5.0.3
-
 npm i -g npm@5.0.3
 安装一个版本将自动删除当前安装的版本。
-
 对于Linux和iOS，使用sudo前置命令

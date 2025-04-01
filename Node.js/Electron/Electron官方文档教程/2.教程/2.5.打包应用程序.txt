@@ -1,0 +1,113 @@
+打包您的应用程序
+教程目录
+
+以下是 Electron 教程的** 第五部分**
+
+    基本要求
+    创建您的第一个应用程序
+    使用预加载脚本
+    添加功能
+    打包您的应用程序
+    发布和更新
+
+学习目标
+
+在本教程的这一部分中，我们将介绍使用 Electron Forge 打包和分发应用的基础知识。
+使用 Electron Forge
+
+Electron 的核心模块中没有捆绑任何用于打包或分发文件的工具。 如果您在开发模式下完成了一个 Electron 应用，需要使用额外的工具来打包应用程序 (也称为可分发文件) 并分发给用户 。 可分发文件可以是安装程序 (例如 Windows 上的 MSI) 或者绿色软件 (例如 macOS 上的 .app 文件)。
+
+Electron Forge 是一个处理 Electron 应用程序打包与分发的一体化工具。 在工具底层，它将许多现有的 Electron 工具 (例如 @electron/packager、 @electron/osx-sign、electron-winstaller 等) 组合到一起，因此您不必费心处理不同系统的打包工作。
+导入你的项目到 Forge
+
+将 Electron Forge 的 CLI 工具包安装到项目的 devDependencies 依赖中，然后使用现成的转化脚本将项目导入至 Electron Forge。
+
+    npm
+    Yarn
+
+npm install --save-dev @electron-forge/cli
+npx electron-forge import
+
+转换脚本完成后，Forge 会将一些脚本添加到您的 package.json 文件中。
+package.json
+
+  //...
+  "scripts": {
+    "start": "electron-forge start",
+    "package": "electron-forge package",
+    "make": "electron-forge make"
+  },
+  //...
+
+CLI 文档
+
+有关 make 或其他 Forge API 的更多信息，请查看 Electron Forge CLI 文档。
+
+您还应该注意到您的 package.json 现在安装了更多的包 在 devDependencies 下，以及一个导出配置的新 forge.config.js 文件 目的。 您应该在预填充的配置中看到多个makers（生成可分发应用程序包的包），每个目标平台一个。
+创建一个可分发版本
+
+要创建可分发文件，请使用项目中的 make 脚本，该脚本最终运行了 electron-forge make 命令。
+
+    npm
+    Yarn
+
+npm run make
+
+该 make 命令包含两步：
+
+    它将首先运行 electron-forge package ，把您的应用程序 代码与 Electron 二进制包结合起来。 完成打包的代码将会被生成到一个特定的文件夹中。
+    然后它将使用这个文件夹为每个 maker 配置生成一个可分发文件。
+
+在脚本运行后，您应该看到一个 out 文件夹，其中包括可分发文件与一个包含其源码的文件夹。
+macOS output example
+
+out/
+├── out/make/zip/darwin/x64/my-electron-app-darwin-x64-1.0.0.zip
+├── ...
+└── out/my-electron-app-darwin-x64/my-electron-app.app/Contents/MacOS/my-electron-app
+
+out/make 文件夹中的应用程序应该可以启动了！ 现在，您已经创建了你的第一个 Electron 程序。
+可分发文件格式
+
+Electron Forge 通过配置可以为不同的操作系统创建特定格式的可分发文件 (例如 DMG、deb、MSI 等)。 相关配置选项详情，请参阅 Forge 的 Makers 文档。
+创建和添加应用程序图标
+
+设置自定义的应用程序图标，需要添加一些额外的配置。 查看 Forge 的图标教程 了解更多信息。
+不使用 Electron Forge 打包
+
+If you want to manually package your code, or if you're just interested understanding the mechanics behind packaging an Electron app, check out the full Application Packaging documentation.
+重要提示：对代码进行签名
+
+为了将桌面应用程序分发给最终用户，我们 强烈建议 您对 Electron 应用进行 代码签名。 代码签名是交付桌面应用程序的重要组成部分，并且它对于应用程序的自动更新功能 (将会在教程最后部分讲解) 来说是必需的。
+
+代码签名是一种可用于证明桌面应用程序是由已知来源创建的安全技术。 Windows 和 macOS 拥有其特定的代码签名系统，这将使用户难以下载或启动未签名的应用程序。
+
+在 macOS 上，代码签名是在应用程序打包时完成的。 而在 Windows 中，则是对可分发文件进行签名操作。 如果您已经拥有适用于 Windows 和 macOS 的代码签名证书，可以在 Forge 配置中设置您的凭据。
+info
+
+欲了解更多代码签名的信息，请参阅Forge文档中的 签署 macOS 应用程序 指南。
+
+    macOS
+    Windows
+
+forge.config.js
+
+module.exports = {
+  packagerConfig: {
+    osxSign: {},
+    // ...
+    osxNotarize: {
+      tool: 'notarytool',
+      appleId: process.env.APPLE_ID,
+      appleIdPassword: process.env.APPLE_PASSWORD,
+      teamId: process.env.APPLE_TEAM_ID
+    }
+    // ...
+  }
+}
+
+摘要
+
+Electron 应用程序需要打包后分发给用户。 在本教程中，您将应用程序导入 Electron Forge 并对其进行配置以打包您的应用程序并生成安装程序。
+
+为了让应用程序受到用户系统的信任，您需要以数字签名证明可分发文件的内容是真实的并且未被代码签名篡改。 只要在应用配置中添加签名证书信息，您就可以通过 Forge 对其进行签名。
